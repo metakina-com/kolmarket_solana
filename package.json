@@ -1,0 +1,53 @@
+{
+  "name": "kolmarket-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test:api": "./scripts/test-apis.sh",
+    "deploy": "npm run build && npx wrangler pages deploy .next",
+    "deploy:preview": "npm run build && npx wrangler pages deploy .next --branch=preview"
+  },
+  "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.0",
+    "@elizaos/core": "^1.7.2",
+    "@elizaos/plugin-discord": "^1.3.3",
+    "@elizaos/plugin-solana-agent-kit": "^0.25.6-alpha.1",
+    "@elizaos/plugin-telegram": "^1.6.2",
+    "@elizaos/plugin-twitter": "^1.2.22",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/web3.js": "^1.95.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.3.0",
+    "langchain": "^1.2.11",
+    "lucide-react": "^0.424.0",
+    "next": "^15.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.12.0",
+    "server-only": "^0.0.1",
+    "solana-agent-kit": "^2.0.10",
+    "tailwind-merge": "^2.4.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/bs58": "^5.0.0",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "ignore-loader": "^0.1.2",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.0",
+    "wrangler": "^3.114.17"
+  }
+}

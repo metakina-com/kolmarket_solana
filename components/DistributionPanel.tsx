@@ -1,0 +1,229 @@
+"use client";
+
+import { useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Send, Plus, Trash2, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { PublicKey } from "@solana/web3.js";
+
+interface Recipient {
+  address: string;
+  amount: number;
+  percentage?: number;
+}
+
+export function DistributionPanel() {
+  const { publicKey, connected } = useWallet();
+  const [recipients, setRecipients] = useState<Recipient[]>([
+    { address: "", amount: 0 },
+  ]);
+  const [usePercentage, setUsePercentage] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+
+  const addRecipient = () => {
+    setRecipients([...recipients, { address: "", amount: 0 }]);
+  };
+
+  const removeRecipient = (index: number) => {
+    setRecipients(recipients.filter((_, i) => i !== index));
+  };
+
+  const updateRecipient = (index: number, field: keyof Recipient, value: string | number) => {
+    const updated = [...recipients];
+    updated[index] = { ...updated[index], [field]: value };
+    setRecipients(updated);
+  };
+
+  const handleDistribute = async () => {
+    if (!connected || !publicKey) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    // 验证地址
+    const validRecipients = recipients.filter((r) => {
+      try {
+        new PublicKey(r.address);
+        return r.amount > 0 || (usePercentage && (r.percentage || 0) > 0);
+      } catch {
+        return false;
+      }
+    });
+
+    if (validRecipients.length === 0) {
+      alert("Please add at least one valid recipient");
+      return;
+    }
+
+    setLoading(true);
+    setResult(null);
+
+    try {
+      const response = await fetch("/api/execution/distribute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recipients: validRecipients.map((r) => ({
+            address: r.address,
+            amount: r.amount,
+            percentage: r.percentage,
+          })),
+          totalAmount,
+          usePercentage,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Distribution failed");
+      }
+
+      setResult(data.result);
+    } catch (error) {
+      console.error("Distribution error:", error);
+      alert(error instanceof Error ? error.message : "Distribution failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="glass-strong rounded-xl p-6 max-w-2xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+        Distribution Panel
+      </h2>
+
+      {!connected && (
+        <div className="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-lg text-yellow-400 text-sm">
+          ⚠️ Please connect your wallet to use distribution features
+        </div>
+      )}
+
+      {/* Distribution Mode */}
+      <div className="mb-6">
+        <label className="flex items-center gap-2 text-slate-300 mb-2">
+          <input
+            type="checkbox"
+            checked={usePercentage}
+            onChange={(e) => setUsePercentage(e.target.checked)}
+            className="rounded"
+          />
+          <span>Use percentage distribution</span>
+        </label>
+        {usePercentage && (
+          <input
+            type="number"
+            placeholder="Total amount (SOL)"
+            value={totalAmount || ""}
+            onChange={(e) => setTotalAmount(parseFloat(e.target.value) || 0)}
+            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mt-2"
+          />
+        )}
+      </div>
+
+      {/* Recipients List */}
+      <div className="space-y-4 mb-6">
+        {recipients.map((recipient, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex gap-2 items-start"
+          >
+            <div className="flex-1 space-y-2">
+              <input
+                type="text"
+                placeholder="Recipient address"
+                value={recipient.address}
+                onChange={(e) => updateRecipient(index, "address", e.target.value)}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500"
+              />
+              {usePercentage ? (
+                <input
+                  type="number"
+                  placeholder="Percentage (%)"
+                  value={recipient.percentage || ""}
+                  onChange={(e) =>
+                    updateRecipient(index, "percentage", parseFloat(e.target.value) || 0)
+                  }
+                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+                />
+              ) : (
+                <input
+                  type="number"
+                  placeholder="Amount (SOL)"
+                  value={recipient.amount || ""}
+                  onChange={(e) =>
+                    updateRecipient(index, "amount", parseFloat(e.target.value) || 0)
+                  }
+                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+                />
+              )}
+            </div>
+            {recipients.length > 1 && (
+              <button
+                onClick={() => removeRecipient(index)}
+                className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+              >
+                <Trash2 size={20} />
+              </button>
+            )}
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Add Recipient Button */}
+      <button
+        onClick={addRecipient}
+        className="mb-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+      >
+        <Plus size={16} />
+        Add Recipient
+      </button>
+
+      {/* Execute Button */}
+      <button
+        onClick={handleDistribute}
+        disabled={loading || !connected}
+        className="w-full px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 font-semibold"
+      >
+        {loading ? (
+          <>
+            <Loader2 size={20} className="animate-spin" />
+            Processing...
+          </>
+        ) : (
+          <>
+            <Send size={20} />
+            Execute Distribution
+          </>
+        )}
+      </button>
+
+      {/* Result */}
+      {result && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6 p-4 bg-green-500/20 border border-green-500/30 rounded-lg"
+        >
+          <h3 className="text-green-400 font-semibold mb-2">Distribution Successful!</h3>
+          <p className="text-sm text-slate-300">
+            Transaction: <span className="font-mono text-xs">{result.transactionHash}</span>
+          </p>
+          <p className="text-sm text-slate-300 mt-1">
+            Total Amount: {result.totalAmount} SOL
+          </p>
+        </motion.div>
+      )}
+
+      {/* Warning */}
+      <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-xs text-slate-400">
+        ⚠️ <strong>Demo Mode:</strong> This is a demonstration. In production, transactions must be signed by the user&apos;s wallet.
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,27 @@
+name = "kolmarket-ai"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = ".next"
+
+# Workers AI 绑定（用于 LLM 和 Embeddings）
+[ai]
+binding = "AI"
+
+# D1 数据库绑定（用于结构化数据存储）
+# 创建数据库后，运行: npx wrangler d1 create kolmarket-db
+# 然后替换下面的 database_id
+[[d1_databases]]
+binding = "DB"
+database_name = "kolmarket-db"
+database_id = "8edcc00c-63a1-4268-8968-527043eb6450"  # 已创建
+
+# Vectorize 向量数据库绑定（用于 RAG）
+# 创建索引后，运行: npx wrangler vectorize create kol-knowledge-index --dimensions=768 --metric=cosine
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "kol-knowledge-index"
+
+# R2 存储桶绑定（用于文档存储，可选）
+# 创建存储桶后，运行: npx wrangler r2 bucket create kolmarket-documents
+# [[r2_buckets]]
+# binding = "R2_BUCKET"
+# bucket_name = "kolmarket-documents"

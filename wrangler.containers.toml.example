@@ -1,0 +1,78 @@
+# Cloudflare Containers 配置示例
+# 用于运行 ElizaOS 插件的完整 Node.js 环境
+
+name = "kolmarket-ai"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = ".next"
+
+# Workers AI 绑定（用于 LLM 和 Embeddings）
+[ai]
+binding = "AI"
+
+# D1 数据库绑定
+[[d1_databases]]
+binding = "DB"
+database_name = "kolmarket-db"
+database_id = "8edcc00c-63a1-4268-8968-527043eb6450"
+
+# Vectorize 向量数据库绑定
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "kol-knowledge-index"
+
+# ============================================
+# ElizaOS 容器配置（Beta，需要付费计划）
+# ============================================
+
+# 容器配置
+# 注意：Containers 目前处于 Beta 阶段，需要付费计划
+# 详细文档：https://developers.cloudflare.com/containers/
+
+[[containers]]
+name = "elizaos-server"
+# 使用官方 Node.js 镜像，或自定义包含 ElizaOS 的镜像
+image = "node:20-alpine"
+# 或使用自定义镜像：
+# image = "your-dockerhub-username/elizaos-server:latest"
+port = 3001
+# 全局部署到所有边缘节点
+region = "earth"
+# 容器环境变量
+[containers.env]
+NODE_ENV = "production"
+# 注意：敏感信息（API Keys）应使用 Secrets，不要直接写在配置文件中
+
+# 容器资源配置（可选）
+# [containers.resources]
+# cpu = "1"
+# memory = "512Mi"
+
+# 容器路由配置（可选）
+# 可以从 Workers 代码中路由请求到容器
+# [containers.routes]
+# pattern = "/api/elizaos/*"
+# container = "elizaos-server"
+
+# ============================================
+# 使用说明
+# ============================================
+
+# 1. 构建 Docker 镜像
+#    cd elizaos-container
+#    docker build -t your-username/elizaos-server .
+#    docker push your-username/elizaos-server
+
+# 2. 部署容器
+#    npx wrangler containers deploy elizaos-server \
+#      --image your-username/elizaos-server \
+#      --port 3001
+
+# 3. 在 API 路由中调用容器
+#    const containerUrl = env.ELIZAOS_CONTAINER_URL;
+#    const response = await fetch(`${containerUrl}/api/twitter/post`, {...});
+
+# 4. 设置环境变量
+#    npx wrangler secret put TWITTER_API_KEY
+#    npx wrangler secret put DISCORD_BOT_TOKEN
+#    npx wrangler secret put TELEGRAM_BOT_TOKEN
+#    npx wrangler secret put SOLANA_PRIVATE_KEY
