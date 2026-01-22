@@ -1,0 +1,8 @@
+name = "elizaos-container-worker"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+main = "src/index.ts"
+
+[[containers]]
+class_name = "ElizaOSContainer"
+image = "registry.cloudflare.com/acb6471710adbd7e73a05cc665a6fb94/elizaos-server:latest"
