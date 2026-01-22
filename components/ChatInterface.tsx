@@ -59,10 +59,24 @@ export function ChatInterface() {
         }),
       });
 
-      const data = await response.json();
-
+      // 检查响应状态
       if (!response.ok) {
-        throw new Error(data.error || `HTTP ${response.status}: Failed to get response`);
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to get response`);
+      }
+
+      // 解析 JSON 响应
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse response:", parseError);
+        throw new Error("Invalid response format from server");
       }
 
       // 确保响应消息存在

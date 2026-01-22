@@ -48,8 +48,9 @@ export async function POST(req: NextRequest) {
 
     // --- 以下是原有的 Cloudflare Workers AI 逻辑 ---
 
+    // 在 Edge Runtime 中，AI 绑定通过 context 传递
     const ai = (globalThis as any).AI || (req as any).env?.AI;
-    const env = (req as any).env;
+    const env = (req as any).env || {};
 
     let systemPrompt: string;
     if (kolHandle) {
@@ -88,22 +89,38 @@ export async function POST(req: NextRequest) {
     }
 
     // Workers AI 逻辑
-    const config = getRecommendedModelConfig("chat");
-    const response = await generateTextWithCloudflareAI(
-      ai,
-      [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt },
-      ],
-      config
-    );
+    try {
+      const config = getRecommendedModelConfig("chat");
+      const response = await generateTextWithCloudflareAI(
+        ai,
+        [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: prompt },
+        ],
+        config
+      );
 
-    return NextResponse.json({ response });
+      return NextResponse.json({ response });
+    } catch (aiError) {
+      console.error("Workers AI error:", aiError);
+      // 如果 Workers AI 失败，返回降级响应
+      const persona = kolHandle ? getKOLPersona(kolHandle) : null;
+      const kolName = persona?.name || "AI Assistant";
+      return NextResponse.json({
+        response: `🚀 ${kolName} here. Workers AI is temporarily unavailable. You asked: "${prompt.slice(0, 50)}..." Please try again later.`,
+      });
+    }
 
   } catch (error) {
     console.error("AI API error:", error);
-    return NextResponse.json({
-      response: "🤖 System overload! Please recalibrate and try again in a moment.",
-    });
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json(
+      {
+        error: "Internal server error",
+        message: errorMessage,
+        response: "🤖 System overload! Please recalibrate and try again in a moment.",
+      },
+      { status: 500 }
+    );
   }
 }

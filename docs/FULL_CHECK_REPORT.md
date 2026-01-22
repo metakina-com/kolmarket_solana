@@ -30,8 +30,7 @@
 - `KMTAutomationPanel`: `loadTasks` 使用 `useCallback`，effect 依赖正确
 - `KnowledgeManagement`: `loadStats` 使用 `useCallback`，effect 依赖正确
 
-**剩余 Warning（非阻塞）**:
-- `app/creator/page.tsx`: 2 处 `<img>` 建议改为 `next/image` 的 `<Image />`
+**剩余 Warning**: 无（`<img>` 已改为 `next/image`）
 
 ---
 
@@ -135,7 +134,7 @@
 |------|------|
 | 构建 | ✅ 通过 |
 | 类型 | ✅ 通过 |
-| Lint | ✅ 通过（2 个 img 相关 Warning） |
+| Lint | ✅ 通过（无 Warning） |
 | API 与执行层 | ✅ 正常，用户钱包签名已接入 |
 | 前端与配置 | ✅ 角色门户、钱包、分红/策略流程正常 |
 | 安全与依赖 | ⚠️ 输入校验已加强；npm 审计有传递依赖告警，需持续跟进 |
