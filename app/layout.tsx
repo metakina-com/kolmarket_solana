@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { ClientWalletProvider } from "@/components/providers/ClientWalletProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,11 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ClientWalletProvider>
-          {children}
-        </ClientWalletProvider>
+        <ThemeProvider>
+          <ClientWalletProvider>
+            {children}
+          </ClientWalletProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
