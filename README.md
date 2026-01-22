@@ -122,6 +122,7 @@ kolmarket_solana/
 - ✅ AI 聊天界面（Cloudflare Workers AI）
 - ✅ 响应式设计（移动端友好）
 - ✅ Cyberpunk 主题 UI
+- ✅ **R2 文件存储** - 用户上传图片、视频等文件到 Cloudflare R2 🚀
 - ✅ **KOLMarket Agent Suite** - 基于 ElizaOS 的完整智能体套件 🚀
   - **数字分身 (Avatar)** - Twitter 24/7 自动发推、互动
   - **粉丝客服 (Mod)** - Discord/Telegram 机器人，自动回复、引导
@@ -133,6 +134,7 @@ kolmarket_solana/
 - **Next.js + Recharts**: 应用层 MVP
 - **Solana Wallet Adapter**: 钱包连接
 - **Cloudflare Workers AI**: AI 聊天后端
+- **Cloudflare R2**: 文件存储（图片、视频等）✅ **已集成**
 
 ### 待集成 🔄
 - **Cookie.fun API**: KOL Mindshare Index 数据 ✅ **已集成基础功能**
@@ -301,6 +303,7 @@ const suite = await createFullAgentSuite(
 - 📖 [快速部署](./docs/QUICK_DEPLOY.md) - 5 分钟快速部署
 - 📖 [容器部署](./docs/CONTAINERS_QUICK_START.md) - Cloudflare Containers 部署
 - 📖 [Agent Suite 指南](./docs/AGENT_SUITE_GUIDE.md) - 数字生命使用指南
+- 📖 [R2 存储指南](./docs/R2_STORAGE_GUIDE.md) - 文件上传和存储指南
 
 ### 社交媒体
 

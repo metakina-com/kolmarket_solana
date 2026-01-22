@@ -18,10 +18,10 @@ database_id = "6bdc857b-ec3e-4508-8094-f9a1d8452eea"
 binding = "VECTORIZE"
 index_name = "kol-knowledge-index"
 
-# R2 存储桶绑定（用于文档存储，可选）
-# [[r2_buckets]]
-# binding = "R2_BUCKET"
-# bucket_name = "kolmarket-documents"
+# R2 存储桶绑定（用于用户上传的图片、视频等文件）
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "kolmarket-uploads"
 
 # ============================================
 # ElizaOS 容器配置 (Beta)
