@@ -1,27 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Connection, Keypair, clusterApiUrl } from "@solana/web3.js";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import {
   initializeTradingAgent,
-  executeTradingStrategy,
+  buildTradingStrategyTransaction,
   TradingStrategy,
 } from "@/lib/execution/trading-agent";
-import { loadKeypairFromEnv } from "@/lib/utils/solana-keypair";
 
-// 使用 Edge runtime（Solana 操作通过容器或降级实现）
 export const runtime = "edge";
 
 /**
  * POST /api/execution/strategy
- * 执行交易策略
+ * 构建策略未签名交易，供前端用户钱包签名并广播。
  * 
- * 注意：这是一个演示实现，实际生产环境需要：
- * 1. 使用用户的钱包签名
- * 2. 实现更严格的风险控制
- * 3. 添加策略验证
+ * Body: { strategy, network?, payer }
+ * payer: 用户钱包公钥 (base58)，必填。
  */
 export async function POST(req: NextRequest) {
   try {
-    const { strategy, network = "devnet" } = await req.json();
+    const { strategy, network = "devnet", payer } = await req.json();
 
     if (!strategy) {
       return NextResponse.json(
@@ -29,8 +25,13 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    if (!payer || typeof payer !== "string") {
+      return NextResponse.json(
+        { error: "payer (wallet public key) is required. Sign with your wallet." },
+        { status: 400 }
+      );
+    }
 
-    // 创建连接
     const connection = new Connection(
       network === "mainnet"
         ? process.env.SOLANA_MAINNET_RPC || clusterApiUrl("mainnet-beta")
@@ -38,37 +39,30 @@ export async function POST(req: NextRequest) {
       "confirmed"
     );
 
-    // 初始化交易智能体
     const agent = await initializeTradingAgent(connection, {
       maxSlippage: 5,
       maxTransactionAmount: 10,
       maxDailyLoss: 50,
     });
 
-    // 从环境变量加载密钥对（开发环境）
-    // ⚠️ 警告：生产环境应该使用用户钱包签名
-    let signer = loadKeypairFromEnv(network);
-    if (!signer) {
-      console.warn("⚠️  No keypair found in env, using generated keypair (for demo only)");
-      signer = Keypair.generate(); // 仅用于演示
-    }
-
-    // 执行策略
-    const execution = await executeTradingStrategy(
+    const payerPubkey = new PublicKey(payer);
+    const built = await buildTradingStrategyTransaction(
       agent,
       strategy as TradingStrategy,
-      signer
+      payerPubkey
     );
 
     return NextResponse.json({
       success: true,
-      execution,
+      serializedTransaction: built.serializedTransaction,
+      strategyId: built.strategyId,
+      ruleCount: built.ruleCount,
     });
   } catch (error) {
-    console.error("Strategy execution error:", error);
+    console.error("Strategy prepare error:", error);
     return NextResponse.json(
       {
-        error: "Failed to execute strategy",
+        error: "Failed to prepare strategy transaction",
         message: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }

@@ -45,6 +45,13 @@ export interface TradingExecution {
   timestamp: string;
 }
 
+/** 用于前端签名的序列化未签名策略交易 */
+export interface SerializedStrategyTx {
+  serializedTransaction: string; // base64
+  strategyId: string;
+  ruleCount: number;
+}
+
 export interface TradingAgent {
   connection: Connection;
   strategies: TradingStrategy[];
@@ -87,7 +94,69 @@ export async function initializeTradingAgent(
 }
 
 /**
- * 执行交易策略
+ * 构建策略未签名交易（供用户钱包签名）
+ * 
+ * @param agent - 交易智能体实例
+ * @param strategy - 交易策略
+ * @param payer - 付款人公钥（用户钱包）
+ * @returns 序列化信息，前端反序列化后由用户签名并广播
+ */
+export async function buildTradingStrategyTransaction(
+  agent: TradingAgent,
+  strategy: TradingStrategy,
+  payer: PublicKey
+): Promise<SerializedStrategyTx> {
+  if (!strategy.enabled) {
+    throw new Error(`Strategy ${strategy.id} is not enabled`);
+  }
+
+  // 1. 评估策略条件
+  const conditionsMet = await evaluateStrategyConditions(agent, strategy, payer);
+  if (!conditionsMet) {
+    throw new Error(`Strategy conditions not met for ${strategy.id}`);
+  }
+
+  // 2. 构建交易
+  const transaction = new Transaction();
+  let ruleCount = 0;
+
+  for (const rule of strategy.rules) {
+    const instruction = await generateInstructionFromRule(agent, rule, payer);
+    if (instruction) {
+      transaction.add(instruction);
+      ruleCount++;
+    }
+  }
+
+  if (ruleCount === 0) {
+    throw new Error(`No valid instructions generated for strategy ${strategy.id}`);
+  }
+
+  // 3. 模拟交易（安全检查）
+  const simulation = await agent.connection.simulateTransaction(transaction);
+  if (simulation.value.err) {
+    throw new Error(`Transaction simulation failed: ${JSON.stringify(simulation.value.err)}`);
+  }
+
+  // 4. 设置交易参数
+  const { blockhash } = await agent.connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  transaction.feePayer = payer;
+
+  // 5. 序列化未签名交易
+  const serialized = Buffer.from(
+    transaction.serialize({ requireAllSignatures: false })
+  ).toString("base64");
+
+  return {
+    serializedTransaction: serialized,
+    strategyId: strategy.id,
+    ruleCount,
+  };
+}
+
+/**
+ * 执行交易策略（服务端签名，如脚本/后台）
  * 
  * @param agent - 交易智能体实例
  * @param strategy - 交易策略
@@ -141,27 +210,11 @@ export async function executeTradingStrategy(
       }
     }
 
-    // 3. 降级到基础 web3.js 实现
-    const transaction = new Transaction();
-    
-    // 根据策略规则生成指令
-    for (const rule of strategy.rules) {
-      const instruction = await generateInstructionFromRule(agent, rule, signer.publicKey);
-      if (instruction) {
-        transaction.add(instruction);
-      }
-    }
-
-    // 4. 模拟交易（安全检查）
-    const simulation = await agent.connection.simulateTransaction(transaction);
-    if (simulation.value.err) {
-      throw new Error(`Transaction simulation failed: ${JSON.stringify(simulation.value.err)}`);
-    }
-
-    // 5. 执行链上交易
-    transaction.recentBlockhash = (await agent.connection.getLatestBlockhash()).blockhash;
-    transaction.feePayer = signer.publicKey;
-
+    // 3. 使用构建函数生成交易，然后签名并发送
+    const built = await buildTradingStrategyTransaction(agent, strategy, signer.publicKey);
+    const transaction = Transaction.from(
+      Buffer.from(built.serializedTransaction, "base64")
+    );
     const signature = await sendAndConfirmTransaction(
       agent.connection,
       transaction,
