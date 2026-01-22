@@ -66,9 +66,11 @@ export async function createTwitterAgent(
     }
 
     // 动态导入 ElizaOS 和 Twitter 插件（仅在运行时）
-    const elizaosCore: any = await import("@elizaos/core");
+    const elizaCorePkg = "@elizaos/core";
+    const twitterPluginPkg = "@elizaos/plugin-twitter";
+    const elizaosCore: any = await import(elizaCorePkg);
     const Agent = elizaosCore.Agent || elizaosCore.default?.Agent;
-    const twitterPluginModule: any = await import("@elizaos/plugin-twitter");
+    const twitterPluginModule: any = await import(twitterPluginPkg);
     const TwitterPlugin = twitterPluginModule.default || twitterPluginModule.TwitterPlugin;
 
     // 创建 Agent 配置
@@ -135,9 +137,11 @@ export async function createDiscordAgent(
     }
 
     // 动态导入
-    const elizaosCore: any = await import("@elizaos/core");
+    const elizaCorePkg = "@elizaos/core";
+    const discordPluginPkg = "@elizaos/plugin-discord";
+    const elizaosCore: any = await import(elizaCorePkg);
     const Agent = elizaosCore.Agent || elizaosCore.default?.Agent;
-    const discordPluginModule: any = await import("@elizaos/plugin-discord");
+    const discordPluginModule: any = await import(discordPluginPkg);
     const DiscordPlugin = discordPluginModule.default || discordPluginModule.DiscordPlugin;
 
     const agentConfig = {
@@ -195,9 +199,11 @@ export async function createTelegramAgent(
     }
 
     // 动态导入
-    const elizaosCore: any = await import("@elizaos/core");
+    const elizaCorePkg = "@elizaos/core";
+    const telegramPluginPkg = "@elizaos/plugin-telegram";
+    const elizaosCore: any = await import(elizaCorePkg);
     const Agent = elizaosCore.Agent || elizaosCore.default?.Agent;
-    const telegramPluginModule: any = await import("@elizaos/plugin-telegram");
+    const telegramPluginModule: any = await import(telegramPluginPkg);
     const TelegramPlugin = telegramPluginModule.default || telegramPluginModule.TelegramPlugin;
 
     const agentConfig = {
@@ -254,9 +260,11 @@ export async function createSolanaAgent(
     }
 
     // 动态导入
-    const elizaosCore: any = await import("@elizaos/core");
+    const elizaCorePkg = "@elizaos/core";
+    const solanaPluginPkg = "@elizaos/plugin-solana-agent-kit";
+    const elizaosCore: any = await import(elizaCorePkg);
     const Agent = elizaosCore.Agent || elizaosCore.default?.Agent;
-    const solanaPluginModule: any = await import("@elizaos/plugin-solana-agent-kit");
+    const solanaPluginModule: any = await import(solanaPluginPkg);
     const SolanaAgentKitPlugin = solanaPluginModule.default || solanaPluginModule.SolanaAgentKitPlugin;
 
     const agentConfig = {

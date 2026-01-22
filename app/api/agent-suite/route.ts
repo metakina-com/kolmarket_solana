@@ -3,8 +3,8 @@ import { agentSuiteManager, createFullAgentSuite } from "@/lib/agents/agent-suit
 import { getKOLPersona } from "@/lib/agents/kol-personas";
 import { getAgentSuiteDB } from "@/lib/db/agent-suite-db";
 
-// 使用 Node.js runtime，因为 ElizaOS 插件需要 Node.js 环境
-export const runtime = "nodejs";
+// 使用 Edge runtime（当使用容器时，ElizaOS 插件在容器中运行）
+export const runtime = "edge";
 
 // 获取数据库实例（在 Cloudflare Pages 中，DB 绑定通过 env 访问）
 function getDB() {

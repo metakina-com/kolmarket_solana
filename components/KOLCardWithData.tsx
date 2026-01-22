@@ -25,10 +25,10 @@ export function KOLCardWithData({ name, handle, fallbackData }: KOLCardWithDataP
   // 加载状态
   if (loading && !data) {
     return (
-      <div className="glass rounded-xl p-6 flex items-center justify-center min-h-[400px]">
+      <div className="bg-white rounded-xl p-6 flex items-center justify-center min-h-[400px] border border-gray-200/80">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-cyan-500 mx-auto mb-4" />
-          <p className="text-slate-400">Loading {name}...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-foreground">Loading {name}...</p>
         </div>
       </div>
     );
@@ -37,12 +37,12 @@ export function KOLCardWithData({ name, handle, fallbackData }: KOLCardWithDataP
   // 错误状态（使用降级数据）
   if (error && !data && !fallbackData) {
     return (
-      <div className="glass rounded-xl p-6 border border-red-500/30">
-        <div className="flex items-center gap-2 text-red-400 mb-2">
+      <div className="bg-white rounded-xl p-6 border border-red-500/30">
+        <div className="flex items-center gap-2 text-red-500 mb-2">
           <AlertCircle size={20} />
           <span className="font-semibold">Failed to load data</span>
         </div>
-        <p className="text-sm text-slate-400">@{handle}</p>
+        <p className="text-sm text-gray-500">@{handle}</p>
       </div>
     );
   }

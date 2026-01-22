@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { use } from "react";
 import { motion } from "framer-motion";
 import AgentSuitePanel from "@/components/AgentSuitePanel";
@@ -72,7 +74,7 @@ export default function KOLDetailPage({ params }: PageProps) {
         >
           <h2 className="text-xl font-bold text-white mb-4">About</h2>
           <p className="text-slate-300 mb-4">{persona.personality}</p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div>
               <h3 className="text-sm font-semibold text-slate-400 mb-2">Expertise</h3>

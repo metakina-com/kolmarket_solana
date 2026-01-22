@@ -1,7 +1,7 @@
 "use client";
 
 import { KOLRadarChart } from "./KOLRadarChart";
-import { TrendingUp, Users, MessageCircle } from "lucide-react";
+import { TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -22,28 +22,28 @@ interface KOLCardProps {
 export function KOLCard({ name, handle, mindshareScore, stats, volume, followers }: KOLCardProps) {
   return (
     <motion.div
-      className="glass rounded-xl p-6 hover:border-cyan-500/50 transition-all"
+      className="bg-white rounded-xl p-6 border border-gray-200/80 hover:shadow-lg transition-all"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.02, y: -5 }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-xl font-bold text-white">{name}</h3>
-          <p className="text-sm text-slate-400">@{handle}</p>
+          <h3 className="text-xl font-bold text-foreground">{name}</h3>
+          <p className="text-sm text-gray-500">@{handle}</p>
         </div>
         <div className="text-right">
-          <div className="px-3 py-1 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full border border-cyan-500/30">
-            <span className="text-xs text-cyan-400 font-semibold">Mindshare</span>
-            <div className="text-lg font-bold text-white">{mindshareScore}</div>
+          <div className="px-3 py-1 bg-green-100/50 rounded-full border border-primary/30">
+            <span className="text-xs text-primary-dark font-semibold">Mindshare</span>
+            <div className="text-lg font-bold text-primary-dark">{mindshareScore}</div>
           </div>
         </div>
       </div>
 
       {/* Stats Icons */}
-      <div className="flex items-center gap-4 mb-4 text-sm text-slate-400">
+      <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
         {volume && (
           <div className="flex items-center gap-1">
             <TrendingUp size={16} />
@@ -60,18 +60,24 @@ export function KOLCard({ name, handle, mindshareScore, stats, volume, followers
 
       {/* Radar Chart */}
       <div className="mb-4">
-        <KOLRadarChart data={stats} />
+        <KOLRadarChart 
+          data={stats}
+          strokeColor="#28A745"
+          fillColor="#28A745"
+          gridColor="#E9ECEF"
+          tickColor="#6C757D"
+        />
       </div>
 
       {/* Action Buttons */}
       <div className="flex gap-2">
         <Link
           href={`/kol/${handle}`}
-          className="flex-1 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors text-center"
+          className="flex-1 px-4 py-2 bg-muted hover:bg-gray-300 rounded-lg text-sm font-medium transition-colors text-center text-foreground"
         >
           View Profile
         </Link>
-        <button className="flex-1 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 rounded-lg text-sm font-medium transition-all">
+        <button className="flex-1 px-4 py-2 bg-primary hover:bg-primary-dark rounded-lg text-sm font-medium transition-all text-white">
           Chat AI
         </button>
       </div>

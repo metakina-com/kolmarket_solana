@@ -1,27 +1,67 @@
 name = "kolmarket-ai"
 compatibility_date = "2024-01-01"
-pages_build_output_dir = ".next"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
 
 # Workers AI 绑定（用于 LLM 和 Embeddings）
 [ai]
 binding = "AI"
 
 # D1 数据库绑定（用于结构化数据存储）
-# 创建数据库后，运行: npx wrangler d1 create kolmarket-db
-# 然后替换下面的 database_id
 [[d1_databases]]
 binding = "DB"
 database_name = "kolmarket-db"
-database_id = "8edcc00c-63a1-4268-8968-527043eb6450"  # 已创建
+database_id = "6bdc857b-ec3e-4508-8094-f9a1d8452eea"
 
 # Vectorize 向量数据库绑定（用于 RAG）
-# 创建索引后，运行: npx wrangler vectorize create kol-knowledge-index --dimensions=768 --metric=cosine
 [[vectorize]]
 binding = "VECTORIZE"
 index_name = "kol-knowledge-index"
 
 # R2 存储桶绑定（用于文档存储，可选）
-# 创建存储桶后，运行: npx wrangler r2 bucket create kolmarket-documents
 # [[r2_buckets]]
 # binding = "R2_BUCKET"
 # bucket_name = "kolmarket-documents"
+
+# ============================================
+# ElizaOS 容器配置 (Beta)
+# ============================================
+# 注意：Cloudflare Containers 需要付费计划
+# 如果未启用，可以使用 Railway/Fly.io 作为替代
+
+# 取消注释以下配置以启用 Containers
+# [[containers]]
+# name = "elizaos-server"
+# image = "kolmarket/elizaos-server:latest"
+# port = 3001
+# region = "earth"
+# 
+# [containers.env]
+# NODE_ENV = "production"
+
+# 容器 URL (通过 wrangler secret 设置)
+# ELIZAOS_CONTAINER_URL = "https://elizaos-server.xxx.workers.dev"
+
+# ============================================
+# 环境变量说明
+# ============================================
+# 使用以下命令设置 secrets:
+#
+# # ElizaOS 容器 URL (必需，如果使用容器)
+# npx wrangler secret put ELIZAOS_CONTAINER_URL
+#
+# # Twitter API (可选)
+# npx wrangler secret put TWITTER_API_KEY
+# npx wrangler secret put TWITTER_API_SECRET
+# npx wrangler secret put TWITTER_ACCESS_TOKEN
+# npx wrangler secret put TWITTER_ACCESS_TOKEN_SECRET
+#
+# # Discord (可选)
+# npx wrangler secret put DISCORD_BOT_TOKEN
+#
+# # Telegram (可选)
+# npx wrangler secret put TELEGRAM_BOT_TOKEN
+#
+# # Solana (可选)
+# npx wrangler secret put SOLANA_PRIVATE_KEY
+# npx wrangler secret put SOLANA_RPC_URL

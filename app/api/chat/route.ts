@@ -12,12 +12,45 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // Get AI binding from Cloudflare environment
-    // In Cloudflare Pages, the AI binding is available via globalThis.AI
+    // 1. 优先尝试连接到 ElizaOS 服务器 (如果配置了环境变量)
+    // 这里的 ELIZA_API_URL 可以通过 .env.local 配置
+    const elizaApiUrl = process.env.ELIZA_API_URL || "http://localhost:3001";
+
+    // 如果是 Eliza 模式，我们可以尝试转发
+    if (process.env.USE_ELIZA === "true" || kolHandle) {
+      try {
+        console.log(`Attempting to reach ElizaOS at ${elizaApiUrl} for KOL: ${kolHandle}`);
+        const elizaResponse = await fetch(`${elizaApiUrl}/message`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: prompt,
+            userId: "user",
+            userName: "vibe_user",
+            agentId: kolHandle || "default", // 将 kolHandle 映射为 Eliza 的 agentId
+          }),
+          // 设置较短的超时时间，如果 Eliza 没开，迅速降级到 Workers AI
+          signal: AbortSignal.timeout(5000),
+        });
+
+        if (elizaResponse.ok) {
+          const elizaData = await elizaResponse.json();
+          // Eliza 返回的通常是一个数组 [{ text: "..." }]
+          const responseText = Array.isArray(elizaData) ? elizaData[0]?.text : elizaData.text;
+          if (responseText) {
+            return NextResponse.json({ response: responseText });
+          }
+        }
+      } catch (e) {
+        console.warn("ElizaOS connection failed or timed out, falling back to Workers AI:", e);
+      }
+    }
+
+    // --- 以下是原有的 Cloudflare Workers AI 逻辑 ---
+
     const ai = (globalThis as any).AI || (req as any).env?.AI;
     const env = (req as any).env;
 
-    // Get KOL persona if specified
     let systemPrompt: string;
     if (kolHandle) {
       const persona = getKOLPersona(kolHandle);
@@ -27,31 +60,34 @@ export async function POST(req: NextRequest) {
     }
 
     if (!ai) {
-      // Fallback for local development - return a mock response with KOL personality
-      const mockResponses = [
-        "🚀 GM anon! This is a demo response. In production, I'd be powered by Cloudflare Workers AI. What's your alpha?",
-        "💎 HODL strong! This is a demo - real AI coming soon. What's on your mind?",
-        "🦍 Ape in! Demo mode activated. What do you want to know?",
-      ];
-      const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
-      return NextResponse.json({
-        response: randomResponse,
-      });
+      // Fallback for local development if neither Eliza nor Workers AI is available
+      const persona = kolHandle ? getKOLPersona(kolHandle) : null;
+      const kolName = persona?.name || "AI Assistant";
+
+      const promptLower = prompt.toLowerCase();
+      let mockResponse: string;
+
+      if (promptLower.includes("gm") || promptLower.includes("hello") || promptLower.includes("hi")) {
+        mockResponse = `GM! 👋 I'm ${kolName}'s digital twin. ElizaOS is currently offline, so I'm in demo mode. What's your alpha today?`;
+      } else {
+        mockResponse = `🚀 ${kolName} here. My neural processor (ElizaOS) isn't responding, but I'm still here in demo mode. You asked: "${prompt.slice(0, 30)}..."`;
+      }
+
+      return NextResponse.json({ response: mockResponse });
     }
 
-    // 如果启用 RAG 且有 Vectorize 绑定，使用 RAG 查询
+    // RAG 逻辑
     if (useRAG && env?.VECTORIZE && kolHandle) {
       try {
         const { ragQueryWithKOL } = await import("@/lib/agents/rag-integration");
         const response = await ragQueryWithKOL(ai, env, kolHandle, prompt, systemPrompt);
         return NextResponse.json({ response });
       } catch (ragError) {
-        console.warn("RAG query failed, falling back to regular chat:", ragError);
-        // 降级到普通对话
+        console.warn("RAG query failed:", ragError);
       }
     }
 
-    // 使用 Cloudflare AI 适配器生成响应
+    // Workers AI 逻辑
     const config = getRecommendedModelConfig("chat");
     const response = await generateTextWithCloudflareAI(
       ai,
@@ -62,20 +98,12 @@ export async function POST(req: NextRequest) {
       config
     );
 
-    return NextResponse.json({
-      response,
-    });
+    return NextResponse.json({ response });
+
   } catch (error) {
     console.error("AI API error:", error);
-    // Return a fallback response instead of error for better UX
-    const fallbackResponses = [
-      "🚀 GM! I'm having a moment. In production, I'd be chatting with you via Cloudflare Workers AI. What's your alpha?",
-      "💎 HODL on! Something went wrong. Try again?",
-      "🦍 Ape moment! Let's try that again.",
-    ];
-    const randomResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
     return NextResponse.json({
-      response: randomResponse,
+      response: "🤖 System overload! Please recalibrate and try again in a moment.",
     });
   }
 }

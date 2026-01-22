@@ -114,36 +114,36 @@ export function KnowledgeManagement({ kolHandle }: { kolHandle: string }) {
 
   return (
     <motion.div
-      className="glass rounded-xl p-6"
+      className="bg-white rounded-xl p-6 border border-gray-200/80"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
       <div className="flex items-center gap-2 mb-6">
-        <Database className="w-5 h-5 text-cyan-400" />
-        <h2 className="text-xl font-bold text-white">知识库管理</h2>
-        <span className="text-sm text-slate-400">@{kolHandle}</span>
+        <Database className="w-5 h-5 text-primary" />
+        <h2 className="text-xl font-bold text-foreground">Knowledge Base</h2>
+        <span className="text-sm text-gray-500">@{kolHandle}</span>
       </div>
 
       {/* 统计信息 */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-1">知识块</div>
-            <div className="text-lg font-bold text-white">{stats.totalChunks}</div>
+          <div className="bg-muted rounded-lg p-3 border border-gray-200/80">
+            <div className="text-xs text-gray-500 mb-1">Knowledge Chunks</div>
+            <div className="text-lg font-bold text-foreground">{stats.totalChunks}</div>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-1">数据源</div>
-            <div className="text-lg font-bold text-white">{stats.totalSources}</div>
+          <div className="bg-muted rounded-lg p-3 border border-gray-200/80">
+            <div className="text-xs text-gray-500 mb-1">Sources</div>
+            <div className="text-lg font-bold text-foreground">{stats.totalSources}</div>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-1">首次添加</div>
-            <div className="text-sm text-white">
+          <div className="bg-muted rounded-lg p-3 border border-gray-200/80">
+            <div className="text-xs text-gray-500 mb-1">First Added</div>
+            <div className="text-sm text-foreground">
               {stats.firstAdded ? new Date(stats.firstAdded).toLocaleDateString() : "N/A"}
             </div>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-1">最后更新</div>
-            <div className="text-sm text-white">
+          <div className="bg-muted rounded-lg p-3 border border-gray-200/80">
+            <div className="text-xs text-gray-500 mb-1">Last Updated</div>
+            <div className="text-sm text-foreground">
               {stats.lastAdded ? new Date(stats.lastAdded).toLocaleDateString() : "N/A"}
             </div>
           </div>
@@ -153,28 +153,28 @@ export function KnowledgeManagement({ kolHandle }: { kolHandle: string }) {
       {/* 添加知识表单 */}
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            数据源（可选）
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Source (Optional)
           </label>
           <input
             type="text"
             value={source}
             onChange={(e) => setSource(e.target.value)}
-            placeholder="例如: twitter, blog, document"
-            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+            placeholder="e.g. twitter, blog, document"
+            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-foreground placeholder-gray-400 focus:outline-none focus:border-primary"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            知识内容
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Knowledge Content
           </label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="输入知识内容或文档..."
+            placeholder="Enter knowledge content or document..."
             rows={6}
-            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 resize-none"
+            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-foreground placeholder-gray-400 focus:outline-none focus:border-primary resize-none"
           />
         </div>
 
@@ -182,23 +182,23 @@ export function KnowledgeManagement({ kolHandle }: { kolHandle: string }) {
           <button
             onClick={addKnowledge}
             disabled={!content.trim() || uploading}
-            className="flex-1 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-primary-dark"
           >
             <Plus size={16} />
-            {uploading ? "添加中..." : "添加知识"}
+            {uploading ? "Adding..." : "Add Knowledge"}
           </button>
           <button
             onClick={indexDocument}
             disabled={!content.trim() || uploading}
-            className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2 bg-muted hover:bg-gray-300 rounded-lg text-sm font-medium transition-colors text-center text-foreground flex items-center justify-center gap-2"
           >
             <FileText size={16} />
-            {uploading ? "索引中..." : "索引文档"}
+            {uploading ? "Indexing..." : "Index Document"}
           </button>
           <button
             onClick={loadStats}
             disabled={loading}
-            className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-muted hover:bg-gray-300 rounded-lg text-sm font-medium transition-colors text-foreground disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Search size={16} />
           </button>
@@ -206,8 +206,8 @@ export function KnowledgeManagement({ kolHandle }: { kolHandle: string }) {
       </div>
 
       {loading && (
-        <div className="mt-4 text-center text-slate-400 text-sm">
-          加载中...
+        <div className="mt-4 text-center text-gray-500 text-sm">
+          Loading...
         </div>
       )}
     </motion.div>

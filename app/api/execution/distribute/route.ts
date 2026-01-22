@@ -3,8 +3,8 @@ import { Connection, Keypair, clusterApiUrl } from "@solana/web3.js";
 import { executeSOLDistribution, executePercentageDistribution } from "@/lib/execution/distribution";
 import { loadKeypairFromEnv } from "@/lib/utils/solana-keypair";
 
-// 使用 Node.js runtime，因为 Solana Agent Kit 不兼容 Edge Runtime
-export const runtime = "nodejs";
+// 使用 Edge runtime（Solana 操作通过容器或降级实现）
+export const runtime = "edge";
 
 /**
  * POST /api/execution/distribute

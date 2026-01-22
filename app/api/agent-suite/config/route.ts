@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAgentSuiteDB } from "@/lib/db/agent-suite-db";
 import type { AvatarConfig, ModConfig, TraderConfig } from "@/lib/agents/agent-suite";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 // 获取数据库实例
 function getDB() {

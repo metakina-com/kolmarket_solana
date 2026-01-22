@@ -1,0 +1,303 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
+import {
+    UserCircle,
+    Settings,
+    DollarSign,
+    Users,
+    Share2,
+    Twitter,
+    MessageCircle,
+    BarChart2,
+    Lock,
+    Zap,
+    Cpu,
+    TrendingUp,
+    RefreshCcw,
+    Check
+} from "lucide-react";
+import { Navbar } from "@/components/Navbar";
+
+export default function CreatorPage() {
+    const [kolHandle] = useState("ansem");
+    const [aggression, setAggression] = useState(85);
+    const [humor, setHumor] = useState(42);
+    const [followers, setFollowers] = useState(12500);
+    const [revenue, setRevenue] = useState(42902.50);
+    const [isSaving, setIsSaving] = useState(false);
+    const [lastSaved, setLastSaved] = useState<Date | null>(null);
+
+    // 加载设置
+    useEffect(() => {
+        const loadSettings = async () => {
+            try {
+                const res = await fetch(`/api/creator/settings?kolHandle=${kolHandle}`);
+                const data = await res.json();
+                if (!data.error) {
+                    setAggression(data.aggression || 85);
+                    setHumor(data.humor || 42);
+                    setFollowers(data.followers || 12500);
+                    setRevenue(data.revenue || 42902.50);
+                }
+            } catch (e) {
+                console.error("Failed to load settings:", e);
+            }
+        };
+        loadSettings();
+    }, [kolHandle]);
+
+    // 保存设置
+    const saveSettings = async (newAggression: number, newHumor: number) => {
+        setIsSaving(true);
+        try {
+            await fetch("/api/creator/settings", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    kolHandle,
+                    aggression: newAggression,
+                    humor: newHumor
+                })
+            });
+            setLastSaved(new Date());
+        } catch (e) {
+            console.error("Failed to save settings:", e);
+        } finally {
+            setTimeout(() => setIsSaving(false), 800);
+        }
+    };
+
+    return (
+        <main className="min-h-screen bg-[#020617] text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-cyber-grid opacity-10 pointer-events-none" />
+            <div className="scanline" />
+
+            <Navbar />
+
+            <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto grid grid-cols-12 gap-6 pb-12 text-shadow-neon">
+
+                {/* Left: Agent Personality & Links */}
+                <aside className="col-span-12 lg:col-span-3 space-y-6">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="cyber-glass rounded-2xl p-6 border border-cyan-500/20"
+                    >
+                        <div className="flex flex-col items-center mb-6">
+                            <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-1 mb-4 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                                <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
+                                    <UserCircle className="w-16 h-16 text-slate-700" />
+                                </div>
+                            </div>
+                            <h3 className="text-xl font-bold">@{kolHandle} Clone</h3>
+                            <p className="text-xs text-cyan-400 font-mono animate-pulse">Agent Status: ACTIVE</p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
+                                <div className="flex items-center gap-2 text-sm text-slate-300">
+                                    <Twitter size={16} className="text-cyan-400" />
+                                    Twitter Link
+                                </div>
+                                <div className="w-2 h-2 rounded-full bg-green-500" />
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
+                                <div className="flex items-center gap-2 text-sm text-slate-300">
+                                    <MessageCircle size={16} className="text-indigo-400" />
+                                    Discord Mod
+                                </div>
+                                <div className="w-2 h-2 rounded-full bg-green-500" />
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="cyber-glass p-6 rounded-2xl border border-white/5"
+                    >
+                        <div className="flex justify-between items-center mb-6">
+                            <h4 className="text-xs font-mono text-slate-500 uppercase tracking-widest">Neural Tuning</h4>
+                            {isSaving ? (
+                                <RefreshCcw size={14} className="animate-spin text-cyan-400" />
+                            ) : lastSaved ? (
+                                <Check size={14} className="text-green-400" />
+                            ) : null}
+                        </div>
+
+                        <div className="space-y-8">
+                            <div>
+                                <div className="flex justify-between text-xs mb-3">
+                                    <span className="text-slate-400 uppercase font-bold tracking-tighter">Aggression</span>
+                                    <span className="text-cyan-400 font-mono">{aggression}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="0" max="100"
+                                    value={aggression}
+                                    onChange={(e) => {
+                                        const val = parseInt(e.target.value);
+                                        setAggression(val);
+                                        saveSettings(val, humor);
+                                    }}
+                                    className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                                />
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between text-xs mb-3">
+                                    <span className="text-slate-400 uppercase font-bold tracking-tighter">Humor</span>
+                                    <span className="text-purple-400 font-mono">{humor}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="0" max="100"
+                                    value={humor}
+                                    onChange={(e) => {
+                                        const val = parseInt(e.target.value);
+                                        setHumor(val);
+                                        saveSettings(aggression, val);
+                                    }}
+                                    className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                                />
+                            </div>
+                        </div>
+
+                        <p className="mt-6 text-[10px] text-slate-600 italic leading-tight">
+                            Neural parameters are synced with ElizaOS Core in real-time. Changes affect agent response tone.
+                        </p>
+                    </motion.div>
+                </aside>
+
+                {/* Center: Revenue & Performance */}
+                <section className="col-span-12 lg:col-span-6 space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="cyber-glass rounded-2xl p-6 border border-white/10"
+                        >
+                            <div className="text-slate-500 text-xs font-mono mb-1 uppercase tracking-wider">Total Revenue Share</div>
+                            <div className="text-4xl font-black text-white tracking-tighter">${revenue.toLocaleString()}</div>
+                            <div className="mt-4 flex items-center gap-2 text-green-400 text-sm">
+                                <TrendingUp size={16} />
+                                +12.4% this week
+                            </div>
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className="cyber-glass rounded-2xl p-6 border border-white/10"
+                        >
+                            <div className="text-slate-500 text-xs font-mono mb-1 uppercase tracking-wider">Active Followers</div>
+                            <div className="text-4xl font-black text-white tracking-tighter">{(followers / 1000).toFixed(1)}K</div>
+                            <div className="mt-4 flex items-center gap-2 text-cyan-400 text-sm">
+                                <Users size={16} />
+                                Network expansion mode
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="cyber-glass rounded-2xl p-8 border border-white/10"
+                    >
+                        <div className="flex justify-between items-center mb-8">
+                            <h3 className="text-xl font-bold flex items-center gap-2">
+                                <BarChart2 className="w-5 h-5 text-purple-400" />
+                                Influence Metrics
+                            </h3>
+                            <button className="text-xs px-3 py-1 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all font-mono">
+                                LAST 30 DAYS
+                            </button>
+                        </div>
+
+                        <div className="h-64 flex items-end justify-between gap-1 px-4">
+                            {[40, 70, 45, 90, 65, 80, 50, 95, 60, 85, 40, 75].map((h, i) => (
+                                <div key={i} className="flex-1 group relative">
+                                    <div
+                                        className="w-full bg-gradient-to-t from-cyan-500/20 via-cyan-500/50 to-cyan-500 rounded-t-sm transition-all duration-500 group-hover:from-cyan-400 group-hover:to-cyan-300"
+                                        style={{ height: `${h}%` }}
+                                    />
+                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity border border-white/10 z-20">
+                                        {h}k
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex justify-between mt-4 px-4 text-[10px] text-slate-500 font-mono">
+                            <span>JAN</span>
+                            <span>MAR</span>
+                            <span>MAY</span>
+                            <span>JUL</span>
+                            <span>SEP</span>
+                            <span>NOV</span>
+                        </div>
+                    </motion.div>
+
+                    <div className="p-6 rounded-2xl bg-cyan-500/5 border border-cyan-500/20 flex items-center justify-between group overflow-hidden relative">
+                        <div className="absolute inset-0 bg-cyan-500/2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="flex gap-4 items-center relative z-10">
+                            <div className="p-3 bg-cyan-500/10 rounded-xl">
+                                <Lock className="text-cyan-400" size={24} />
+                            </div>
+                            <div>
+                                <h4 className="font-bold">Neural Filter Protocol</h4>
+                                <p className="text-xs text-slate-500">Enable high-sensitivity moderation for wallet interactions</p>
+                            </div>
+                        </div>
+                        <button className="px-6 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition-all relative z-10 border border-white/5 active:scale-95">
+                            Configure
+                        </button>
+                    </div>
+                </section>
+
+                {/* Right: Live Feed & Actions */}
+                <aside className="col-span-12 lg:col-span-3 space-y-6">
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="cyber-glass rounded-2xl p-6 border border-white/5 h-full"
+                    >
+                        <h3 className="font-bold mb-6 flex items-center gap-2">
+                            <RefreshCcw className="w-5 h-5 text-yellow-400" />
+                            Live Ledger Logs
+                        </h3>
+                        <div className="space-y-6">
+                            {[
+                                { time: "14:20", msg: "Replied to @elonmusk regarding SOL scaling." },
+                                { time: "14:15", msg: "Analyzed $KMT mindshare index for new alert." },
+                                { time: "13:58", msg: "Executed sentiment swap: +0.5 SOL." },
+                                { time: "13:42", msg: "Synced knowledge base with new whitepaper." },
+                            ].map((log, i) => (
+                                <div key={i} className="relative pl-6 border-l border-white/10 py-1">
+                                    <div className="absolute -left-[5px] top-2 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                                    <div className="text-[10px] text-slate-500 mb-1 font-mono uppercase tracking-tighter">{log.time}</div>
+                                    <p className="text-xs text-slate-300 leading-tight">{log.msg}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-12 space-y-4">
+                            <button className="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-lg active:scale-95">
+                                <Share2 size={18} />
+                                BroadCast Alpha
+                            </button>
+                            <button className="w-full py-4 bg-slate-800 rounded-xl font-bold text-slate-400 flex items-center justify-center gap-2 text-sm uppercase tracking-widest hover:bg-slate-700 transition-all border border-white/5">
+                                <Settings size={18} />
+                                Agent Settings
+                            </button>
+                        </div>
+                    </motion.div>
+                </aside>
+
+            </div>
+        </main>
+    );
+}
