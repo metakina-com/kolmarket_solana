@@ -7,6 +7,7 @@ import { KOLCardWithData } from "@/components/KOLCardWithData";
 import { ChatInterface } from "@/components/ChatInterface";
 import { KnowledgeManagement } from "@/components/KnowledgeManagement";
 import { KMTWhitepaper } from "@/components/KMTWhitepaper";
+import { Twitter, MessageCircle, Users } from "lucide-react";
 
 // Mock 数据作为降级方案
 const mockKOLs = [
@@ -153,10 +154,41 @@ export default function Home() {
                 Empowering the next generation of digital influence and automated agency on Solana.
               </p>
             </div>
-            <div className="flex gap-8 text-sm font-mono text-slate-400">
-              <a href="#" className="hover:text-cyan-400 transition-colors">Docs</a>
-              <a href="#" className="hover:text-cyan-400 transition-colors">Github</a>
-              <a href="#" className="hover:text-cyan-400 transition-colors">Trading Rules</a>
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex gap-8 text-sm font-mono text-slate-400">
+                <a href="#" className="hover:text-cyan-400 transition-colors">Docs</a>
+                <a href="#" className="hover:text-cyan-400 transition-colors">Github</a>
+                <a href="#" className="hover:text-cyan-400 transition-colors">Trading Rules</a>
+              </div>
+              <div className="flex items-center gap-4">
+                <a
+                  href="https://x.com/KOLMARKET"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg border border-white/5 hover:border-cyan-500/30 transition-all"
+                  aria-label="Twitter"
+                >
+                  <Twitter size={18} />
+                </a>
+                <a
+                  href="https://t.me/kolmarketai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg border border-white/5 hover:border-cyan-500/30 transition-all"
+                  aria-label="Telegram"
+                >
+                  <MessageCircle size={18} />
+                </a>
+                <a
+                  href="https://discord.com/channels/1433748708255727640/1463848664001937533"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg border border-white/5 hover:border-cyan-500/30 transition-all"
+                  aria-label="Discord"
+                >
+                  <Users size={18} />
+                </a>
+              </div>
             </div>
           </div>
 

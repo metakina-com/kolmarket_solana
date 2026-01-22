@@ -1,7 +1,7 @@
 "use client";
 
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { Menu, X, Cpu } from "lucide-react";
+import { Menu, X, Cpu, Twitter, MessageCircle, Users } from "lucide-react";
 import { useState } from "react";
 
 export function Navbar() {
@@ -35,7 +35,37 @@ export function Navbar() {
             <a href="#agents" className="text-sm font-bold text-slate-400 hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Agents
             </a>
-            <div className="pl-4 border-l border-white/10">
+            <div className="flex items-center gap-4 pl-4 border-l border-white/10">
+              {/* Social Links */}
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://x.com/KOLMARKET"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-all"
+                  aria-label="Twitter"
+                >
+                  <Twitter size={18} />
+                </a>
+                <a
+                  href="https://t.me/kolmarketai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-all"
+                  aria-label="Telegram"
+                >
+                  <MessageCircle size={18} />
+                </a>
+                <a
+                  href="https://discord.com/channels/1433748708255727640/1463848664001937533"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-all"
+                  aria-label="Discord"
+                >
+                  <Users size={18} />
+                </a>
+              </div>
               <WalletMultiButton className="!bg-white !text-slate-950 !font-bold !rounded-xl !h-11 hover:!bg-cyan-400 transition-all !px-6" />
             </div>
           </div>
@@ -66,7 +96,37 @@ export function Navbar() {
             <a href="#agents" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-400 hover:text-cyan-400 transition-colors">
               Agents
             </a>
-            <div className="pt-4 border-t border-white/5">
+            <div className="pt-4 border-t border-white/5 space-y-4">
+              {/* Social Links */}
+              <div className="flex items-center justify-center gap-4">
+                <a
+                  href="https://x.com/KOLMARKET"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-all"
+                  aria-label="Twitter"
+                >
+                  <Twitter size={20} />
+                </a>
+                <a
+                  href="https://t.me/kolmarketai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-all"
+                  aria-label="Telegram"
+                >
+                  <MessageCircle size={20} />
+                </a>
+                <a
+                  href="https://discord.com/channels/1433748708255727640/1463848664001937533"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-all"
+                  aria-label="Discord"
+                >
+                  <Users size={20} />
+                </a>
+              </div>
               <WalletMultiButton className="!bg-cyan-500 !text-white !font-bold !rounded-xl !w-full" />
             </div>
           </div>
