@@ -302,10 +302,13 @@ const suite = await createFullAgentSuite(
 
 ### 快速开始
 
-- 📖 [快速部署](./docs/QUICK_DEPLOY.md) - 5 分钟快速部署
-- 📖 [容器部署](./docs/CONTAINERS_QUICK_START.md) - Cloudflare Containers 部署
+- 📖 [项目总结](./PROJECT_SUMMARY_2024.md) - 完整项目总结和业务功能 🆕
+- 📖 [Railway 部署](./docs/RAILWAY_DEPLOY.md) - Railway 容器部署指南 ⭐
+- 📖 [容器方案对比](./docs/CONTAINER_SOLUTIONS.md) - 所有容器方案对比
 - 📖 [Agent Suite 指南](./docs/AGENT_SUITE_GUIDE.md) - 数字生命使用指南
 - 📖 [R2 存储指南](./docs/R2_STORAGE_GUIDE.md) - 文件上传和存储指南
+- 📖 [测试指南](./TESTING_GUIDE.md) - 完整测试指南
+- 📖 [文档中心](./docs/README.md) - 所有文档索引
 
 ### 社交媒体
 
