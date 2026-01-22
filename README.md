@@ -214,16 +214,18 @@ kolmarket_solana/
    - 📖 [快速开始](./docs/CONTAINERS_QUICK_START.md) - 5 步部署
    - 📖 [完整部署指南](./docs/CONTAINERS_DEPLOYMENT.md) - 详细步骤
    - 📖 [最终指南](./docs/CONTAINERS_FINAL.md) - 一键部署
+   - 📖 [**方案对比**](./docs/CONTAINER_SOLUTIONS.md) - **所有容器方案对比** 🆕
 
-2. ⭐⭐⭐⭐ **分离架构**（推荐免费用户）
+2. ⭐⭐⭐⭐ **Railway/Render/Fly.io**（推荐免费用户）
    - ✅ 功能完整
-   - ✅ 成本可控
-   - ✅ 部署到 Railway/Render
+   - ✅ 成本可控（免费试用）
+   - ✅ 快速部署
+   - 📖 [方案对比](./docs/CONTAINER_SOLUTIONS.md) - 详细对比
 
 3. ⭐⭐⭐ **降级实现**（默认，快速上线）
    - ✅ 完全兼容 Cloudflare
    - ✅ 无需额外配置
-   - ⚠️ 功能有限
+   - ⚠️ 功能有限（60%）
 
 **💡 推荐策略**: 
 - **有 Cloudflare 付费计划** → 使用 **Cloudflare Containers**（最佳体验）✅ **代码已就绪**

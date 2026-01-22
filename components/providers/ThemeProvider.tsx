@@ -43,11 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
-  // 防止 hydration 不匹配
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
+  // 始终提供 context，即使在未挂载时也使用默认值，避免 useTheme 报错
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}

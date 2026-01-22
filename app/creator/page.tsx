@@ -16,9 +16,13 @@ import {
     Cpu,
     TrendingUp,
     RefreshCcw,
-    Check
+    Check,
+    Camera,
+    Image as ImageIcon,
+    X
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { FileUpload, UploadedFile } from "@/components/FileUpload";
 
 export default function CreatorPage() {
     const [kolHandle] = useState("ansem");
@@ -28,6 +32,8 @@ export default function CreatorPage() {
     const [revenue, setRevenue] = useState(42902.50);
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [contentImages, setContentImages] = useState<UploadedFile[]>([]);
 
     // 加载设置
     useEffect(() => {
@@ -40,6 +46,9 @@ export default function CreatorPage() {
                     setHumor(data.humor || 42);
                     setFollowers(data.followers || 12500);
                     setRevenue(data.revenue || 42902.50);
+                    if (data.avatarUrl) {
+                        setAvatarUrl(data.avatarUrl);
+                    }
                 }
             } catch (e) {
                 console.error("Failed to load settings:", e);
@@ -49,7 +58,7 @@ export default function CreatorPage() {
     }, [kolHandle]);
 
     // 保存设置
-    const saveSettings = async (newAggression: number, newHumor: number) => {
+    const saveSettings = async (newAggression: number, newHumor: number, newAvatarUrl?: string) => {
         setIsSaving(true);
         try {
             await fetch("/api/creator/settings", {
@@ -58,7 +67,8 @@ export default function CreatorPage() {
                 body: JSON.stringify({
                     kolHandle,
                     aggression: newAggression,
-                    humor: newHumor
+                    humor: newHumor,
+                    avatarUrl: newAvatarUrl || avatarUrl
                 })
             });
             setLastSaved(new Date());
@@ -67,6 +77,17 @@ export default function CreatorPage() {
         } finally {
             setTimeout(() => setIsSaving(false), 800);
         }
+    };
+
+    // 处理头像上传
+    const handleAvatarUpload = (file: UploadedFile) => {
+        setAvatarUrl(file.fileUrl);
+        saveSettings(aggression, humor, file.fileUrl);
+    };
+
+    // 处理内容图片上传
+    const handleContentImageUpload = (file: UploadedFile) => {
+        setContentImages(prev => [...prev, file]);
     };
 
     return (
@@ -86,10 +107,49 @@ export default function CreatorPage() {
                         className="cyber-glass rounded-2xl p-6 border border-cyan-500/20"
                     >
                         <div className="flex flex-col items-center mb-6">
-                            <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-1 mb-4 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-                                <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
-                                    <UserCircle className="w-16 h-16 text-slate-700" />
+                            <div className="relative group">
+                                <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-1 mb-4 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                                    <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
+                                        {avatarUrl ? (
+                                            <img 
+                                                src={avatarUrl} 
+                                                alt="Avatar" 
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <UserCircle className="w-16 h-16 text-slate-700" />
+                                        )}
+                                    </div>
                                 </div>
+                                <label className="absolute bottom-0 right-0 p-2 bg-cyan-500 rounded-full cursor-pointer hover:bg-cyan-400 transition-all shadow-lg group-hover:scale-110">
+                                    <Camera className="w-4 h-4 text-white" />
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept="image/*"
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+                                            
+                                            const formData = new FormData();
+                                            formData.append('file', file);
+                                            formData.append('folder', 'avatars');
+                                            
+                                            try {
+                                                const res = await fetch('/api/storage/upload', {
+                                                    method: 'POST',
+                                                    body: formData,
+                                                });
+                                                const result = await res.json();
+                                                if (result.success) {
+                                                    handleAvatarUpload(result.file);
+                                                }
+                                            } catch (error) {
+                                                console.error('Upload failed:', error);
+                                            }
+                                        }}
+                                    />
+                                </label>
                             </div>
                             <h3 className="text-xl font-bold">@{kolHandle} Clone</h3>
                             <p className="text-xs text-cyan-400 font-mono animate-pulse">Agent Status: ACTIVE</p>
@@ -256,6 +316,46 @@ export default function CreatorPage() {
                             Configure
                         </button>
                     </div>
+
+                    {/* 内容图片上传区域 */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="cyber-glass rounded-2xl p-6 border border-white/10"
+                    >
+                        <div className="flex items-center gap-2 mb-4">
+                            <ImageIcon className="w-5 h-5 text-purple-400" />
+                            <h3 className="text-lg font-bold">内容图片</h3>
+                        </div>
+                        <FileUpload
+                            folder="creator-content"
+                            allowedTypes={['image/*']}
+                            maxSize={10 * 1024 * 1024} // 10MB
+                            multiple={true}
+                            onUploadComplete={handleContentImageUpload}
+                            className="mb-4"
+                        />
+                        {contentImages.length > 0 && (
+                            <div className="grid grid-cols-3 gap-3 mt-4">
+                                {contentImages.map((image) => (
+                                    <div key={image.filePath} className="relative group">
+                                        <img 
+                                            src={image.fileUrl} 
+                                            alt={image.fileName}
+                                            className="w-full h-24 object-cover rounded-lg border border-white/10"
+                                        />
+                                        <button
+                                            onClick={() => setContentImages(prev => prev.filter(img => img.filePath !== image.filePath))}
+                                            className="absolute top-1 right-1 p-1 bg-red-500/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <X className="w-3 h-3 text-white" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </motion.div>
                 </section>
 
                 {/* Right: Live Feed & Actions */}

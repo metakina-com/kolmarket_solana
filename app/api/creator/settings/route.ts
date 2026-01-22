@@ -55,7 +55,8 @@ export async function GET(req: NextRequest) {
             aggression: avatarStats.aggression || 85,
             humor: avatarStats.humor || 42,
             revenue: stats.trader?.totalProfit || 42902.50,
-            followers: stats.avatar?.followers || 12500
+            followers: stats.avatar?.followers || 12500,
+            avatarUrl: avatarStats.avatarUrl || null
         });
     } catch (error) {
         console.error("Failed to fetch settings:", error);
@@ -65,7 +66,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
-        const { kolHandle, aggression, humor } = await req.json();
+        const { kolHandle, aggression, humor, avatarUrl } = await req.json();
 
         const env = (req as any).env;
         const db = getAgentSuiteDB(env);
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
             if (!memDb[kolHandle]) memDb[kolHandle] = { ...memDb.ansem };
             memDb[kolHandle].aggression = aggression;
             memDb[kolHandle].humor = humor;
+            if (avatarUrl) memDb[kolHandle].avatarUrl = avatarUrl;
             return NextResponse.json({ success: true, mode: "memory" });
         }
 
@@ -93,7 +95,7 @@ export async function POST(req: NextRequest) {
                     trader: { enabled: true, status: "stopped" }
                 },
                 stats: {
-                    avatar: { totalTweets: 0, totalInteractions: 0, followers: 12500, engagementRate: 0, ...(aggression !== undefined && { aggression }), ...(humor !== undefined && { humor }) } as any,
+                    avatar: { totalTweets: 0, totalInteractions: 0, followers: 12500, engagementRate: 0, ...(aggression !== undefined && { aggression }), ...(humor !== undefined && { humor }), ...(avatarUrl && { avatarUrl }) } as any,
                     trader: { totalTrades: 0, totalVolume: 0, totalProfit: 42902.50, winRate: 0, followers: 500 }
                 },
                 createdAt: new Date().toISOString(),
@@ -104,8 +106,9 @@ export async function POST(req: NextRequest) {
             await db.updateStats(suite.suiteId, {
                 avatar: {
                     ...suite.stats.avatar,
-                    aggression,
-                    humor
+                    ...(aggression !== undefined && { aggression }),
+                    ...(humor !== undefined && { humor }),
+                    ...(avatarUrl && { avatarUrl })
                 }
             });
         }
