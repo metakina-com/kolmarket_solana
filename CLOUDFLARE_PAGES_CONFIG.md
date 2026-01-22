@@ -28,18 +28,22 @@
 
 #### 步骤 3: 配置构建设置
 
-填写以下信息：
+**若使用 Wrangler 配置文件 (BETA)**：在项目设置中启用 “Read configuration from wrangler.toml”。Cloudflare 会从 `wrangler.toml` 读取 `pages_build_output_dir`，构建命令为 `npx @cloudflare/next-on-pages@1`，通常无需在 Dashboard 中修改构建命令与输出目录。
+
+**若在 Dashboard 中手动填写**，请使用：
 
 ```
 项目名称 (Project name): kolmarket-ai
 生产分支 (Production branch): main
 
 构建设置 (Build settings):
-  框架预设 (Framework preset): Next.js
-  构建命令 (Build command): npm run build
-  构建输出目录 (Build output directory): .next
+  框架预设 (Framework preset): Next.js（或 None）
+  构建命令 (Build command): npx @cloudflare/next-on-pages@1
+  构建输出目录 (Build output directory): .vercel/output/static
   根目录 (Root directory): / (项目根目录)
 ```
+
+⚠️ **注意**：勿使用 `npm run build` + `.next`。本项目通过 `@cloudflare/next-on-pages` 部署，必须使用上述命令与输出目录，否则构建会失败。详见 [Cloudflare Pages 部署成功指南](./CLOUDFLARE_PAGES_DEPLOY_SUCCESS.md)。
 
 #### 步骤 4: 环境变量配置
 
@@ -85,11 +89,13 @@ NODE_ENV=production
 在 **Settings** → **Builds & deployments** 中：
 
 ```
-Framework preset: Next.js
-Build command: npm run build
-Build output directory: .next
+Framework preset: Next.js（或 None）
+Build command: npx @cloudflare/next-on-pages@1
+Build output directory: .vercel/output/static
 Root directory: /
 ```
+
+若启用 Wrangler 配置文件，构建由 `wrangler.toml` 驱动，通常无需修改上述项。
 
 #### 步骤 3: 配置环境变量
 
@@ -106,8 +112,8 @@ Root directory: /
 | 配置项 | Workers | Pages (正确) |
 |--------|---------|--------------|
 | **项目类型** | 脚本/API | Next.js 应用 |
-| **构建命令** | 不需要 | `npm run build` |
-| **输出目录** | 不需要 | `.next` |
+| **构建命令** | 不需要 | `npx @cloudflare/next-on-pages@1` |
+| **输出目录** | 不需要 | `.vercel/output/static` |
 | **框架** | 无 | Next.js |
 | **部署命令** | `npx wrangler deploy` | 自动（Git） |
 
@@ -117,10 +123,10 @@ Root directory: /
 
 - [ ] 项目类型选择为 **Pages**（不是 Workers）
 - [ ] Git 仓库已连接
-- [ ] 构建设置已配置（Next.js）
+- [ ] 构建设置已配置：**构建命令** `npx @cloudflare/next-on-pages@1`，**输出目录** `.vercel/output/static`（或使用 Wrangler 配置）
+- [ ] 所有 API 路由已声明 `export const runtime = 'edge'`（见 [部署成功指南](./CLOUDFLARE_PAGES_DEPLOY_SUCCESS.md)）
 - [ ] 环境变量已添加
-- [ ] D1 数据库绑定已配置
-- [ ] Vectorize 索引绑定已配置
+- [ ] D1 / R2 / AI / Vectorize 等绑定已配置（如使用）
 - [ ] 自定义域名已配置（可选）
 
 ---
@@ -137,6 +143,7 @@ Root directory: /
 
 ## 📚 相关文档
 
+- [Cloudflare Pages 部署成功指南](./CLOUDFLARE_PAGES_DEPLOY_SUCCESS.md) — 构建失败修复、Edge 路由、next-on-pages 配置
 - [Cloudflare Pages 文档](https://developers.cloudflare.com/pages/)
 - [Next.js 部署指南](https://developers.cloudflare.com/pages/framework-guides/nextjs/)
 - [项目配置说明](./CONFIGURE_DOMAIN.md)

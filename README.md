@@ -46,10 +46,12 @@ npm start
 
 ## Cloudflare Pages 部署
 
-1. 确保 `wrangler.toml` 中配置了 AI 绑定
-2. 在 Cloudflare Dashboard 中创建 Pages 项目
-3. 连接 GitHub 仓库或直接上传构建产物
-4. 在 Pages 设置中配置 Workers AI 绑定
+1. 确保 `wrangler.toml` 中配置了 AI、D1、R2 等绑定（见 `wrangler.toml`）
+2. 在 Cloudflare Dashboard 中创建 **Pages** 项目，连接 GitHub 仓库
+3. 构建命令：`npx @cloudflare/next-on-pages@1`，输出目录：`.vercel/output/static`（若使用 Wrangler 配置则自动读取）
+4. 在 Pages 设置中配置 Workers AI、D1、R2、Vectorize 等绑定及环境变量
+
+📋 详见 [Cloudflare Pages 配置指南](./CLOUDFLARE_PAGES_CONFIG.md) 与 [部署成功指南](./CLOUDFLARE_PAGES_DEPLOY_SUCCESS.md)（含构建失败修复说明）。
 
 ## 技术架构层级
 
