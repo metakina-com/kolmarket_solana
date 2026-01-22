@@ -123,9 +123,9 @@
 
 | 项目 | 说明 |
 |------|------|
-| `<img>` → `<Image />` | `app/creator/page.tsx` 两处替换为 `next/image`，优化 LCP 与带宽 |
+| ~~`<img>` → `<Image />`~~ | ✅ 已完成：`app/creator/page.tsx` 头像与内容图已改为 `next/image` |
 | 依赖安全 | 关注 ElizaOS / 插件更新，在合适时机升级并复跑 `npm audit` |
-| E2E / API 测试 | 可完善 `scripts/test-apis.sh` 覆盖 distribute/strategy 等新流程 |
+| E2E / API 测试 | ✅ `test-apis.sh` 已覆盖 distribute/strategy 的 400 校验用例（缺 payer、空 recipients、非法 payer 等） |
 
 ---
 
