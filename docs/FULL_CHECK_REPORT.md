@@ -48,7 +48,7 @@
 
 ### 3.2 其他 API
 
-- **Edge Runtime**: 绝大部分 API 使用 `runtime = "edge"`（chat, agents, knowledge, mindshare, execution, storage, agent-suite 等）.
+- **Edge Runtime**: 所有 API 路由均声明 `runtime = "edge"`（含 chat, agents, knowledge, mindshare, execution, storage, agent-suite 等）。
 - **Storage**: `[path]` 使用 `params: Promise<{ path }>`，符合 Next.js 15。
 - **KMT Automation**: 使用 `getOrCreateKeypair`（`lib/utils/solana-keypair`）。
 
@@ -115,6 +115,8 @@
 
 1. **API 校验**: Distribute / Strategy 对 `payer`、`mint` 做 `PublicKey` 校验，失败时返回 400 而非 500。
 2. **React Hooks**: 修复 `JupiterTerminal`、`KMTAutomationPanel`、`KnowledgeManagement` 的 `useEffect` 依赖告警。
+3. **Cloudflare Pages 部署**: `/api/storage/[path]`、`/api/storage/upload` 添加 `export const runtime = 'edge'`，解决 next-on-pages 构建失败。详见 [CLOUDFLARE_PAGES_DEPLOY_SUCCESS](../CLOUDFLARE_PAGES_DEPLOY_SUCCESS.md)。
+4. **tsconfig**: 移除重复的 `skipLibCheck`，消除 next-on-pages 构建时的 `[duplicate-object-key]` 警告。
 
 ---
 
