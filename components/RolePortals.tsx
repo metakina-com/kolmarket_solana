@@ -18,7 +18,7 @@ const roles = [
         id: "kol",
         title: "I am a KOL",
         subtitle: "Infect Your Spirit",
-        description: "Launch your digital twin. Automate your Twitter, Discord, and Telegram while you sleep. Monitize your influence.",
+        description: "Launch your digital twin. Automate your Twitter, Discord, and Telegram while you sleep. Monetize your influence.",
         icon: UserCircle,
         color: "from-cyan-500 to-blue-600",
         neon: "neon-border-cyan",

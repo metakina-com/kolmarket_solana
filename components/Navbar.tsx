@@ -37,6 +37,9 @@ export function Navbar() {
             <a href="#agents" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Agents
             </a>
+            <a href="#knowledge" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
+              Knowledge
+            </a>
             <a href="#docs" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Docs
             </a>
@@ -115,6 +118,9 @@ export function Navbar() {
             </a>
             <a href="#agents" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Agents
+            </a>
+            <a href="#knowledge" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
+              Knowledge
             </a>
             <a href="#docs" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Docs

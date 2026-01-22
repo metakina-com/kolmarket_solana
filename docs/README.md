@@ -22,6 +22,7 @@
 - [API 文档](./API_DOCUMENTATION.md) - 完整 API 接口文档
 - [数据接口](./DATA_INTERFACES.md) - 数据库和数据结构
 - [技术栈](./TECH_STACK.md) - 技术栈说明
+- [前端 UX 优化方案](./FRONTEND_UX_OPTIMIZATION_PLAN.md) - 页面前端全面优化与用户体验提升方案 🆕
 
 ### 💼 业务文档
 - [商业模式](./BUSINESS_MODEL.md) - 商业模式和收入来源
