@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Database, Upload, FileText, Plus, Trash2, Search } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -18,8 +18,7 @@ export function KnowledgeManagement({ kolHandle }: { kolHandle: string }) {
   const [source, setSource] = useState("");
   const [uploading, setUploading] = useState(false);
 
-  // 加载统计信息
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/knowledge?kolHandle=${kolHandle}`);
@@ -32,7 +31,7 @@ export function KnowledgeManagement({ kolHandle }: { kolHandle: string }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [kolHandle]);
 
   // 添加知识
   const addKnowledge = async () => {
@@ -107,10 +106,9 @@ export function KnowledgeManagement({ kolHandle }: { kolHandle: string }) {
     }
   };
 
-  // 组件挂载时加载统计
   useEffect(() => {
     loadStats();
-  }, [kolHandle]);
+  }, [loadStats]);
 
   return (
     <motion.div

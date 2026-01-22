@@ -46,7 +46,7 @@ export function JupiterTerminal() {
                 }
             });
         }
-    }, [connected, publicKey]);
+    }, [connected, publicKey, signAllTransactions, signTransaction]);
 
     return (
         <div className="w-full h-[600px] cyber-glass rounded-2xl overflow-hidden border border-cyan-500/20">

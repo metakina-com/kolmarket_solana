@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { Clock, Play, Pause, Trash2, Plus, Settings, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
@@ -40,15 +40,8 @@ export function KMTAutomationPanel() {
   const [network, setNetwork] = useState<"devnet" | "mainnet-beta">("devnet");
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  useEffect(() => {
-    if (tokenMint) {
-      loadTasks();
-    }
-  }, [tokenMint, network]);
-
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     if (!tokenMint) return;
-    
     setLoading(true);
     try {
       const res = await fetch(
@@ -63,7 +56,11 @@ export function KMTAutomationPanel() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [tokenMint, network]);
+
+  useEffect(() => {
+    if (tokenMint) loadTasks();
+  }, [tokenMint, loadTasks]);
 
   const executeTask = async (taskId: string) => {
     setLoading(true);
