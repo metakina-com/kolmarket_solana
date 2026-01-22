@@ -64,14 +64,14 @@ export function DistributionPanel() {
       return;
     }
     if (tokenMode) {
+      if (!mint.trim()) {
+        alert("Enter token mint address for token distribution");
+        return;
+      }
       try {
         new PublicKey(mint);
       } catch {
         alert("Invalid token mint address");
-        return;
-      }
-      if (!mint.trim()) {
-        alert("Enter token mint address for token distribution");
         return;
       }
     }
@@ -140,24 +140,49 @@ export function DistributionPanel() {
       )}
 
       {/* Distribution Mode */}
-      <div className="mb-6">
-        <label className="flex items-center gap-2 text-slate-300 mb-2">
+      <div className="mb-6 space-y-3">
+        <label className="flex items-center gap-2 text-slate-300">
           <input
             type="checkbox"
-            checked={usePercentage}
-            onChange={(e) => setUsePercentage(e.target.checked)}
+            checked={tokenMode}
+            onChange={(e) => {
+              setTokenMode(e.target.checked);
+              if (e.target.checked) setUsePercentage(false);
+            }}
             className="rounded"
           />
-          <span>Use percentage distribution</span>
+          <span>SPL Token distribution</span>
         </label>
-        {usePercentage && (
+        {tokenMode && (
           <input
-            type="number"
-            placeholder="Total amount (SOL)"
-            value={totalAmount || ""}
-            onChange={(e) => setTotalAmount(parseFloat(e.target.value) || 0)}
-            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mt-2"
+            type="text"
+            placeholder="Token mint address"
+            value={mint}
+            onChange={(e) => setMint(e.target.value)}
+            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500"
           />
+        )}
+        {!tokenMode && (
+          <>
+            <label className="flex items-center gap-2 text-slate-300 mt-2">
+              <input
+                type="checkbox"
+                checked={usePercentage}
+                onChange={(e) => setUsePercentage(e.target.checked)}
+                className="rounded"
+              />
+              <span>Use percentage distribution</span>
+            </label>
+            {usePercentage && (
+              <input
+                type="number"
+                placeholder="Total amount (SOL)"
+                value={totalAmount || ""}
+                onChange={(e) => setTotalAmount(parseFloat(e.target.value) || 0)}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white mt-2"
+              />
+            )}
+          </>
         )}
       </div>
 
@@ -178,7 +203,17 @@ export function DistributionPanel() {
                 onChange={(e) => updateRecipient(index, "address", e.target.value)}
                 className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500"
               />
-              {usePercentage ? (
+              {tokenMode ? (
+                <input
+                  type="number"
+                  placeholder="Amount (raw token units)"
+                  value={recipient.amount || ""}
+                  onChange={(e) =>
+                    updateRecipient(index, "amount", parseFloat(e.target.value) || 0)
+                  }
+                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+                />
+              ) : usePercentage ? (
                 <input
                   type="number"
                   placeholder="Percentage (%)"
@@ -252,7 +287,7 @@ export function DistributionPanel() {
             Transaction: <span className="font-mono text-xs">{result.transactionHash}</span>
           </p>
           <p className="text-sm text-slate-300 mt-1">
-            Total Amount: {result.totalAmount} SOL
+            Total: {result.totalAmount} {result.mode === "token" ? "token units" : "SOL"}
           </p>
         </motion.div>
       )}

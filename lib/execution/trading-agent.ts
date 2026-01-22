@@ -107,7 +107,7 @@ export async function executeTradingStrategy(
 
   try {
     // 1. 评估策略条件
-    const conditionsMet = await evaluateStrategyConditions(agent, strategy);
+    const conditionsMet = await evaluateStrategyConditions(agent, strategy, signer.publicKey);
     if (!conditionsMet) {
       return {
         id: `exec-${Date.now()}`,
@@ -194,16 +194,53 @@ export async function executeTradingStrategy(
 
 /**
  * 评估策略条件
+ * 支持简单条件格式，如 "balance > 1"、"balance >= 0.5 SOL"
  */
 async function evaluateStrategyConditions(
   agent: TradingAgent,
-  strategy: TradingStrategy
+  strategy: TradingStrategy,
+  payer: PublicKey
 ): Promise<boolean> {
-  // 简化实现：检查所有规则的条件
-  // 实际应该根据条件类型进行评估
   for (const rule of strategy.rules) {
-    // TODO: 实现条件评估逻辑
-    // 例如：价格条件、时间条件、余额条件等
+    const cond = (rule.condition || "").trim();
+    if (!cond) continue;
+
+    const balanceMatch = cond.match(
+      /^balance\s*(>=?|<=?|==?|!=)\s*([\d.]+)(?:\s*SOL)?\s*$/i
+    );
+    if (balanceMatch) {
+      const op = balanceMatch[1];
+      const threshold = parseFloat(balanceMatch[2]);
+      if (Number.isNaN(threshold) || threshold < 0) continue;
+
+      const lamports = await agent.connection.getBalance(payer);
+      const balanceSOL = lamports / LAMPORTS_PER_SOL;
+
+      let ok = false;
+      switch (op) {
+        case ">":
+          ok = balanceSOL > threshold;
+          break;
+        case ">=":
+          ok = balanceSOL >= threshold;
+          break;
+        case "<":
+          ok = balanceSOL < threshold;
+          break;
+        case "<=":
+          ok = balanceSOL <= threshold;
+          break;
+        case "==":
+          ok = Math.abs(balanceSOL - threshold) < 1e-9;
+          break;
+        case "!=":
+          ok = Math.abs(balanceSOL - threshold) >= 1e-9;
+          break;
+        default:
+          ok = true;
+      }
+      if (!ok) return false;
+    }
   }
   return true;
 }

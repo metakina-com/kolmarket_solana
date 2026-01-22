@@ -7,7 +7,7 @@ import { getFileFromR2 } from '@/lib/storage/r2-storage';
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { path: string } }
+  { params }: { params: Promise<{ path: string }> }
 ) {
   try {
     const env = (process.env as unknown) as any;
@@ -20,8 +20,8 @@ export async function GET(
       );
     }
 
-    // 解码文件路径
-    const filePath = decodeURIComponent(params.path);
+    const { path } = await params;
+    const filePath = decodeURIComponent(path);
 
     // 安全检查：防止路径遍历攻击
     if (filePath.includes('..') || filePath.startsWith('/')) {
@@ -64,7 +64,7 @@ export async function GET(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { path: string } }
+  { params }: { params: Promise<{ path: string }> }
 ) {
   try {
     const env = (process.env as unknown) as any;
@@ -77,8 +77,8 @@ export async function DELETE(
       );
     }
 
-    // 解码文件路径
-    const filePath = decodeURIComponent(params.path);
+    const { path } = await params;
+    const filePath = decodeURIComponent(path);
 
     // 安全检查：防止路径遍历攻击
     if (filePath.includes('..') || filePath.startsWith('/')) {
