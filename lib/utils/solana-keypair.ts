@@ -7,12 +7,33 @@ import { Keypair } from "@solana/web3.js";
 
 /**
  * 从环境变量加载 Solana 密钥对
+ * 支持多种格式：
+ * 1. SOLANA_PRIVATE_KEY - 数组格式: [163,222,31,...]
+ * 2. SOLANA_DEVNET_PRIVATE_KEY / SOLANA_MAINNET_PRIVATE_KEY - Hex 字符串格式
  * 
  * @param network - 网络类型 ('devnet' | 'mainnet')
  * @returns Keypair 或 null
  */
 export function loadKeypairFromEnv(network: "devnet" | "mainnet" = "devnet"): Keypair | null {
   try {
+    // 优先尝试使用通用的 SOLANA_PRIVATE_KEY（数组格式）
+    const privateKeyArray = process.env.SOLANA_PRIVATE_KEY;
+    if (privateKeyArray) {
+      try {
+        // 尝试解析数组格式: [163,222,31,...]
+        const bytes = JSON.parse(privateKeyArray) as number[];
+        if (Array.isArray(bytes) && bytes.length === 64) {
+          const keypair = Keypair.fromSecretKey(Uint8Array.from(bytes));
+          console.log(`✅ Loaded keypair from SOLANA_PRIVATE_KEY: ${keypair.publicKey.toBase58()}`);
+          return keypair;
+        }
+      } catch (parseError) {
+        // 如果不是数组格式，继续尝试其他格式
+        console.debug("SOLANA_PRIVATE_KEY is not in array format, trying other formats...");
+      }
+    }
+
+    // 回退到网络特定的环境变量（Hex 格式）
     const envKey = network === "devnet" 
       ? "SOLANA_DEVNET_PRIVATE_KEY"
       : "SOLANA_MAINNET_PRIVATE_KEY";

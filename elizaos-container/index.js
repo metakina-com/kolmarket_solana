@@ -34,6 +34,34 @@ app.use((req, res, next) => {
 // 存储 Agent 实例
 const agents = new Map();
 
+// ==================== 工具函数 ====================
+
+/**
+ * 解析 Solana 私钥（支持数组格式和 Hex 字符串格式）
+ * @param {string} privateKeyEnv - 环境变量中的私钥值
+ * @returns {string|undefined} - 解析后的私钥（Hex 字符串格式）
+ */
+function parseSolanaPrivateKey(privateKeyEnv) {
+  if (!privateKeyEnv) {
+    return undefined;
+  }
+
+  try {
+    // 尝试解析为数组格式: [163,222,31,...]
+    const parsed = JSON.parse(privateKeyEnv);
+    if (Array.isArray(parsed) && parsed.length === 64) {
+      // 将数组转换为 Hex 字符串
+      return parsed.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+  } catch (e) {
+    // 如果不是数组格式，假设是 Hex 字符串格式
+    // 直接返回原值
+  }
+
+  // 如果已经是 Hex 字符串格式，直接返回
+  return privateKeyEnv;
+}
+
 // ==================== 健康检查 ====================
 
 app.get('/health', (req, res) => {

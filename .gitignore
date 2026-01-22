@@ -32,9 +32,11 @@ yarn-error.log*
 # local env files (包含私钥，不要提交)
 .env*.local
 .env.local
+.env.container
 
 # 但保留示例文件
 !.env.local.example
+!.env.container.example
 .env
 
 # vercel

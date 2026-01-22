@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "bash scripts/comprehensive-test.sh",
     "test:api": "./scripts/test-apis.sh",
+    "test:plugins": "./scripts/test-all-plugins.sh",
+    "test:container": "./scripts/test-container.sh",
+    "test:all": "bash scripts/comprehensive-test.sh",
     "deploy": "npx @cloudflare/next-on-pages && npx wrangler pages deploy .vercel/output/static",
     "deploy:preview": "npx @cloudflare/next-on-pages && npx wrangler pages deploy .vercel/output/static --branch=preview"
   },
