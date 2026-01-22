@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadFileToR2, validateFileType, validateFileSize } from '@/lib/storage/r2-storage';
 
+export const runtime = 'edge';
+
 /**
  * POST /api/storage/upload
  * 上传文件到 R2 存储
