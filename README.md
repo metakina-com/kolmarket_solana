@@ -281,6 +281,33 @@ const suite = await createFullAgentSuite(
 
 **💡 推荐**: 有 Cloudflare 付费计划时，使用 **Cloudflare Containers** 方案（代码已完整实现，可直接部署）。
 
+## 📚 文档
+
+### 核心文档
+
+- 📖 [API 文档](./docs/API_DOCUMENTATION.md) - 完整的 API 接口说明
+- 📖 [用户指南](./docs/USER_GUIDE.md) - 详细的使用说明
+- 📖 [商业模式](./docs/BUSINESS_MODEL.md) - 商业模式和收入模式
+- 📖 [数据接口](./docs/DATA_INTERFACES.md) - 数据结构和接口格式
+
+### 技术文档
+
+- 📖 [架构文档](./docs/ARCHITECTURE.md) - 系统架构设计
+- 📖 [部署指南](./docs/DEPLOYMENT_GUIDE.md) - 部署步骤
+- 📖 [测试指南](./docs/TESTING_GUIDE.md) - 测试方法
+
+### 快速开始
+
+- 📖 [快速部署](./docs/QUICK_DEPLOY.md) - 5 分钟快速部署
+- 📖 [容器部署](./docs/CONTAINERS_QUICK_START.md) - Cloudflare Containers 部署
+- 📖 [Agent Suite 指南](./docs/AGENT_SUITE_GUIDE.md) - 数字生命使用指南
+
+### 社交媒体
+
+- 🐦 [Twitter](https://x.com/KOLMARKET)
+- 💬 [Telegram](https://t.me/kolmarketai)
+- 💬 [Discord](https://discord.com/channels/1433748708255727640/1463848664001937533)
+
 ## 许可证
 
 MIT License
