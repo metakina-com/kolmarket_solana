@@ -12,7 +12,7 @@
     "numReplicas": 1,
     "startCommand": "node index.js",
     "healthcheckPath": "/health",
-    "healthcheckTimeout": 30,
+    "healthcheckTimeout": 60,
     "healthcheckInterval": 10,
     "sleepApplication": false,
     "useLegacyStacker": false,

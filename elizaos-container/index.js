@@ -296,12 +296,28 @@ app.post('/api/solana/trade', async (req, res) => {
 // 全局错误处理
 process.on('uncaughtException', (error) => {
   console.error('❌ Uncaught Exception:', error);
+  console.error('❌ Error stack:', error.stack);
   // 不退出进程，让 Railway 的重启策略处理
+  // 但记录详细错误以便调试
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('❌ Unhandled Rejection at:', promise);
+  console.error('❌ Reason:', reason);
+  if (reason instanceof Error) {
+    console.error('❌ Error stack:', reason.stack);
+  }
   // 不退出进程，让 Railway 的重启策略处理
+  // 但记录详细错误以便调试
+});
+
+// 确保进程不会因为警告而退出
+process.on('warning', (warning) => {
+  console.warn('⚠️  Process warning:', warning.name);
+  console.warn('⚠️  Warning message:', warning.message);
+  if (warning.stack) {
+    console.warn('⚠️  Warning stack:', warning.stack);
+  }
 });
 
 // 优雅关闭
@@ -334,38 +350,99 @@ process.on('SIGINT', () => {
 
 // ==================== 启动服务器 ====================
 
+// 确保在启动前输出日志
+console.log('🚀 Starting ElizaOS Container...');
+console.log(`📦 Node version: ${process.version}`);
+console.log(`📦 Platform: ${process.platform}`);
+
 const port = parseInt(process.env.PORT || '3001', 10);
 const host = process.env.HOST || '0.0.0.0';
 
 // 验证端口
 if (isNaN(port) || port < 1 || port > 65535) {
   console.error('❌ Invalid PORT:', process.env.PORT);
-  process.exit(1);
+  console.error('❌ Using default port 3001');
+  const defaultPort = 3001;
+  startServer(defaultPort, host);
+} else {
+  startServer(port, host);
 }
 
-// 启动服务器
-const server = app.listen(port, host, () => {
-  console.log(`🚀 ElizaOS Container running on ${host}:${port}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔌 Plugins available:`);
-  console.log(`   - Twitter: ${process.env.TWITTER_API_KEY ? '✅' : '❌'}`);
-  console.log(`   - Discord: ${process.env.DISCORD_BOT_TOKEN ? '✅' : '❌'}`);
-  console.log(`   - Telegram: ${process.env.TELEGRAM_BOT_TOKEN ? '✅' : '❌'}`);
-  console.log(`   - Solana: ${process.env.SOLANA_PRIVATE_KEY || process.env.SOLANA_PUBLIC_KEY ? '✅' : '❌'}`);
-  console.log(`✅ Server started successfully`);
-});
+function startServer(serverPort, serverHost) {
+  try {
+    // 启动服务器
+    const server = app.listen(serverPort, serverHost, () => {
+      console.log(`✅ ElizaOS Container running on ${serverHost}:${serverPort}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔌 Plugins available:`);
+      console.log(`   - Twitter: ${process.env.TWITTER_API_KEY ? '✅' : '❌'}`);
+      console.log(`   - Discord: ${process.env.DISCORD_BOT_TOKEN ? '✅' : '❌'}`);
+      console.log(`   - Telegram: ${process.env.TELEGRAM_BOT_TOKEN ? '✅' : '❌'}`);
+      console.log(`   - Solana: ${process.env.SOLANA_PRIVATE_KEY || process.env.SOLANA_PUBLIC_KEY ? '✅' : '❌'}`);
+      console.log(`✅ Server started successfully`);
+      console.log(`🌐 Health check: http://${serverHost}:${serverPort}/health`);
+      
+      // 立即测试健康检查
+      setTimeout(() => {
+        const http = require('http');
+        const options = {
+          hostname: serverHost === '0.0.0.0' ? 'localhost' : serverHost,
+          port: serverPort,
+          path: '/health',
+          method: 'GET',
+          timeout: 2000
+        };
+        
+        const req = http.request(options, (res) => {
+          console.log(`✅ Internal health check: ${res.statusCode}`);
+        });
+        
+        req.on('error', (err) => {
+          console.warn(`⚠️  Internal health check failed: ${err.message}`);
+        });
+        
+        req.on('timeout', () => {
+          req.destroy();
+          console.warn(`⚠️  Internal health check timeout`);
+        });
+        
+        req.end();
+      }, 1000);
+    });
 
-// 服务器错误处理
-server.on('error', (error) => {
-  if (error.code === 'EADDRINUSE') {
-    console.error(`❌ Port ${port} is already in use`);
-  } else {
-    console.error('❌ Server error:', error);
+    // 服务器错误处理
+    server.on('error', (error) => {
+      console.error('❌ Server error:', error);
+      if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${serverPort} is already in use`);
+        console.error(`❌ Trying to use port ${serverPort + 1}...`);
+        // 尝试下一个端口
+        setTimeout(() => {
+          startServer(serverPort + 1, serverHost);
+        }, 1000);
+      } else {
+        console.error('❌ Fatal server error, exiting...');
+        process.exit(1);
+      }
+    });
+
+    // 监听连接事件
+    server.on('connection', (socket) => {
+      // 可选：记录连接信息
+      // console.log(`📡 New connection from ${socket.remoteAddress}`);
+    });
+
+    // 定期健康检查日志（每5分钟）
+    setInterval(() => {
+      console.log(`💓 Health check - ${new Date().toISOString()} - Agents: ${agents.size} - Uptime: ${Math.round(process.uptime())}s`);
+    }, 5 * 60 * 1000);
+
+    // 启动时立即输出健康检查日志
+    console.log(`💓 Initial health check - ${new Date().toISOString()}`);
+    
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    console.error('❌ Error stack:', error.stack);
+    process.exit(1);
   }
-  process.exit(1);
-});
-
-// 定期健康检查日志（每5分钟）
-setInterval(() => {
-  console.log(`💓 Health check - ${new Date().toISOString()} - Agents: ${agents.size}`);
-}, 5 * 60 * 1000);
+}

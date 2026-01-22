@@ -1,9 +1,8 @@
 node_modules
 npm-debug.log
-.env
-.env.local
 .git
 .gitignore
-README.md
+.env
+.env.local
 *.md
 .DS_Store
