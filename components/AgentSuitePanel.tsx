@@ -237,8 +237,16 @@ export default function AgentSuitePanel({ kolHandle, kolName }: AgentSuitePanelP
                 } : undefined,
               }}
               onSave={async (config) => {
-                // TODO: 实现配置保存逻辑
-                console.log("Saving config:", config);
+                const res = await fetch("/api/agent-suite/config", {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ suiteId: suite.suiteId, config }),
+                });
+                if (!res.ok) {
+                  const data = await res.json().catch(() => ({}));
+                  throw new Error(data.error || data.message || "保存配置失败");
+                }
+                await loadSuite();
               }}
             />
             <button

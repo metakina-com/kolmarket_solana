@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFileFromR2 } from '@/lib/storage/r2-storage';
 
+export const runtime = 'edge';
+
 /**
  * GET /api/storage/[path]
  * 从 R2 获取文件（用于访问上传的文件）

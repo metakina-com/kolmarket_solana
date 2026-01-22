@@ -71,6 +71,7 @@ export default function AgentSuiteConfig({
       setIsOpen(false);
     } catch (error) {
       console.error("Failed to save config:", error);
+      alert(error instanceof Error ? error.message : "保存配置失败");
     } finally {
       setLoading(false);
     }

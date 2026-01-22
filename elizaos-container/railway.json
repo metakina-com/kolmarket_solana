@@ -12,15 +12,11 @@
     "numReplicas": 1,
     "startCommand": "node index.js",
     "healthcheckPath": "/health",
+    "healthcheckTimeout": 30,
+    "healthcheckInterval": 10,
     "sleepApplication": false,
     "useLegacyStacker": false,
-    "multiRegionConfig": {
-      "us-west2": {
-        "numReplicas": 1
-      }
-    },
     "restartPolicyType": "ON_FAILURE",
-    "healthcheckTimeout": 100,
     "restartPolicyMaxRetries": 10
   }
 }
