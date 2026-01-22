@@ -249,6 +249,41 @@ export class AgentSuiteDB {
   }
 
   /**
+   * 更新 Suite 配置（avatar_config, mod_config, trader_config）
+   */
+  async updateSuiteConfig(
+    suiteId: string,
+    config: { avatar?: AvatarConfig; mod?: ModConfig; trader?: TraderConfig }
+  ): Promise<void> {
+    const updates: string[] = [];
+    const values: any[] = [];
+
+    if (config.avatar !== undefined) {
+      updates.push("avatar_config = ?");
+      values.push(JSON.stringify(config.avatar));
+    }
+    if (config.mod !== undefined) {
+      updates.push("mod_config = ?");
+      values.push(JSON.stringify(config.mod));
+    }
+    if (config.trader !== undefined) {
+      updates.push("trader_config = ?");
+      values.push(JSON.stringify(config.trader));
+    }
+
+    if (updates.length === 0) return;
+
+    updates.push("updated_at = ?");
+    values.push(Date.now());
+    values.push(suiteId);
+
+    await this.db
+      .prepare(`UPDATE agent_suites SET ${updates.join(", ")} WHERE id = ?`)
+      .bind(...values)
+      .run();
+  }
+
+  /**
    * 更新统计数据
    */
   async updateStats(

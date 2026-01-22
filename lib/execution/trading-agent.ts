@@ -330,23 +330,24 @@ async function generateInstructionFromRule(
 }
 
 /**
- * 执行分红分配
- * 
+ * 执行分红分配（已弃用）
+ *
+ * 分红已统一走用户钱包签名流程，请使用：
+ * - POST /api/execution/distribute：构建未签名交易，前端签名后广播
+ * - lib/execution/distribution：buildSOLDistributionTransaction / buildTokenDistributionTransaction
+ *
+ * @deprecated 使用 distribute API + 用户钱包签名
  * @param agent - 交易智能体实例
  * @param recipients - 接收者列表
  * @param amounts - 分配金额
  * @returns 交易哈希
  */
 export async function executeDistribution(
-  agent: any,
-  recipients: PublicKey[],
-  amounts: number[]
+  _agent: any,
+  _recipients: PublicKey[],
+  _amounts: number[]
 ): Promise<string> {
-  // TODO: 实现分红逻辑
-  // 1. 验证分配参数
-  // 2. 创建批量转账交易
-  // 3. 签名并发送交易
-  // 4. 返回交易哈希
-
-  return "";
+  throw new Error(
+    "executeDistribution is deprecated. Use POST /api/execution/distribute with user wallet signing instead."
+  );
 }

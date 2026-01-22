@@ -43,22 +43,13 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // 更新配置（这里简化处理，实际应该更新数据库中的配置字段）
-    // 注意：当前实现中，配置存储在 agent_suites 表的 *_config 字段中
-    // 如果需要更新配置，需要修改数据库结构或使用单独的配置表
+    const configUpdates: { avatar?: AvatarConfig; mod?: ModConfig; trader?: TraderConfig } = {};
+    if (config.avatar !== undefined) configUpdates.avatar = config.avatar as AvatarConfig;
+    if (config.mod !== undefined) configUpdates.mod = config.mod as ModConfig;
+    if (config.trader !== undefined) configUpdates.trader = config.trader as TraderConfig;
 
-    // 更新模块启用状态
-    if (config.avatar !== undefined) {
-      // TODO: 更新 avatar_config 字段
-      // 这里可以扩展数据库操作来更新配置
-    }
-
-    if (config.mod !== undefined) {
-      // TODO: 更新 mod_config 字段
-    }
-
-    if (config.trader !== undefined) {
-      // TODO: 更新 trader_config 字段
+    if (Object.keys(configUpdates).length > 0) {
+      await db.updateSuiteConfig(suiteId, configUpdates);
     }
 
     return NextResponse.json({
