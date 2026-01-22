@@ -50,10 +50,9 @@ export async function POST(req: NextRequest) {
         connection,
         payerPubkey,
         mintPubkey,
-        recipients.map((r: { address: string; amount: number }) => ({
-          address: r.address,
-          amount: Number(r.amount),
-        }))
+        recipients,
+        !!usePercentage,
+        usePercentage ? totalAmount : undefined
       );
       return NextResponse.json({
         success: true,

@@ -52,6 +52,7 @@ export function DistributionPanel() {
     const validRecipients = recipients.filter((r) => {
       try {
         new PublicKey(r.address);
+        if (tokenMode) return r.amount > 0;
         return r.amount > 0 || (usePercentage && (r.percentage || 0) > 0);
       } catch {
         return false;
@@ -62,25 +63,43 @@ export function DistributionPanel() {
       alert("Please add at least one valid recipient");
       return;
     }
+    if (tokenMode) {
+      try {
+        new PublicKey(mint);
+      } catch {
+        alert("Invalid token mint address");
+        return;
+      }
+      if (!mint.trim()) {
+        alert("Enter token mint address for token distribution");
+        return;
+      }
+    }
 
     setLoading(true);
     setResult(null);
 
     try {
+      const payload: Record<string, unknown> = {
+        recipients: validRecipients.map((r) => ({
+          address: r.address,
+          amount: r.amount,
+          ...(tokenMode ? {} : { percentage: r.percentage }),
+        })),
+        network: "devnet",
+        payer: publicKey.toBase58(),
+      };
+      if (tokenMode) {
+        payload.mint = mint.trim();
+      } else {
+        payload.totalAmount = totalAmount;
+        payload.usePercentage = usePercentage;
+      }
+
       const res = await fetch("/api/execution/distribute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recipients: validRecipients.map((r) => ({
-            address: r.address,
-            amount: r.amount,
-            percentage: r.percentage,
-          })),
-          totalAmount,
-          usePercentage,
-          network: "devnet",
-          payer: publicKey.toBase58(),
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -98,6 +117,7 @@ export function DistributionPanel() {
       setResult({
         transactionHash: txHash,
         totalAmount: data.totalAmount ?? 0,
+        mode: data.mode ?? "sol",
       });
     } catch (err) {
       console.error("Distribution error:", err);
