@@ -4,6 +4,7 @@ import "./globals.css";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { ClientWalletProvider } from "@/components/providers/ClientWalletProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ToastProvider } from "@/components/providers/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <ClientWalletProvider>
-            {children}
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </ClientWalletProvider>
         </ThemeProvider>
       </body>

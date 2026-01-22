@@ -114,6 +114,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 检查数据库（如果可用）
+    const db = getDB();
+    if (db) {
+      // 检查是否已存在 Suite
+      try {
+        const existingSuite = await db.getSuiteByKOLHandle(kolHandle);
+        if (existingSuite) {
+          // 返回现有 Suite
+          return NextResponse.json({
+            success: true,
+            suite: existingSuite,
+            message: "Agent Suite already exists",
+            existing: true,
+          });
+        }
+      } catch (dbError) {
+        // 如果查询失败，继续创建新 Suite
+        console.warn("Failed to check existing suite:", dbError);
+      }
+    }
+
     // 创建 Suite
     const suite = await createFullAgentSuite(
       kolHandle,
@@ -127,9 +148,27 @@ export async function POST(req: NextRequest) {
     );
 
     // 保存到数据库（如果可用）
-    const db = getDB();
     if (db) {
-      await db.createSuite(suite);
+      try {
+        await db.createSuite(suite);
+      } catch (dbError: any) {
+        // 如果是 UNIQUE constraint 错误，尝试获取现有 Suite
+        if (dbError?.message?.includes("UNIQUE constraint") || 
+            dbError?.message?.includes("SQLITE_CONSTRAINT")) {
+          console.warn("Suite already exists, fetching existing suite");
+          const existingSuite = await db.getSuiteByKOLHandle(kolHandle);
+          if (existingSuite) {
+            return NextResponse.json({
+              success: true,
+              suite: existingSuite,
+              message: "Agent Suite already exists",
+              existing: true,
+            });
+          }
+        }
+        // 其他数据库错误，记录但不阻止返回
+        console.error("Database error (non-critical):", dbError);
+      }
     }
 
     return NextResponse.json({

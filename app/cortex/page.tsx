@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Database,
     Upload,
-    Search,
     Network,
     FileText,
     CheckCircle2,
@@ -14,9 +13,9 @@ import {
     Globe,
     Plus,
     Loader2,
-    X
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { useToast } from "@/components/providers/ToastProvider";
 
 interface Dataset {
     name: string;
@@ -25,7 +24,10 @@ interface Dataset {
     status: "SYNCED" | "INDEXING" | "FAILED";
 }
 
+const FILE_INPUT_ID = "cortex-file-upload";
+
 export default function CortexPage() {
+    const toast = useToast();
     const [datasets, setDatasets] = useState<Dataset[]>([
         { name: "Whitepaper_V2.pdf", size: "2.4MB", chunks: 420, status: "SYNCED" },
         { name: "Tokenomics_Model.csv", size: "1.1MB", chunks: 115, status: "SYNCED" },
@@ -34,6 +36,11 @@ export default function CortexPage() {
 
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+
+    const clearFileInput = () => {
+        const el = document.getElementById(FILE_INPUT_ID) as HTMLInputElement | null;
+        if (el) el.value = "";
+    };
 
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -44,12 +51,12 @@ export default function CortexPage() {
 
         try {
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append("file", file);
 
             setUploadProgress(30);
 
-            const response = await fetch('/api/cortex/upload', {
-                method: 'POST',
+            const response = await fetch("/api/cortex/upload", {
+                method: "POST",
                 body: formData,
             });
 
@@ -64,19 +71,26 @@ export default function CortexPage() {
                         name: file.name,
                         size: (file.size / 1024).toFixed(1) + "KB",
                         chunks: result.chunks || Math.floor(Math.random() * 200 + 50),
-                        status: "SYNCED"
+                        status: "SYNCED",
                     };
-                    setDatasets(prev => [newFile, ...prev]);
+                    setDatasets((prev) => [newFile, ...prev]);
                     setIsUploading(false);
+                    toast.success(`Upload complete: ${file.name}`);
                 }, 500);
             } else {
-                alert("Upload failed: " + result.error);
+                clearFileInput();
                 setIsUploading(false);
+                toast.error("Upload failed: " + (result.error || "Unknown error"), () => {
+                    document.getElementById(FILE_INPUT_ID)?.click();
+                });
             }
-        } catch (error) {
-            console.error("Upload error:", error);
-            alert("Connection to Cortex failed.");
+        } catch (err) {
+            console.error("Upload error:", err);
+            clearFileInput();
             setIsUploading(false);
+            toast.error("Connection to Cortex failed.", () => {
+                document.getElementById(FILE_INPUT_ID)?.click();
+            });
         }
     };
 
