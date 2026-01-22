@@ -99,7 +99,7 @@ test_discord() {
         -d "{
             \"suiteId\": \"$SUITE_ID\",
             \"channelId\": \"$CHANNEL_ID\",
-            \"content\": \"测试 Discord 消息 - 来自 KOLMarket 测试脚本 - $(date)\"
+            \"message\": \"测试 Discord 消息 - 来自 KOLMarket 测试脚本 - $(date)\"
         }")
     
     HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
@@ -139,7 +139,7 @@ test_telegram() {
         -d "{
             \"suiteId\": \"$SUITE_ID\",
             \"chatId\": \"$CHAT_ID\",
-            \"content\": \"测试 Telegram 消息 - 来自 KOLMarket 测试脚本 - $(date)\"
+            \"message\": \"测试 Telegram 消息 - 来自 KOLMarket 测试脚本 - $(date)\"
         }")
     
     HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
@@ -179,8 +179,9 @@ test_solana() {
         -H "Content-Type: application/json" \
         -d "{
             \"suiteId\": \"$SUITE_ID\",
-            \"action\": \"balance\",
-            \"token\": \"SOL\"
+            \"action\": \"buy\",
+            \"token\": \"SOL\",
+            \"amount\": 0.001
         }")
     
     HTTP_CODE=$(echo "$RESPONSE" | tail -n1)

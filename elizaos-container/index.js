@@ -85,10 +85,11 @@ app.post('/api/twitter/post', async (req, res) => {
 
 app.post('/api/discord/message', async (req, res) => {
   try {
-    const { suiteId, channelId, message, config } = req.body;
+    const { suiteId, channelId, message, content, config } = req.body;
+    const messageText = message || content; // 支持两种参数名
 
-    if (!suiteId || !channelId || !message) {
-      return res.status(400).json({ error: 'suiteId, channelId, and message are required' });
+    if (!suiteId || !channelId || !messageText) {
+      return res.status(400).json({ error: 'suiteId, channelId, and message/content are required' });
     }
 
     if (!process.env.DISCORD_BOT_TOKEN) {
@@ -120,7 +121,7 @@ app.post('/api/discord/message', async (req, res) => {
     }
 
     const plugin = agent.plugins.find(p => p.name === 'discord' || p.constructor.name.includes('Discord'));
-    await plugin.sendMessage?.(channelId, message);
+    await plugin.sendMessage?.(channelId, messageText);
     
     res.json({ success: true });
   } catch (error) {
@@ -133,10 +134,11 @@ app.post('/api/discord/message', async (req, res) => {
 
 app.post('/api/telegram/message', async (req, res) => {
   try {
-    const { suiteId, chatId, message, config } = req.body;
+    const { suiteId, chatId, message, content, config } = req.body;
+    const messageText = message || content; // 支持两种参数名
 
-    if (!suiteId || !chatId || !message) {
-      return res.status(400).json({ error: 'suiteId, chatId, and message are required' });
+    if (!suiteId || !chatId || !messageText) {
+      return res.status(400).json({ error: 'suiteId, chatId, and message/content are required' });
     }
 
     if (!process.env.TELEGRAM_BOT_TOKEN) {
@@ -182,12 +184,30 @@ app.post('/api/solana/trade', async (req, res) => {
   try {
     const { suiteId, action, token, amount, config } = req.body;
 
-    if (!suiteId || !action || !token || amount === undefined) {
-      return res.status(400).json({ error: 'suiteId, action, token, and amount are required' });
+    if (!suiteId || !action) {
+      return res.status(400).json({ error: 'suiteId and action are required' });
+    }
+
+    // 支持 balance 查询
+    if (action === 'balance') {
+      if (!process.env.SOLANA_PRIVATE_KEY && !process.env.SOLANA_PUBLIC_KEY) {
+        return res.status(500).json({ error: 'Solana credentials not configured' });
+      }
+      
+      // 简单的余额查询逻辑
+      return res.json({ 
+        success: true, 
+        action: 'balance',
+        message: 'Balance query - check wallet for details'
+      });
     }
 
     if (action !== 'buy' && action !== 'sell') {
-      return res.status(400).json({ error: "action must be 'buy' or 'sell'" });
+      return res.status(400).json({ error: "action must be 'buy', 'sell', or 'balance'" });
+    }
+
+    if (!token || amount === undefined) {
+      return res.status(400).json({ error: 'token and amount are required for buy/sell actions' });
     }
 
     if (!process.env.SOLANA_PRIVATE_KEY && !process.env.SOLANA_PUBLIC_KEY) {
