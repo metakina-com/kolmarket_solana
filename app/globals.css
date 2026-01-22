@@ -65,6 +65,10 @@
     @apply selection:bg-cyan-500/30 selection:text-cyan-200;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-cyan-500/60 ring-offset-2 ring-offset-background;
+  }
 }
 
 @layer utilities {

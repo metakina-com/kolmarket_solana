@@ -5,25 +5,24 @@ import { motion } from "framer-motion";
 import {
     UserCircle,
     Settings,
-    DollarSign,
     Users,
     Share2,
     Twitter,
     MessageCircle,
     BarChart2,
     Lock,
-    Zap,
-    Cpu,
     TrendingUp,
     RefreshCcw,
     Check,
     Camera,
     Image as ImageIcon,
-    X
+    X,
+    LayoutDashboard,
 } from "lucide-react";
 import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
 import { FileUpload, UploadedFile } from "@/components/FileUpload";
+import { MobileDrawer } from "@/components/ui/MobileDrawer";
 
 export default function CreatorPage() {
     const [kolHandle] = useState("ansem");
@@ -35,6 +34,7 @@ export default function CreatorPage() {
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [contentImages, setContentImages] = useState<UploadedFile[]>([]);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     // 加载设置
     useEffect(() => {
@@ -98,10 +98,10 @@ export default function CreatorPage() {
 
             <Navbar />
 
-            <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto grid grid-cols-12 gap-6 pb-12 text-shadow-neon">
+            <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto grid grid-cols-12 gap-6 pb-24 lg:pb-12 text-shadow-neon">
 
-                {/* Left: Agent Personality & Links */}
-                <aside className="col-span-12 lg:col-span-3 space-y-6">
+                {/* Left: Agent & Tuning — desktop only; mobile → drawer */}
+                <aside className="hidden lg:block lg:col-span-3 order-1 space-y-6">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -235,8 +235,19 @@ export default function CreatorPage() {
                     </motion.div>
                 </aside>
 
-                {/* Center: Revenue & Performance */}
-                <section className="col-span-12 lg:col-span-6 space-y-6">
+                {/* Center: Revenue & Performance — priority on mobile */}
+                <section className="col-span-12 lg:col-span-6 order-2 space-y-6">
+                    <div className="flex lg:hidden mb-2">
+                        <button
+                            type="button"
+                            onClick={() => setDrawerOpen(true)}
+                            className="flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-sm font-medium"
+                            aria-label="Open agent and logs"
+                        >
+                            <LayoutDashboard size={18} />
+                            Agent & Logs
+                        </button>
+                    </div>
                     <div className="grid grid-cols-2 gap-6">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -276,7 +287,7 @@ export default function CreatorPage() {
                                 <BarChart2 className="w-5 h-5 text-purple-400" />
                                 Influence Metrics
                             </h3>
-                            <button className="text-xs px-3 py-1 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all font-mono">
+                            <button type="button" className="min-h-[44px] px-3 py-2 text-xs bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50">
                                 LAST 30 DAYS
                             </button>
                         </div>
@@ -320,7 +331,7 @@ export default function CreatorPage() {
                         </button>
                     </div>
 
-                    {/* 内容图片上传区域 */}
+                    {/* Content images upload */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -329,7 +340,7 @@ export default function CreatorPage() {
                     >
                         <div className="flex items-center gap-2 mb-4">
                             <ImageIcon className="w-5 h-5 text-purple-400" />
-                            <h3 className="text-lg font-bold">内容图片</h3>
+                            <h3 className="text-lg font-bold">Content Images</h3>
                         </div>
                         <FileUpload
                             folder="creator-content"
@@ -363,8 +374,8 @@ export default function CreatorPage() {
                     </motion.div>
                 </section>
 
-                {/* Right: Live Feed & Actions */}
-                <aside className="col-span-12 lg:col-span-3 space-y-6">
+                {/* Right: Live Feed & Actions — desktop only; mobile → drawer */}
+                <aside className="hidden lg:block lg:col-span-3 order-3 space-y-6">
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -403,6 +414,67 @@ export default function CreatorPage() {
                 </aside>
 
             </div>
+
+            <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Agent & Logs">
+                <div className="space-y-6">
+                    <div className="cyber-glass rounded-2xl p-6 border border-cyan-500/20">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-0.5 flex items-center justify-center overflow-hidden bg-slate-900">
+                                {avatarUrl ? (
+                                    <Image src={avatarUrl} alt="Avatar" width={56} height={56} className="rounded-full object-cover" />
+                                ) : (
+                                    <UserCircle className="w-10 h-10 text-slate-600" />
+                                )}
+                            </div>
+                            <div>
+                                <h3 className="font-bold">@{kolHandle} Clone</h3>
+                                <p className="text-[10px] text-cyan-400 font-mono">ACTIVE</p>
+                            </div>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <div className="flex justify-between text-xs mb-1">
+                                    <span className="text-slate-400">Aggression</span>
+                                    <span className="text-cyan-400 font-mono">{aggression}%</span>
+                                </div>
+                                <input type="range" min="0" max="100" value={aggression} onChange={(e) => { const v = parseInt(e.target.value); setAggression(v); saveSettings(v, humor); }} className="w-full h-1.5 bg-slate-800 rounded-lg accent-cyan-500" />
+                            </div>
+                            <div>
+                                <div className="flex justify-between text-xs mb-1">
+                                    <span className="text-slate-400">Humor</span>
+                                    <span className="text-purple-400 font-mono">{humor}%</span>
+                                </div>
+                                <input type="range" min="0" max="100" value={humor} onChange={(e) => { const v = parseInt(e.target.value); setHumor(v); saveSettings(aggression, v); }} className="w-full h-1.5 bg-slate-800 rounded-lg accent-purple-500" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="cyber-glass rounded-2xl p-6 border border-white/5">
+                        <h3 className="font-bold mb-4 flex items-center gap-2">
+                            <RefreshCcw className="w-5 h-5 text-yellow-400" />
+                            Live Ledger
+                        </h3>
+                        <div className="space-y-3">
+                            {[{ time: "14:20", msg: "Replied to @elonmusk re SOL scaling." }, { time: "14:15", msg: "Analyzed $KMT mindshare." }, { time: "13:58", msg: "Sentiment swap: +0.5 SOL." }].map((log, i) => (
+                                <div key={i} className="relative pl-4 border-l border-white/10 py-1">
+                                    <div className="absolute -left-[5px] top-1.5 w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                                    <div className="text-[10px] text-slate-500 font-mono">{log.time}</div>
+                                    <p className="text-xs text-slate-300">{log.msg}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-6 space-y-2">
+                            <button type="button" className="w-full min-h-[44px] py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                                <Share2 size={16} />
+                                BroadCast Alpha
+                            </button>
+                            <button type="button" className="w-full min-h-[44px] py-3 bg-slate-800 rounded-xl font-bold text-slate-400 text-sm flex items-center justify-center gap-2 border border-white/5">
+                                <Settings size={16} />
+                                Agent Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </MobileDrawer>
         </main>
     );
 }

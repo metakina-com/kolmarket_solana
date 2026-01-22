@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Database,
     Upload,
     Network,
     FileText,
@@ -13,9 +12,11 @@ import {
     Globe,
     Plus,
     Loader2,
+    LayoutDashboard,
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/components/providers/ToastProvider";
+import { MobileDrawer } from "@/components/ui/MobileDrawer";
 
 interface Dataset {
     name: string;
@@ -36,6 +37,7 @@ export default function CortexPage() {
 
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const clearFileInput = () => {
         const el = document.getElementById(FILE_INPUT_ID) as HTMLInputElement | null;
@@ -101,10 +103,10 @@ export default function CortexPage() {
 
             <Navbar />
 
-            <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto grid grid-cols-12 gap-6 pb-12">
+            <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto grid grid-cols-12 gap-6 pb-24 lg:pb-12">
 
-                {/* Left: Memory Stats & Nodes */}
-                <aside className="col-span-12 lg:col-span-4 space-y-6">
+                {/* Left: Stats & Map — desktop only; mobile → drawer */}
+                <aside className="hidden lg:block lg:col-span-4 order-1 space-y-6">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -161,8 +163,19 @@ export default function CortexPage() {
                     </motion.div>
                 </aside>
 
-                {/* Center: Knowledge Base & Uploads */}
-                <section className="col-span-12 lg:col-span-8 space-y-6">
+                {/* Center: Datasets — priority on mobile */}
+                <section className="col-span-12 lg:col-span-8 order-2 space-y-6">
+                    <div className="flex flex-wrap items-center gap-2 mb-2 lg:hidden">
+                        <button
+                            type="button"
+                            onClick={() => setDrawerOpen(true)}
+                            className="flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-sm font-medium"
+                            aria-label="Open stats and neural map"
+                        >
+                            <LayoutDashboard size={18} />
+                            Stats & Map
+                        </button>
+                    </div>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -210,12 +223,12 @@ export default function CortexPage() {
                                 <button
                                     type="button"
                                     onClick={() => document.getElementById(FILE_INPUT_ID)?.click()}
-                                    className="flex-1 md:flex-none px-6 py-3 bg-white text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-cyan-400 transition-all active:scale-95 shadow-xl"
+                                    className="flex-1 md:flex-none min-h-[44px] px-6 py-3 bg-white text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-cyan-400 transition-all active:scale-95 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
                                 >
                                     <Upload size={18} />
                                     Inject Data
                                 </button>
-                                <button type="button" className="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition-all" aria-label="Refresh">
+                                <button type="button" className="min-w-[44px] min-h-[44px] p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50" aria-label="Refresh">
                                     <RefreshCcw size={18} />
                                 </button>
                             </div>
@@ -291,6 +304,39 @@ export default function CortexPage() {
                 </section>
 
             </div>
+
+            <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Stats & Neural Map">
+                <div className="space-y-6">
+                    <div className="cyber-glass rounded-2xl p-6 border border-cyan-500/20">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-3 bg-cyan-500/10 rounded-2xl">
+                                <Cpu className="text-cyan-400 w-8 h-8" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-black tracking-tighter">KNOWLEDGE CORTEX</h2>
+                                <p className="text-[10px] text-slate-500 font-mono uppercase">Neural Vector Engine v4.0</p>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="p-4 bg-slate-900/50 border border-white/5 rounded-xl">
+                                <div className="text-xs text-slate-500 mb-1">Index Size</div>
+                                <div className="text-xl font-bold font-mono">14.2 GB</div>
+                            </div>
+                            <div className="p-4 bg-slate-900/50 border border-white/5 rounded-xl">
+                                <div className="text-xs text-slate-500 mb-1">Active Vectors</div>
+                                <div className="text-xl font-bold font-mono">{(datasets.reduce((acc, d) => acc + d.chunks, 0) * 1.5).toFixed(0)}K</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="cyber-glass rounded-2xl p-6 border border-white/5 h-48 relative overflow-hidden flex items-center justify-center">
+                        <Network className="w-24 h-24 text-cyan-400 opacity-20" />
+                        <div className="absolute text-center z-10">
+                            <div className="text-xs font-mono text-cyan-400">Neural Map</div>
+                            <div className="text-[10px] text-slate-500">{datasets.length} sources linked</div>
+                        </div>
+                    </div>
+                </div>
+            </MobileDrawer>
         </main>
     );
 }

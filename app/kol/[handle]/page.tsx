@@ -132,7 +132,7 @@ export default function KOLDetailPage({ params }: PageProps) {
               <h2 className="text-2xl font-bold text-foreground">Agent Suite</h2>
             </div>
             <p className="text-muted-foreground">
-              基于 ElizaOS 的完整智能体套件，让数字生命真正活起来
+              Full Agent Suite powered by ElizaOS — bring your digital twin to life.
             </p>
           </div>
           <AgentSuitePanel kolHandle={handle} kolName={persona.name} />
@@ -150,10 +150,10 @@ export default function KOLDetailPage({ params }: PageProps) {
               <div className="p-2 bg-cyan-500/20 rounded-lg">
                 <Twitter className="w-5 h-5 text-cyan-400" />
               </div>
-              <h3 className="font-semibold text-foreground">数字分身</h3>
+              <h3 className="font-semibold text-foreground">Digital Twin</h3>
             </div>
             <p className="text-sm text-muted-foreground">
-              24/7 自动发推、互动，永不眠的喊单员。你睡觉时，你的分身帮你维持热度。
+              24/7 automated tweets and engagement. Your twin keeps the buzz while you sleep.
             </p>
           </div>
 
@@ -162,10 +162,10 @@ export default function KOLDetailPage({ params }: PageProps) {
               <div className="p-2 bg-purple-500/20 rounded-lg">
                 <MessageSquare className="w-5 h-5 text-purple-400" />
               </div>
-              <h3 className="font-semibold text-foreground">粉丝客服</h3>
+              <h3 className="font-semibold text-foreground">Community Support</h3>
             </div>
             <p className="text-sm text-muted-foreground">
-              Discord/Telegram 机器人，24小时回复粉丝提问，不用你自己盯着群。
+              Discord/Telegram bots reply to fans 24/7. No need to watch the groups yourself.
             </p>
           </div>
 
@@ -174,10 +174,10 @@ export default function KOLDetailPage({ params }: PageProps) {
               <div className="p-2 bg-green-500/20 rounded-lg">
                 <TrendingUp className="w-5 h-5 text-green-400" />
               </div>
-              <h3 className="font-semibold text-foreground">带单交易</h3>
+              <h3 className="font-semibold text-foreground">Trading & Revenue</h3>
             </div>
             <p className="text-sm text-muted-foreground">
-              链上交易、跟单、自动分红。粉丝可以直接跟你的 AI 钱包买币，你拿自动分红。
+              On-chain trading, copy-trading, and revenue share. Fans follow your AI wallet; you earn automatically.
             </p>
           </div>
         </motion.div>
