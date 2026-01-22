@@ -202,19 +202,20 @@ export default function CortexPage() {
                             <div className="flex gap-3 w-full md:w-auto">
                                 <input
                                     type="file"
-                                    id="file-upload"
+                                    id={FILE_INPUT_ID}
                                     className="hidden"
                                     onChange={handleUpload}
                                     accept=".txt,.pdf,.csv,.md"
                                 />
                                 <button
-                                    onClick={() => document.getElementById('file-upload')?.click()}
+                                    type="button"
+                                    onClick={() => document.getElementById(FILE_INPUT_ID)?.click()}
                                     className="flex-1 md:flex-none px-6 py-3 bg-white text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-cyan-400 transition-all active:scale-95 shadow-xl"
                                 >
                                     <Upload size={18} />
                                     Inject Data
                                 </button>
-                                <button className="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition-all">
+                                <button type="button" className="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition-all" aria-label="Refresh">
                                     <RefreshCcw size={18} />
                                 </button>
                             </div>
@@ -257,7 +258,8 @@ export default function CortexPage() {
                             ))}
 
                             <button
-                                onClick={() => document.getElementById('file-upload')?.click()}
+                                type="button"
+                                onClick={() => document.getElementById(FILE_INPUT_ID)?.click()}
                                 className="w-full border-2 border-dashed border-white/5 rounded-2xl p-10 flex flex-col items-center justify-center gap-3 hover:border-white/10 hover:bg-white/5 transition-all group"
                             >
                                 <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-600 group-hover:text-white transition-colors">

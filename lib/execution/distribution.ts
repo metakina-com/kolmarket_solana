@@ -13,6 +13,7 @@ import {
   sendAndConfirmTransaction,
   Keypair,
 } from "@solana/web3.js";
+import { tradingHistoryManager } from "./trading-history";
 
 export interface DistributionRecipient {
   address: PublicKey;
@@ -117,12 +118,23 @@ export async function executeSOLDistribution(
     { commitment: "confirmed" }
   );
 
-  return {
+  const result: DistributionResult = {
     transactionHash: signature,
     recipients,
     totalAmount,
     timestamp: new Date().toISOString(),
   };
+
+  // 记录到历史
+  const network = connection.rpcEndpoint.includes("mainnet") ? "mainnet" : "devnet";
+  tradingHistoryManager.addFromDistribution(
+    result,
+    signer.publicKey.toBase58(),
+    network,
+    "sol"
+  );
+
+  return result;
 }
 
 const estimatedFeePerTransfer = 5000;
@@ -379,10 +391,22 @@ export async function executeTokenDistribution(
     { commitment: "confirmed" }
   );
 
-  return {
+  const result: DistributionResult = {
     transactionHash: signature,
     recipients,
     totalAmount: built.totalAmount,
     timestamp: new Date().toISOString(),
   };
+
+  // 记录到历史
+  const network = connection.rpcEndpoint.includes("mainnet") ? "mainnet" : "devnet";
+  tradingHistoryManager.addFromDistribution(
+    result,
+    signer.publicKey.toBase58(),
+    network,
+    "token",
+    tokenMint.toBase58()
+  );
+
+  return result;
 }

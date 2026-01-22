@@ -106,7 +106,7 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-6 space-y-4 border-t border-slate-200/20 dark:border-white/5 animate-in fade-in slide-in-from-top-4">
+          <div className="md:hidden py-6 space-y-4 border-t border-slate-200/20 dark:border-white/5 opacity-100 transition-opacity duration-200">
             <a href="#whitepaper" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               $KMT Token
             </a>

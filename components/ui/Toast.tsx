@@ -31,10 +31,9 @@ export function Toast({ message, type, retry, duration = 4000, onClose }: ToastP
       initial={{ opacity: 0, y: -12, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -8, scale: 0.96 }}
-      className="flex items-start gap-3 p-4 rounded-xl border bg-card shadow-lg min-w-[280px] max-w-[420px]"
-      style={{
-        borderColor: isSuccess ? "rgba(34, 197, 94, 0.3)" : "rgba(239, 68, 68, 0.3)",
-      }}
+      className={`flex items-start gap-3 p-4 rounded-xl border bg-card shadow-lg min-w-[280px] max-w-[420px] ${
+        isSuccess ? "border-green-500/30" : "border-red-500/30"
+      }`}
     >
       <Icon
         size={20}
@@ -49,7 +48,7 @@ export function Toast({ message, type, retry, duration = 4000, onClose }: ToastP
               retry();
               onClose();
             }}
-            className="mt-2 flex items-center gap-1.5 px-2.5 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-lg text-cyan-400 text-xs font-medium transition-colors"
+            className="mt-2 flex items-center gap-1.5 px-2.5 py-1.5 min-h-[44px] bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-lg text-cyan-400 text-xs font-medium transition-colors"
           >
             <RefreshCw size={12} />
             Retry

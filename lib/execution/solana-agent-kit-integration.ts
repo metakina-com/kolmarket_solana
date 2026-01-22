@@ -8,7 +8,8 @@
  * - 所有导入都在函数内部进行，避免静态导入
  */
 
-import type { Connection, PublicKey, Keypair } from "@solana/web3.js";
+import type { Connection, Keypair } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import type { TradingStrategy, TradingExecution } from "./trading-agent";
 
 // 类型定义（避免直接导入）
@@ -75,40 +76,99 @@ export async function initializeSolanaAgentKit(
 /**
  * 使用 Solana Agent Kit 执行交易策略
  * 
+ * 注意：Agent Kit主要用于智能体工具调用，实际swap操作使用Jupiter API
+ * 
  * @param agentKit - Agent Kit 实例
  * @param strategy - 交易策略
  * @param userWallet - 用户钱包公钥
+ * @param connection - Solana 连接（用于Jupiter swap）
+ * @param signer - 签名者（可选，用于服务端签名）
  * @returns 执行结果
  */
 export async function executeStrategyWithAgentKit(
   agentKit: SolanaAgentKit,
   strategy: TradingStrategy,
-  userWallet: PublicKey
+  userWallet: PublicKey,
+  connection?: Connection,
+  signer?: any
 ): Promise<TradingExecution> {
   try {
     // 使用 Agent Kit 的工具调用功能
-    // 根据策略规则转换为 Agent Kit 操作
+    // 根据策略规则转换为操作
 
     let transactionHash = "";
+    const transactions: string[] = [];
 
     for (const rule of strategy.rules) {
       if (rule.action === "transfer") {
-        // 使用 Agent Kit 的转账工具
-        // const result = await agentKit.transfer({
-        //   to: new PublicKey(rule.parameters.recipient),
-        //   amount: rule.parameters.amount,
-        //   from: userWallet,
-        // });
-        // transactionHash = result.signature;
+        // 使用 Agent Kit 的转账工具（如果支持）
+        // 或者使用基础web3.js实现
+        try {
+          // 尝试使用Agent Kit的transfer方法（如果存在）
+          if (typeof agentKit.transfer === "function") {
+            const result = await agentKit.transfer({
+              to: new PublicKey(rule.parameters.recipient),
+              amount: rule.parameters.amount,
+              from: userWallet,
+            });
+            if (result?.signature) {
+              transactionHash = result.signature;
+              transactions.push(result.signature);
+            }
+          } else {
+            // 降级到基础实现
+            console.warn("Agent Kit transfer not available, using fallback");
+          }
+        } catch (transferError) {
+          console.error("Transfer via Agent Kit failed:", transferError);
+        }
       } else if (rule.action === "swap") {
-        // 使用 Agent Kit 的 swap 工具
-        // const result = await agentKit.swap({
-        //   inputMint: rule.parameters.inputMint,
-        //   outputMint: rule.parameters.outputMint,
-        //   amount: rule.parameters.amount,
-        //   user: userWallet,
-        // });
-        // transactionHash = result.signature;
+        // 使用 Jupiter swap（Agent Kit不直接支持swap，使用Jupiter API）
+        try {
+          const { buildJupiterSwapTransaction } = await import("./jupiter-swap");
+          const { VersionedTransaction } = await import("@solana/web3.js");
+          
+          if (!connection) {
+            throw new Error("Connection required for Jupiter swap");
+          }
+
+          // 构建swap交易
+          const { serializedTransaction } = await buildJupiterSwapTransaction(
+            {
+              inputMint: rule.parameters.inputMint,
+              outputMint: rule.parameters.outputMint,
+              amount: rule.parameters.amount,
+              slippageBps: rule.parameters.slippageBps || 50,
+              payer: userWallet,
+            },
+            connection
+          );
+
+          // 如果提供了signer，可以立即执行
+          if (signer) {
+            const { executeJupiterSwap } = await import("./jupiter-swap");
+            const swapResult = await executeJupiterSwap(
+              {
+                inputMint: rule.parameters.inputMint,
+                outputMint: rule.parameters.outputMint,
+                amount: rule.parameters.amount,
+                slippageBps: rule.parameters.slippageBps || 50,
+                payer: userWallet,
+              },
+              connection,
+              signer
+            );
+            transactionHash = swapResult.transactionHash;
+            transactions.push(swapResult.transactionHash);
+          } else {
+            // 返回序列化交易供用户签名
+            // 注意：这种情况下transactionHash为空，需要前端签名后返回
+            console.warn("No signer provided, swap transaction needs user wallet signature");
+          }
+        } catch (swapError) {
+          console.error("Jupiter swap failed:", swapError);
+          throw swapError;
+        }
       }
       // 更多操作类型...
     }
@@ -116,8 +176,8 @@ export async function executeStrategyWithAgentKit(
     return {
       id: `exec-${Date.now()}`,
       strategyId: strategy.id,
-      transactionHash,
-      status: transactionHash ? "success" : "failed",
+      transactionHash: transactionHash || transactions[0] || "",
+      status: transactionHash || transactions.length > 0 ? "success" : "failed",
       timestamp: new Date().toISOString(),
     };
   } catch (error) {

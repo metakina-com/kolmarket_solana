@@ -236,13 +236,103 @@ export class KMTAutomationManager {
   }
 
   /**
-   * 计算下次运行时间（简化实现）
+   * 计算下次运行时间（支持基本Cron表达式）
+   *
+   * 支持的格式: "minute hour day month dayOfWeek"
+   * 例如: "0 0 * * *" (每天午夜), 每6小时可用 "0 0,6,12,18 * * *"
    */
   private calculateNextRun(cron: string): string {
-    // 简化实现：假设是每天运行
-    const next = new Date();
-    next.setDate(next.getDate() + 1);
-    next.setHours(0, 0, 0, 0);
+    const parts = cron.trim().split(/\s+/);
+    if (parts.length !== 5) {
+      // 如果不是标准格式，使用简化逻辑
+      const next = new Date();
+      next.setDate(next.getDate() + 1);
+      next.setHours(0, 0, 0, 0);
+      return next.toISOString();
+    }
+
+    const [minute, hour, day, month, dayOfWeek] = parts;
+    const now = new Date();
+    const next = new Date(now);
+
+    // 解析分钟
+    if (minute !== "*") {
+      if (minute.includes("/")) {
+        // 间隔: "*/15" 每15分钟
+        const interval = parseInt(minute.split("/")[1]);
+        const currentMin = now.getMinutes();
+        const nextMin = Math.ceil((currentMin + 1) / interval) * interval;
+        if (nextMin >= 60) {
+          next.setHours(next.getHours() + 1);
+          next.setMinutes(nextMin % 60);
+        } else {
+          next.setMinutes(nextMin);
+        }
+      } else {
+        const targetMin = parseInt(minute);
+        if (!isNaN(targetMin)) {
+          next.setMinutes(targetMin);
+          if (next <= now) {
+            next.setHours(next.getHours() + 1);
+          }
+        }
+      }
+    }
+
+    // 解析小时
+    if (hour !== "*") {
+      if (hour.includes("/")) {
+        // 间隔: "*/6" 每6小时
+        const interval = parseInt(hour.split("/")[1]);
+        const currentHour = now.getHours();
+        const nextHour = Math.ceil((currentHour + 1) / interval) * interval;
+        if (nextHour >= 24) {
+          next.setDate(next.getDate() + 1);
+          next.setHours(nextHour % 24);
+        } else {
+          next.setHours(nextHour);
+        }
+      } else {
+        const targetHour = parseInt(hour);
+        if (!isNaN(targetHour)) {
+          next.setHours(targetHour);
+          next.setMinutes(0);
+          if (next <= now) {
+            next.setDate(next.getDate() + 1);
+          }
+        }
+      }
+    }
+
+    // 解析日期
+    if (day !== "*") {
+      const targetDay = parseInt(day);
+      if (!isNaN(targetDay)) {
+        next.setDate(targetDay);
+        if (next <= now) {
+          next.setMonth(next.getMonth() + 1);
+        }
+      }
+    }
+
+    // 解析月份
+    if (month !== "*") {
+      const targetMonth = parseInt(month) - 1; // JS月份从0开始
+      if (!isNaN(targetMonth)) {
+        next.setMonth(targetMonth);
+        if (next <= now) {
+          next.setFullYear(next.getFullYear() + 1);
+        }
+      }
+    }
+
+    // 如果计算出的时间已经过去，至少设置为明天
+    if (next <= now) {
+      next.setDate(next.getDate() + 1);
+      next.setHours(0);
+      next.setMinutes(0);
+    }
+
     return next.toISOString();
   }
 
