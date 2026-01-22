@@ -158,7 +158,7 @@ export async function listFilesInR2(
     }
 
     const objects = await r2.list(options);
-    return objects.objects.map(obj => obj.key);
+    return objects.objects.map((obj: { key: string }) => obj.key);
   } catch (error) {
     console.error("R2 list files error:", error);
     return [];

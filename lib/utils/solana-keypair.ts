@@ -66,3 +66,13 @@ export function validateKeypair(keypair: Keypair): boolean {
     return false;
   }
 }
+
+/**
+ * 获取或创建密钥对（用于自动化/脚本）
+ * 优先从环境变量加载，否则生成新的（仅演示）
+ */
+export function getOrCreateKeypair(network: "devnet" | "mainnet" = "devnet"): Keypair {
+  const kp = loadKeypairFromEnv(network);
+  if (kp) return kp;
+  return Keypair.generate();
+}

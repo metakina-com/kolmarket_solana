@@ -46,13 +46,15 @@ export async function POST(req: NextRequest) {
 
     if (mint) {
       const mintPubkey = new PublicKey(mint);
+      const tokenRecipients = recipients.map((r: { address: string; amount: number }) => ({
+        address: r.address,
+        amount: Number(r.amount),
+      }));
       const built = await buildTokenDistributionTransaction(
         connection,
         payerPubkey,
         mintPubkey,
-        recipients,
-        !!usePercentage,
-        usePercentage ? totalAmount : undefined
+        tokenRecipients
       );
       return NextResponse.json({
         success: true,
