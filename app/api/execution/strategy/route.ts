@@ -45,7 +45,15 @@ export async function POST(req: NextRequest) {
       maxDailyLoss: 50,
     });
 
-    const payerPubkey = new PublicKey(payer);
+    let payerPubkey: PublicKey;
+    try {
+      payerPubkey = new PublicKey(payer);
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid payer public key format." },
+        { status: 400 }
+      );
+    }
     const built = await buildTradingStrategyTransaction(
       agent,
       strategy as TradingStrategy,

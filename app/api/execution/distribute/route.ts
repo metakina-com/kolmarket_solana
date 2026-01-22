@@ -42,10 +42,26 @@ export async function POST(req: NextRequest) {
       "confirmed"
     );
 
-    const payerPubkey = new PublicKey(payer);
+    let payerPubkey: PublicKey;
+    try {
+      payerPubkey = new PublicKey(payer);
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid payer public key format." },
+        { status: 400 }
+      );
+    }
 
     if (mint) {
-      const mintPubkey = new PublicKey(mint);
+      let mintPubkey: PublicKey;
+      try {
+        mintPubkey = new PublicKey(mint);
+      } catch {
+        return NextResponse.json(
+          { error: "Invalid token mint address." },
+          { status: 400 }
+        );
+      }
       const tokenRecipients = recipients.map((r: { address: string; amount: number }) => ({
         address: r.address,
         amount: Number(r.amount),
