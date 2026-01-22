@@ -21,6 +21,7 @@ import {
     Image as ImageIcon,
     X
 } from "lucide-react";
+import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
 import { FileUpload, UploadedFile } from "@/components/FileUpload";
 
@@ -109,12 +110,14 @@ export default function CreatorPage() {
                         <div className="flex flex-col items-center mb-6">
                             <div className="relative group">
                                 <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-1 mb-4 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-                                    <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
+                                    <div className="relative w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
                                         {avatarUrl ? (
-                                            <img 
-                                                src={avatarUrl} 
-                                                alt="Avatar" 
-                                                className="w-full h-full object-cover"
+                                            <Image
+                                                src={avatarUrl}
+                                                alt="Avatar"
+                                                fill
+                                                sizes="96px"
+                                                className="object-cover"
                                             />
                                         ) : (
                                             <UserCircle className="w-16 h-16 text-slate-700" />
@@ -339,11 +342,13 @@ export default function CreatorPage() {
                         {contentImages.length > 0 && (
                             <div className="grid grid-cols-3 gap-3 mt-4">
                                 {contentImages.map((image) => (
-                                    <div key={image.filePath} className="relative group">
-                                        <img 
-                                            src={image.fileUrl} 
+                                    <div key={image.filePath} className="relative group w-full h-24">
+                                        <Image
+                                            src={image.fileUrl}
                                             alt={image.fileName}
-                                            className="w-full h-24 object-cover rounded-lg border border-white/10"
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            className="object-cover rounded-lg border border-white/10"
                                         />
                                         <button
                                             onClick={() => setContentImages(prev => prev.filter(img => img.filePath !== image.filePath))}

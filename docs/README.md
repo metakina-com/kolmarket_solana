@@ -1,139 +1,110 @@
 # 📚 KOLMarket.ai 文档中心
 
-欢迎来到 KOLMarket.ai 文档中心！这里包含了项目的所有文档和使用说明。
+**最后更新**: 2024-01-22
 
 ---
 
 ## 🎯 快速导航
 
-### 新用户入门
+### 🚀 快速开始
+- [项目总结](../PROJECT_SUMMARY_2024.md) - 完整项目总结和业务功能 🆕
+- [快速启动](../QUICK_START.md) - 5 分钟快速开始
+- [用户指南](./USER_GUIDE.md) - 用户使用指南
 
-1. [用户指南](./USER_GUIDE.md) - 从零开始使用平台
-2. [快速部署](./QUICK_DEPLOY.md) - 5 分钟快速部署
-3. [API 文档](./API_DOCUMENTATION.md) - API 接口说明
+### 📦 部署指南
+- [Railway 部署指南](./RAILWAY_DEPLOY.md) - Railway 容器部署 ⭐
+- [部署指南](./DEPLOYMENT_GUIDE.md) - 完整部署说明
+- [容器方案对比](./CONTAINER_SOLUTIONS.md) - 所有容器方案对比
+- [部署完成总结](../DEPLOYMENT_COMPLETE.md) - 部署状态
 
-### 开发者文档
+### 🔧 技术文档
+- [技术架构](./ARCHITECTURE.md) - 技术架构详解
+- [API 文档](./API_DOCUMENTATION.md) - 完整 API 接口文档
+- [数据接口](./DATA_INTERFACES.md) - 数据库和数据结构
+- [技术栈](./TECH_STACK.md) - 技术栈说明
 
-1. [架构文档](./ARCHITECTURE.md) - 系统架构设计
-2. [技术栈](./TECH_STACK.md) - 技术选型说明
-3. [数据接口](./DATA_INTERFACES.md) - 数据结构和接口格式
-4. [测试指南](./TESTING_GUIDE.md) - 测试方法
+### 💼 业务文档
+- [商业模式](./BUSINESS_MODEL.md) - 商业模式和收入来源
+- [Agent Suite 产品](./AGENT_SUITE_PRODUCT.md) - Agent Suite 产品说明
+- [Agent Suite 指南](./AGENT_SUITE_GUIDE.md) - 使用指南
 
-### 部署文档
+### 🧪 测试和配置
+- [测试指南](../TESTING_GUIDE.md) - 完整测试指南
+- [插件验证](../PLUGINS_VERIFICATION.md) - 插件配置验证
+- [Discord Bot Token 指南](./DISCORD_BOT_TOKEN_GUIDE.md) - Token 获取指南
+- [故障排查](../SERVICE_TROUBLESHOOTING.md) - 服务故障排查
 
-1. [部署指南](./DEPLOYMENT_GUIDE.md) - 完整部署步骤
-2. [容器部署](./CONTAINERS_QUICK_START.md) - Cloudflare Containers 部署
-3. [部署检查清单](./DEPLOYMENT_CHECKLIST.md) - 部署前检查
+### ☁️ Cloudflare 服务
+- [Cloudflare 设置](./CLOUDFLARE_SETUP.md) - Cloudflare 初始化
+- [Cloudflare 服务](./CLOUDFLARE_SERVICES.md) - Cloudflare 服务使用
+- [Cloudflare AI 模型](./CLOUDFLARE_AI_MODELS.md) - AI 模型指南
+- [R2 存储指南](./R2_STORAGE_GUIDE.md) - 文件存储指南
 
-### 业务文档
-
-1. [商业模式](./BUSINESS_MODEL.md) - 商业模式和收入模式
-2. [产品指南](./AGENT_SUITE_PRODUCT.md) - 产品定位和功能
-
----
-
-## 📖 文档分类
-
-### 核心功能文档
-
-| 文档 | 说明 | 状态 |
-|------|------|------|
-| [API 文档](./API_DOCUMENTATION.md) | 完整的 API 接口说明 | ✅ |
-| [用户指南](./USER_GUIDE.md) | 详细的使用说明 | ✅ |
-| [数据接口](./DATA_INTERFACES.md) | 数据结构和接口格式 | ✅ |
-| [商业模式](./BUSINESS_MODEL.md) | 商业模式和收入模式 | ✅ |
-
-### Agent Suite 文档
-
-| 文档 | 说明 | 状态 |
-|------|------|------|
-| [Agent Suite 指南](./AGENT_SUITE_GUIDE.md) | 完整的使用指南 | ✅ |
-| [Agent Suite 快速开始](./AGENT_SUITE_QUICKSTART.md) | 快速开始指南 | ✅ |
-| [Agent Suite 产品](./AGENT_SUITE_PRODUCT.md) | 产品定位和功能 | ✅ |
-| [Agent Suite 数据库](./AGENT_SUITE_DATABASE.md) | 数据库设计 | ✅ |
-
-### 技术文档
-
-| 文档 | 说明 | 状态 |
-|------|------|------|
-| [架构文档](./ARCHITECTURE.md) | 系统架构设计 | ✅ |
-| [技术栈](./TECH_STACK.md) | 技术选型说明 | ✅ |
-| [Cloudflare 服务](./CLOUDFLARE_SERVICES.md) | Cloudflare 服务集成 | ✅ |
-| [Cloudflare 兼容性](./CLOUDFLARE_COMPATIBILITY.md) | 兼容性分析 | ✅ |
-
-### 部署文档
-
-| 文档 | 说明 | 状态 |
-|------|------|------|
-| [部署指南](./DEPLOYMENT_GUIDE.md) | 完整部署步骤 | ✅ |
-| [快速部署](./QUICK_DEPLOY.md) | 5 分钟快速部署 | ✅ |
-| [部署检查清单](./DEPLOYMENT_CHECKLIST.md) | 部署前检查 | ✅ |
-| [容器部署](./CONTAINERS_QUICK_START.md) | Containers 部署 | ✅ |
-| [ElizaOS 容器部署](./DEPLOY_ELIZAOS_CLOUDFLARE.md) | ElizaOS 容器部署 | ✅ |
-
-### 集成文档
-
-| 文档 | 说明 | 状态 |
-|------|------|------|
-| [Cookie.fun 集成](./COOKIE_FUN_INTEGRATION.md) | Cookie.fun API 集成 | ✅ |
-| [RAG 集成](./RAG_INTEGRATION.md) | RAG 知识库集成 | ✅ |
-| [ElizaOS 插件](./ELIZA_PLUGINS_SETUP.md) | ElizaOS 插件设置 | ✅ |
+### 🔌 集成文档
+- [RAG 集成](./RAG_INTEGRATION.md) - RAG 功能说明
+- [集成指南](./INTEGRATION_GUIDE.md) - 技术集成说明
+- [ElizaOS 集成](./ELIZA_AND_AGENT_KIT_STATUS.md) - ElizaOS 状态
 
 ---
 
-## 🔍 按主题查找
+## 📊 文档分类
 
-### 想了解商业模式？
-- [商业模式](./BUSINESS_MODEL.md) - 收入模式、价值分配、增长策略
+### 按功能分类
 
-### 想使用 API？
-- [API 文档](./API_DOCUMENTATION.md) - 所有 API 端点说明
-- [数据接口](./DATA_INTERFACES.md) - 数据格式和结构
+#### Agent Suite（智能体套件）
+- [Agent Suite 产品](./AGENT_SUITE_PRODUCT.md)
+- [Agent Suite 指南](./AGENT_SUITE_GUIDE.md)
+- [Agent Suite 快速开始](./AGENT_SUITE_QUICKSTART.md)
+- [Agent Suite 数据库](./AGENT_SUITE_DATABASE.md)
+- [Agent Suite 示例](./AGENT_SUITE_EXAMPLES.md)
 
-### 想部署项目？
-- [快速部署](./QUICK_DEPLOY.md) - 5 分钟快速部署
-- [部署指南](./DEPLOYMENT_GUIDE.md) - 完整部署步骤
-- [部署检查清单](./DEPLOYMENT_CHECKLIST.md) - 部署前检查
+#### 部署相关
+- [Railway 部署](./RAILWAY_DEPLOY.md) ⭐
+- [容器部署指南](./CONTAINERS_DEPLOYMENT.md)
+- [容器快速开始](./CONTAINERS_QUICK_START.md)
+- [容器最终指南](./CONTAINERS_FINAL.md)
+- [部署检查清单](../DEPLOYMENT_CHECKLIST.md)
 
-### 想使用 Agent Suite？
-- [用户指南](./USER_GUIDE.md) - 详细使用说明
-- [Agent Suite 指南](./AGENT_SUITE_GUIDE.md) - 完整功能说明
-- [Agent Suite 快速开始](./AGENT_SUITE_QUICKSTART.md) - 快速开始
-
-### 想了解技术架构？
-- [架构文档](./ARCHITECTURE.md) - 系统架构设计
-- [技术栈](./TECH_STACK.md) - 技术选型说明
-- [Cloudflare 服务](./CLOUDFLARE_SERVICES.md) - Cloudflare 集成
-
----
-
-## 📊 文档统计
-
-- **总文档数**: 40+
-- **核心文档**: 4 个（API、用户指南、商业模式、数据接口）
-- **技术文档**: 15+ 个
-- **部署文档**: 10+ 个
-- **集成文档**: 10+ 个
+#### 测试相关
+- [测试指南](../TESTING_GUIDE.md)
+- [测试结果](./TEST_RESULTS.md)
+- [完整测试报告](./COMPREHENSIVE_TEST_REPORT.md)
 
 ---
 
-## 🔗 外部资源
+## 🎯 常用文档
 
-- **官网**: https://kolmarket.ai
-- **Twitter**: https://x.com/KOLMARKET
-- **Telegram**: https://t.me/kolmarketai
-- **Discord**: https://discord.com/channels/1433748708255727640/1463848664001937533
-- **GitHub**: https://github.com/metakina-com/kolmarket_solana
+### 新用户
+1. [项目总结](../PROJECT_SUMMARY_2024.md) - 了解项目全貌
+2. [用户指南](./USER_GUIDE.md) - 学习如何使用
+3. [快速启动](../QUICK_START.md) - 开始使用
+
+### 开发者
+1. [API 文档](./API_DOCUMENTATION.md) - API 接口
+2. [技术架构](./ARCHITECTURE.md) - 技术架构
+3. [数据接口](./DATA_INTERFACES.md) - 数据结构
+
+### 部署人员
+1. [Railway 部署指南](./RAILWAY_DEPLOY.md) - Railway 部署
+2. [部署指南](./DEPLOYMENT_GUIDE.md) - 完整部署
+3. [故障排查](../SERVICE_TROUBLESHOOTING.md) - 问题解决
 
 ---
 
-## 📝 文档贡献
+## 📝 文档更新日志
 
-欢迎贡献文档！如果您发现文档有误或需要补充，请：
+### 2024-01-22
+- ✅ 添加项目总结文档
+- ✅ 更新 Railway 部署文档
+- ✅ 添加插件配置指南
+- ✅ 添加测试指南
+- ✅ 添加故障排查文档
 
-1. 提交 Issue
-2. 创建 Pull Request
-3. 联系团队
+### 2024-01-21
+- ✅ 添加 Agent Suite 文档
+- ✅ 添加容器部署文档
+- ✅ 添加 API 文档
+- ✅ 添加用户指南
 
 ---
 

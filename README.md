@@ -4,7 +4,7 @@
 
 **标语**: "Price the Human. Empower the Agent."
 
-**状态**: ✅ **项目 100% 完成，包含 Cloudflare Containers 方案，可直接部署**
+**状态**: ✅ **项目 100% 完成，已部署到 Railway，所有功能已配置**
 
 ## 技术栈
 
