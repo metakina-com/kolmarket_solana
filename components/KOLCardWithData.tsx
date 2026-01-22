@@ -2,7 +2,8 @@
 
 import { KOLCard } from "./KOLCard";
 import { useMindshareData } from "@/lib/hooks/useMindshareData";
-import { Loader2, AlertCircle } from "lucide-react";
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface KOLCardWithDataProps {
   name: string;
@@ -15,45 +16,70 @@ interface KOLCardWithDataProps {
   };
 }
 
+function KOLCardSkeleton() {
+  return (
+    <div className="rounded-2xl p-6 border border-border bg-card/90 backdrop-blur-sm min-h-[420px] animate-pulse">
+      <div className="flex items-start justify-between mb-4">
+        <div className="space-y-2">
+          <div className="h-6 w-24 bg-muted rounded-lg" />
+          <div className="h-4 w-20 bg-muted rounded" />
+        </div>
+        <div className="h-14 w-20 bg-muted rounded-xl" />
+      </div>
+      <div className="flex gap-4 mb-4">
+        <div className="h-4 w-16 bg-muted rounded" />
+        <div className="h-4 w-20 bg-muted rounded" />
+      </div>
+      <div className="h-[200px] bg-muted/50 rounded-xl mb-4" />
+      <div className="flex gap-2">
+        <div className="flex-1 h-11 bg-muted rounded-xl" />
+        <div className="flex-1 h-11 bg-muted rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
 /**
  * 增强版 KOLCard，支持从 API 获取真实数据
  * 如果 API 失败，会使用 fallbackData 作为降级方案
  */
 export function KOLCardWithData({ name, handle, fallbackData }: KOLCardWithDataProps) {
-  const { data, loading, error } = useMindshareData(handle);
+  const { data, loading, error, refetch } = useMindshareData(handle);
 
-  // 加载状态
   if (loading && !data) {
-    return (
-      <div className="bg-white rounded-xl p-6 flex items-center justify-center min-h-[400px] border border-gray-200/80">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-foreground">Loading {name}...</p>
-        </div>
-      </div>
-    );
+    return <KOLCardSkeleton />;
   }
 
-  // 错误状态（使用降级数据）
   if (error && !data && !fallbackData) {
     return (
-      <div className="bg-white rounded-xl p-6 border border-red-500/30">
-        <div className="flex items-center gap-2 text-red-500 mb-2">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl p-6 border border-red-500/30 bg-card/90 backdrop-blur-sm"
+      >
+        <div className="flex items-center gap-2 text-red-400 mb-2">
           <AlertCircle size={20} />
           <span className="font-semibold">Failed to load data</span>
         </div>
-        <p className="text-sm text-gray-500">@{handle}</p>
-      </div>
+        <p className="text-sm text-muted-foreground mb-4">@{handle}</p>
+        <button
+          onClick={() => refetch()}
+          className="flex items-center gap-2 px-4 py-2.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-xl text-cyan-400 text-sm font-medium transition-all min-h-[44px]"
+          aria-label="Retry loading data"
+        >
+          <RefreshCw size={16} />
+          Retry
+        </button>
+      </motion.div>
     );
   }
 
-  // 使用 API 数据或降级数据
   const displayData = data || {
     handle,
-    mindshareScore: fallbackData?.mindshareScore || 0,
-    volume: fallbackData?.volume || "$0",
-    followers: fallbackData?.followers || "0",
-    stats: fallbackData?.stats || [],
+    mindshareScore: fallbackData?.mindshareScore ?? 0,
+    volume: fallbackData?.volume ?? "$0",
+    followers: fallbackData?.followers ?? "0",
+    stats: fallbackData?.stats ?? [],
     lastUpdated: new Date().toISOString(),
   };
 

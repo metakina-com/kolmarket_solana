@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Send, Bot, User, Database } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Send, Bot, User, Database, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { KOLSelector } from "./KOLSelector";
 import { getKOLPersona } from "@/lib/agents/kol-personas";
@@ -9,6 +9,7 @@ import { getKOLPersona } from "@/lib/agents/kol-personas";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  isError?: boolean;
 }
 
 export function ChatInterface() {
@@ -16,9 +17,19 @@ export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [useRAG, setUseRAG] = useState(false); // RAG 功能开关
+  const [useRAG, setUseRAG] = useState(false);
+  const [lastFailedPrompt, setLastFailedPrompt] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Update initial message when KOL changes
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, loading]);
+
   useEffect(() => {
     if (selectedKOL) {
       const persona = getKOLPersona(selectedKOL);
@@ -34,34 +45,36 @@ export function ChatInterface() {
       setMessages([
         {
           role: "assistant",
-          content: "Hey anon! I'm a general purpose AI assistant. Select a KOL to talk to their digital twin, or just chat with me! How can I help you build a better future? 🌿",
+          content:
+            "Hey anon! I'm a general purpose AI assistant. Select a KOL to talk to their digital twin, or just chat with me! How can I help you build a better future? 🌿",
         },
       ]);
     }
   }, [selectedKOL]);
 
-  const handleSend = async () => {
-    if (!input.trim() || loading) return;
+  const sendRequest = async (prompt: string, appendUserMessage: boolean) => {
+    if (!prompt.trim() || loading) return;
 
-    const userMessage: Message = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    if (appendUserMessage) {
+      setMessages((prev) => [...prev, { role: "user", content: prompt }]);
+    }
     setInput("");
     setLoading(true);
+    setLastFailedPrompt(null);
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: input,
+          prompt,
           kolHandle: selectedKOL,
-          useRAG: useRAG && selectedKOL,
+          useRAG: useRAG && !!selectedKOL,
         }),
       });
 
-      // 检查响应状态
       if (!response.ok) {
-        let errorData;
+        let errorData: { error?: string } = {};
         try {
           errorData = await response.json();
         } catch {
@@ -70,38 +83,45 @@ export function ChatInterface() {
         throw new Error(errorData.error || `HTTP ${response.status}: Failed to get response`);
       }
 
-      // 解析 JSON 响应
-      let data;
+      let data: { response?: string; message?: string };
       try {
         data = await response.json();
-      } catch (parseError) {
-        console.error("Failed to parse response:", parseError);
+      } catch {
         throw new Error("Invalid response format from server");
       }
 
-      // 确保响应消息存在
-      const responseContent = data.response || data.message || "🚀 Got your message! In demo mode - try again?";
-      const assistantMessage: Message = { role: "assistant", content: responseContent };
-      setMessages((prev) => [...prev, assistantMessage]);
+      const responseContent =
+        data.response || data.message || "🚀 Got your message! In demo mode - try again?";
+      setMessages((prev) => [...prev, { role: "assistant", content: responseContent }]);
     } catch (error) {
-      console.error("Chat error:", error);
-      // 在开发模式下显示更详细的错误信息
-      const errorMessage = process.env.NODE_ENV === 'development'
-        ? `🔧 Dev mode: ${error instanceof Error ? error.message : 'Unknown error'}. Check console for details.`
-        : "🤖 Oops! Something went wrong. Please try again.";
+      const errorMessage =
+        process.env.NODE_ENV === "development"
+          ? `🔧 Dev: ${error instanceof Error ? error.message : "Unknown error"}. Check console.`
+          : "🤖 Oops! Something went wrong. Please try again.";
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: errorMessage },
+        { role: "assistant", content: errorMessage, isError: true },
       ]);
+      setLastFailedPrompt(prompt);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSend = () => {
+    if (!input.trim() || loading) return;
+    sendRequest(input.trim(), true);
+  };
+
+  const handleRetry = () => {
+    if (!lastFailedPrompt || loading) return;
+    setMessages((prev) => prev.filter((m) => !m.isError));
+    sendRequest(lastFailedPrompt, false);
+  };
+
   return (
-    <div className="cyber-glass rounded-2xl p-6 border border-white/10 max-w-2xl mx-auto shadow-2xl relative overflow-hidden group">
-      {/* Decorative inner glow */}
-      <div className="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 blur-[60px] pointer-events-none group-hover:bg-cyan-500/20 transition-colors" />
+    <div className="rounded-2xl p-6 border border-border bg-card/90 backdrop-blur-sm max-w-2xl mx-auto shadow-xl relative overflow-hidden">
+      <div className="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 blur-[60px] pointer-events-none" />
 
       <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
         Digital Cortex Interface
@@ -115,7 +135,7 @@ export function ChatInterface() {
         <div className="mb-4 flex items-center justify-between p-3 bg-cyan-500/5 rounded-xl border border-cyan-500/20">
           <div className="flex items-center gap-2">
             <Database size={16} className="text-cyan-400" />
-            <span className="text-sm text-slate-300">Enhanced Knowledge Base (RAG)</span>
+            <span className="text-sm text-muted-foreground">Enhanced Knowledge Base (RAG)</span>
             {useRAG && (
               <span className="text-[10px] px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30 font-mono animate-pulse">
                 ACTIVE
@@ -123,19 +143,26 @@ export function ChatInterface() {
             )}
           </div>
           <button
+            type="button"
             onClick={() => setUseRAG(!useRAG)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${useRAG ? "bg-cyan-500" : "bg-slate-800"
-              }`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${
+              useRAG ? "bg-cyan-500" : "bg-muted"
+            }`}
+            aria-label={useRAG ? "Disable RAG" : "Enable RAG"}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${useRAG ? "translate-x-6" : "translate-x-1"
-                }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                useRAG ? "translate-x-6" : "translate-x-1"
+              }`}
             />
           </button>
         </div>
       )}
 
-      <div className="space-y-4 mb-6 h-[400px] overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-slate-800">
+      <div
+        ref={scrollContainerRef}
+        className="space-y-4 mb-6 h-[400px] overflow-y-auto p-2 pr-1"
+      >
         {messages.map((msg, idx) => (
           <motion.div
             key={idx}
@@ -149,49 +176,76 @@ export function ChatInterface() {
               </div>
             )}
             <div
-              className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${msg.role === "user"
-                ? "bg-cyan-500/10 border border-cyan-500/20 text-cyan-50"
-                : "bg-slate-800/40 border border-white/5 text-slate-200"
-                }`}
+              className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${
+                msg.role === "user"
+                  ? "bg-cyan-500/10 border border-cyan-500/20 text-foreground"
+                  : msg.isError
+                    ? "bg-red-500/5 border border-red-500/20 text-foreground"
+                    : "bg-muted/50 border border-border text-foreground"
+              }`}
             >
               {msg.content}
+              {msg.isError && lastFailedPrompt && (
+                <button
+                  type="button"
+                  onClick={handleRetry}
+                  className="mt-3 flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-lg text-cyan-400 text-xs font-medium transition-colors"
+                  aria-label="Retry last message"
+                >
+                  <RefreshCw size={12} />
+                  Retry
+                </button>
+              )}
             </div>
             {msg.role === "user" && (
-              <div className="w-8 h-8 rounded-lg bg-slate-800 border border-white/10 flex items-center justify-center flex-shrink-0">
-                <User size={16} className="text-slate-400" />
+              <div className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center flex-shrink-0">
+                <User size={16} className="text-muted-foreground" />
               </div>
             )}
           </motion.div>
         ))}
         {loading && (
           <div className="flex gap-3">
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
               <Bot size={16} className="text-cyan-400" />
             </div>
-            <div className="bg-slate-800/40 border border-white/5 rounded-2xl p-4">
+            <div className="bg-muted/50 border border-border rounded-2xl p-4">
               <div className="flex gap-1.5">
-                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <span
+                  className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0ms" }}
+                />
+                <span
+                  className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "150ms" }}
+                />
+                <span
+                  className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "300ms" }}
+                />
               </div>
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className="flex gap-3 p-1 bg-slate-950/50 rounded-2xl border border-white/5 focus-within:border-cyan-500/50 transition-colors">
+      <div className="flex gap-3 p-1 bg-muted/30 rounded-2xl border border-border focus-within:border-cyan-500/50 transition-colors">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           placeholder="Transmit signal..."
-          className="flex-1 px-4 py-3 bg-transparent text-white placeholder-slate-600 focus:outline-none"
+          className="flex-1 px-4 py-3 min-h-[44px] bg-transparent text-foreground placeholder-muted-foreground focus:outline-none rounded-xl"
+          aria-label="Chat message"
         />
         <button
+          type="button"
           onClick={handleSend}
           disabled={loading || !input.trim()}
-          className="px-5 py-3 bg-cyan-500 text-slate-950 font-bold rounded-xl disabled:opacity-30 disabled:grayscale transition-all hover:bg-cyan-400 active:scale-95 flex items-center gap-2"
+          className="px-5 py-3 min-h-[44px] bg-cyan-500 text-slate-950 font-bold rounded-xl disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:bg-cyan-400 active:scale-95 flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50"
+          aria-label="Send message"
         >
           <Send size={18} />
         </button>
