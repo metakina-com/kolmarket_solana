@@ -1,79 +1,90 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Connection, Keypair, clusterApiUrl } from "@solana/web3.js";
-import { executeSOLDistribution, executePercentageDistribution } from "@/lib/execution/distribution";
-import { loadKeypairFromEnv } from "@/lib/utils/solana-keypair";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import {
+  buildSOLDistributionTransaction,
+  buildTokenDistributionTransaction,
+} from "@/lib/execution/distribution";
 
-// 使用 Edge runtime（Solana 操作通过容器或降级实现）
 export const runtime = "edge";
 
 /**
  * POST /api/execution/distribute
- * 执行分红分配
- * 
- * 注意：这是一个演示实现，实际生产环境需要：
- * 1. 使用用户的钱包签名，而不是服务器密钥
- * 2. 实现更严格的安全检查
- * 3. 添加权限验证
+ * 构建分红未签名交易，供前端用户钱包签名并广播。
+ * SOL: { recipients, totalAmount?, usePercentage, network?, payer }
+ * Token: { mint, recipients (address + amount 最小单位), network?, payer }
  */
 export async function POST(req: NextRequest) {
   try {
-    const { recipients, totalAmount, usePercentage, network = "devnet" } = await req.json();
+    const body = await req.json();
+    const {
+      recipients,
+      totalAmount,
+      usePercentage,
+      network = "devnet",
+      payer,
+      mint,
+    } = body;
 
     if (!recipients || recipients.length === 0) {
+      return NextResponse.json({ error: "Recipients are required" }, { status: 400 });
+    }
+    if (!payer || typeof payer !== "string") {
       return NextResponse.json(
-        { error: "Recipients are required" },
+        { error: "payer (wallet public key) is required. Sign with your wallet." },
         { status: 400 }
       );
     }
 
-    // 创建连接（实际应该使用环境变量配置）
     const connection = new Connection(
-      network === "mainnet" 
+      network === "mainnet"
         ? process.env.SOLANA_MAINNET_RPC || clusterApiUrl("mainnet-beta")
         : clusterApiUrl("devnet"),
       "confirmed"
     );
 
-    // 从环境变量加载密钥对（开发环境）
-    // ⚠️ 警告：生产环境应该使用用户钱包签名，而不是服务器密钥
-    // 实际实现应该：
-    // 1. 接收用户钱包的公钥
-    // 2. 在前端让用户签名交易
-    // 3. 或者使用安全的签名服务
-    let signer = loadKeypairFromEnv(network);
-    if (!signer) {
-      console.warn("⚠️  No keypair found in env, using generated keypair (for demo only)");
-      signer = Keypair.generate(); // 仅用于演示
+    const payerPubkey = new PublicKey(payer);
+
+    if (mint) {
+      const mintPubkey = new PublicKey(mint);
+      const built = await buildTokenDistributionTransaction(
+        connection,
+        payerPubkey,
+        mintPubkey,
+        recipients.map((r: { address: string; amount: number }) => ({
+          address: r.address,
+          amount: Number(r.amount),
+        }))
+      );
+      return NextResponse.json({
+        success: true,
+        mode: "token",
+        serializedTransaction: built.serializedTransaction,
+        totalAmount: built.totalAmount,
+        recipientCount: built.recipientCount,
+      });
     }
 
-    let result;
-    if (usePercentage && totalAmount) {
-      // 按百分比分配
-      result = await executePercentageDistribution(
-        connection,
-        signer,
-        recipients,
-        totalAmount
-      );
-    } else {
-      // 按固定金额分配
-      result = await executeSOLDistribution(
-        connection,
-        signer,
-        recipients
-      );
-    }
+    const built = await buildSOLDistributionTransaction(
+      connection,
+      payerPubkey,
+      recipients,
+      !!usePercentage,
+      usePercentage ? totalAmount : undefined
+    );
 
     return NextResponse.json({
       success: true,
-      result,
+      mode: "sol",
+      serializedTransaction: built.serializedTransaction,
+      totalAmount: built.totalAmount,
+      recipientCount: built.recipientCount,
     });
-  } catch (error) {
-    console.error("Distribution error:", error);
+  } catch (e) {
+    console.error("Distribution prepare error:", e);
     return NextResponse.json(
       {
-        error: "Failed to execute distribution",
-        message: error instanceof Error ? error.message : "Unknown error",
+        error: "Failed to prepare distribution",
+        message: e instanceof Error ? e.message : "Unknown error",
       },
       { status: 500 }
     );

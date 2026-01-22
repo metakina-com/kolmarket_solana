@@ -1,6 +1,7 @@
 /**
  * 分红分配模块
  * 实现智能分红分配逻辑
+ * 支持：1) 服务端签名（演示） 2) 构建未签名交易供用户钱包签名（生产）
  */
 
 import {
@@ -12,8 +13,6 @@ import {
   sendAndConfirmTransaction,
   Keypair,
 } from "@solana/web3.js";
-// 动态导入避免 Edge Runtime 问题
-// import { getOrCreateAgentKit, executeDistributionWithAgentKit } from "./solana-agent-kit-integration";
 
 export interface DistributionRecipient {
   address: PublicKey;
@@ -26,6 +25,20 @@ export interface DistributionResult {
   recipients: DistributionRecipient[];
   totalAmount: number;
   timestamp: string;
+}
+
+/** 用于前端签名的序列化未签名交易 */
+export interface SerializedDistributionTx {
+  serializedTransaction: string; // base64
+  totalAmount: number;
+  recipientCount: number;
+}
+
+/** Token 分红序列化结果 */
+export interface SerializedTokenDistributionTx {
+  serializedTransaction: string;
+  totalAmount: number; // raw token units
+  recipientCount: number;
 }
 
 /**
@@ -83,36 +96,20 @@ export async function executeSOLDistribution(
     }
   }
 
-  // 检查余额
   const balance = await connection.getBalance(signer.publicKey);
+  const estimatedFee = 5000 * recipients.length;
   const requiredAmount = totalAmount * LAMPORTS_PER_SOL;
-  const estimatedFee = 5000 * recipients.length; // 估算每笔转账费用
-
   if (balance < requiredAmount + estimatedFee) {
     throw new Error(`Insufficient balance. Required: ${(requiredAmount + estimatedFee) / LAMPORTS_PER_SOL} SOL, Available: ${balance / LAMPORTS_PER_SOL} SOL`);
   }
 
-  // 创建交易
-  const transaction = new Transaction();
+  const transaction = await buildSOLDistributionTransactionInternal(
+    connection,
+    signer.publicKey,
+    recipients,
+    totalAmount
+  );
 
-  // 添加所有转账指令
-  for (const recipient of recipients) {
-    const lamports = recipient.amount * LAMPORTS_PER_SOL;
-    transaction.add(
-      SystemProgram.transfer({
-        fromPubkey: signer.publicKey,
-        toPubkey: recipient.address,
-        lamports: Math.floor(lamports),
-      })
-    );
-  }
-
-  // 获取最新区块哈希
-  const { blockhash } = await connection.getLatestBlockhash();
-  transaction.recentBlockhash = blockhash;
-  transaction.feePayer = signer.publicKey;
-
-  // 发送并确认交易
   const signature = await sendAndConfirmTransaction(
     connection,
     transaction,
@@ -126,6 +123,238 @@ export async function executeSOLDistribution(
     totalAmount,
     timestamp: new Date().toISOString(),
   };
+}
+
+/**
+ * 构建 SPL Token 分红未签名交易（供用户钱包签名）
+ * @param connection - Solana 连接
+ * @param payer - 付款人公钥（用户钱包）
+ * @param tokenMint - Token mint 地址
+ * @param recipients - 接收者列表，address 为 base58
+ * @param usePercentage - 是否按百分比
+ * @param totalAmount - 总金额（Token数量），百分比模式必填
+ * @returns 序列化信息，前端反序列化后由用户签名并广播
+ */
+export async function buildTokenDistributionTransaction(
+  connection: Connection,
+  payer: PublicKey,
+  tokenMint: PublicKey,
+  recipients: { address: string; amount: number; percentage?: number }[],
+  usePercentage: boolean,
+  totalAmount?: number
+): Promise<SerializedDistributionTx> {
+  // 动态导入 @solana/spl-token
+  const {
+    getAssociatedTokenAddress,
+    createAssociatedTokenAccountInstruction,
+    getAccount,
+    createTransferInstruction,
+    TOKEN_PROGRAM_ID,
+  } = await import("@solana/spl-token");
+
+  let resolved: DistributionRecipient[];
+  let total: number;
+
+  if (usePercentage && totalAmount != null && totalAmount > 0) {
+    const sum = recipients.reduce((s, r) => s + (r.percentage ?? 0), 0);
+    if (Math.abs(sum - 100) > 0.01) {
+      throw new Error(`Percentages must sum to 100%. Current: ${sum}%`);
+    }
+    resolved = recipients.map((r) => ({
+      address: new PublicKey(r.address),
+      amount: (totalAmount * (r.percentage ?? 0)) / 100,
+      percentage: r.percentage,
+    }));
+    total = totalAmount;
+  } else {
+    resolved = recipients.map((r) => ({
+      address: new PublicKey(r.address),
+      amount: r.amount,
+      percentage: r.percentage,
+    }));
+    total = resolved.reduce((s, r) => s + r.amount, 0);
+  }
+
+  if (resolved.length === 0 || total <= 0) {
+    throw new Error("No valid recipients or total amount is zero");
+  }
+
+  const transaction = new Transaction();
+
+  // 获取发送者的关联代币账户
+  const senderTokenAccount = await getAssociatedTokenAddress(
+    tokenMint,
+    payer
+  );
+
+  // 检查发送者代币账户是否存在
+  try {
+    const senderAccountInfo = await getAccount(connection, senderTokenAccount);
+    const senderBalance = Number(senderAccountInfo.amount);
+    const totalTokenAmount = resolved.reduce((s, r) => s + Math.floor(r.amount), 0);
+    
+    if (senderBalance < totalTokenAmount) {
+      throw new Error(
+        `Insufficient token balance. Required: ${totalTokenAmount}, Available: ${senderBalance}`
+      );
+    }
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("does not exist")) {
+      throw new Error("Sender token account does not exist. Please create it first.");
+    }
+    throw error;
+  }
+
+  // 为每个接收者创建转账指令
+  for (const recipient of resolved) {
+    const recipientPubkey = recipient.address;
+    const amount = Math.floor(recipient.amount);
+    
+    if (amount <= 0) continue;
+
+    // 获取接收者的关联代币账户
+    const recipientTokenAccount = await getAssociatedTokenAddress(
+      tokenMint,
+      recipientPubkey
+    );
+
+    // 检查接收者代币账户是否存在，不存在则创建
+    try {
+      await getAccount(connection, recipientTokenAccount);
+    } catch {
+      // 账户不存在，添加创建指令
+      transaction.add(
+        createAssociatedTokenAccountInstruction(
+          payer, // payer
+          recipientTokenAccount, // associatedTokenAccount
+          recipientPubkey, // owner
+          tokenMint // mint
+        )
+      );
+    }
+
+    // 添加转账指令
+    transaction.add(
+      createTransferInstruction(
+        senderTokenAccount, // source
+        recipientTokenAccount, // destination
+        payer, // owner
+        BigInt(amount), // amount
+        [], // multiSigners
+        TOKEN_PROGRAM_ID // programId
+      )
+    );
+  }
+
+  // 设置交易参数
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  transaction.feePayer = payer;
+
+  const serialized = Buffer.from(
+    transaction.serialize({ requireAllSignatures: false })
+  ).toString("base64");
+
+  return {
+    serializedTransaction: serialized,
+    totalAmount: total,
+    recipientCount: resolved.length,
+  };
+}
+
+const estimatedFeePerTransfer = 5000;
+
+/**
+ * 构建 SOL 分红未签名交易（供用户钱包签名）
+ * @param connection - Solana 连接
+ * @param payer - 付款人公钥（用户钱包）
+ * @param recipients - 接收者列表，address 为 base58
+ * @param usePercentage - 是否按百分比
+ * @param totalAmount - 总金额（SOL），百分比模式必填
+ * @returns 序列化信息，前端反序列化后由用户签名并广播
+ */
+export async function buildSOLDistributionTransaction(
+  connection: Connection,
+  payer: PublicKey,
+  recipients: { address: string; amount: number; percentage?: number }[],
+  usePercentage: boolean,
+  totalAmount?: number
+): Promise<SerializedDistributionTx> {
+  let resolved: DistributionRecipient[];
+  let total: number;
+
+  if (usePercentage && totalAmount != null && totalAmount > 0) {
+    const sum = recipients.reduce((s, r) => s + (r.percentage ?? 0), 0);
+    if (Math.abs(sum - 100) > 0.01) {
+      throw new Error(`Percentages must sum to 100%. Current: ${sum}%`);
+    }
+    resolved = recipients.map((r) => ({
+      address: new PublicKey(r.address),
+      amount: (totalAmount * (r.percentage ?? 0)) / 100,
+      percentage: r.percentage,
+    }));
+    total = totalAmount;
+  } else {
+    resolved = recipients.map((r) => ({
+      address: new PublicKey(r.address),
+      amount: r.amount,
+      percentage: r.percentage,
+    }));
+    total = resolved.reduce((s, r) => s + r.amount, 0);
+  }
+
+  if (resolved.length === 0 || total <= 0) {
+    throw new Error("No valid recipients or total amount is zero");
+  }
+
+  const balance = await connection.getBalance(payer);
+  const requiredLamports = total * LAMPORTS_PER_SOL + estimatedFeePerTransfer * resolved.length;
+  if (balance < requiredLamports) {
+    throw new Error(
+      `Insufficient balance. Required: ${requiredLamports / LAMPORTS_PER_SOL} SOL, Available: ${balance / LAMPORTS_PER_SOL} SOL`
+    );
+  }
+
+  const transaction = await buildSOLDistributionTransactionInternal(
+    connection,
+    payer,
+    resolved,
+    total
+  );
+
+  const serialized = Buffer.from(
+    transaction.serialize({ requireAllSignatures: false })
+  ).toString("base64");
+
+  return {
+    serializedTransaction: serialized,
+    totalAmount: total,
+    recipientCount: resolved.length,
+  };
+}
+
+async function buildSOLDistributionTransactionInternal(
+  connection: Connection,
+  payer: PublicKey,
+  recipients: DistributionRecipient[],
+  totalAmount: number
+): Promise<Transaction> {
+  const transaction = new Transaction();
+  for (const r of recipients) {
+    const lamports = Math.floor(r.amount * LAMPORTS_PER_SOL);
+    if (lamports <= 0) continue;
+    transaction.add(
+      SystemProgram.transfer({
+        fromPubkey: payer,
+        toPubkey: r.address,
+        lamports,
+      })
+    );
+  }
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  transaction.feePayer = payer;
+  return transaction;
 }
 
 /**
@@ -159,12 +388,109 @@ export async function executePercentageDistribution(
 }
 
 /**
- * 执行 SPL Token 分红分配
+ * 构建 SPL Token 分红未签名交易（供用户钱包签名）
+ * recipients[].amount 为 raw token 数量（最小单位）
+ */
+export async function buildTokenDistributionTransaction(
+  connection: Connection,
+  payer: PublicKey,
+  tokenMint: PublicKey,
+  recipients: { address: string; amount: number }[]
+): Promise<SerializedTokenDistributionTx> {
+  if (recipients.length === 0) {
+    throw new Error("Recipients list cannot be empty");
+  }
+
+  const {
+    getAssociatedTokenAddress,
+    createAssociatedTokenAccountInstruction,
+    getAccount,
+    createTransferInstruction,
+    TOKEN_PROGRAM_ID,
+  } = await import("@solana/spl-token");
+
+  const transaction = new Transaction();
+  const totalTokenAmount = recipients.reduce((sum, r) => sum + Math.floor(r.amount), 0);
+  if (totalTokenAmount <= 0) {
+    throw new Error("Total token amount must be positive");
+  }
+
+  const senderTokenAccount = await getAssociatedTokenAddress(
+    tokenMint,
+    payer
+  );
+
+  try {
+    await getAccount(connection, senderTokenAccount);
+  } catch {
+    throw new Error("Sender token account does not exist. Create it first.");
+  }
+
+  const senderAccountInfo = await getAccount(connection, senderTokenAccount);
+  const senderBalance = Number(senderAccountInfo.amount);
+  if (senderBalance < totalTokenAmount) {
+    throw new Error(
+      `Insufficient token balance. Required: ${totalTokenAmount}, Available: ${senderBalance}`
+    );
+  }
+
+  for (const r of recipients) {
+    const recipientPubkey = new PublicKey(r.address);
+    const amount = Math.floor(r.amount);
+    if (amount <= 0) continue;
+
+    const recipientTokenAccount = await getAssociatedTokenAddress(
+      tokenMint,
+      recipientPubkey
+    );
+
+    try {
+      await getAccount(connection, recipientTokenAccount);
+    } catch {
+      transaction.add(
+        createAssociatedTokenAccountInstruction(
+          payer,
+          recipientTokenAccount,
+          recipientPubkey,
+          tokenMint
+        )
+      );
+    }
+
+    transaction.add(
+      createTransferInstruction(
+        senderTokenAccount,
+        recipientTokenAccount,
+        payer,
+        BigInt(amount),
+        [],
+        TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  transaction.feePayer = payer;
+
+  const serialized = Buffer.from(
+    transaction.serialize({ requireAllSignatures: false })
+  ).toString("base64");
+
+  return {
+    serializedTransaction: serialized,
+    totalAmount: totalTokenAmount,
+    recipientCount: recipients.filter((r) => Math.floor(r.amount) > 0).length,
+  };
+}
+
+/**
+ * 执行 SPL Token 分红分配（服务端签名，如脚本/后台）
  * 
  * @param connection - Solana 连接
  * @param signer - 签名者密钥对
  * @param tokenMint - Token mint 地址
- * @param recipients - 接收者列表
+ * @param recipients - 接收者列表（amount 为 token 最小单位）
  * @returns 交易哈希和分配结果
  */
 export async function executeTokenDistribution(
@@ -173,14 +499,27 @@ export async function executeTokenDistribution(
   tokenMint: PublicKey,
   recipients: DistributionRecipient[]
 ): Promise<DistributionResult> {
-  // TODO: 实现 SPL Token 转账
-  // 需要使用 @solana/spl-token
-  // 1. 获取或创建关联代币账户
-  // 2. 创建转账指令
-  // 3. 批量执行
-  // 
-  // 注意：需要安装 @solana/spl-token 包
-  // npm install @solana/spl-token
+  const built = await buildTokenDistributionTransaction(
+    connection,
+    signer.publicKey,
+    tokenMint,
+    recipients.map((r) => ({ address: r.address.toBase58(), amount: r.amount }))
+  );
 
-  throw new Error("Token distribution not yet implemented. Use SOL distribution for now.");
+  const transaction = Transaction.from(
+    Buffer.from(built.serializedTransaction, "base64")
+  );
+  const signature = await sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [signer],
+    { commitment: "confirmed" }
+  );
+
+  return {
+    transactionHash: signature,
+    recipients,
+    totalAmount: built.totalAmount,
+    timestamp: new Date().toISOString(),
+  };
 }

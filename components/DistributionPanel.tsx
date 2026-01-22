@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { Send, Plus, Trash2, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Transaction } from "@solana/web3.js";
 
 interface Recipient {
   address: string;
@@ -13,14 +13,21 @@ interface Recipient {
 }
 
 export function DistributionPanel() {
-  const { publicKey, connected } = useWallet();
+  const { publicKey, connected, signTransaction } = useWallet();
+  const { connection } = useConnection();
   const [recipients, setRecipients] = useState<Recipient[]>([
     { address: "", amount: 0 },
   ]);
   const [usePercentage, setUsePercentage] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [tokenMode, setTokenMode] = useState(false);
+  const [mint, setMint] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{
+    transactionHash: string;
+    totalAmount: number;
+    mode?: "sol" | "token";
+  } | null>(null);
 
   const addRecipient = () => {
     setRecipients([...recipients, { address: "", amount: 0 }]);
@@ -37,12 +44,11 @@ export function DistributionPanel() {
   };
 
   const handleDistribute = async () => {
-    if (!connected || !publicKey) {
+    if (!connected || !publicKey || !signTransaction) {
       alert("Please connect your wallet first");
       return;
     }
 
-    // 验证地址
     const validRecipients = recipients.filter((r) => {
       try {
         new PublicKey(r.address);
@@ -61,7 +67,7 @@ export function DistributionPanel() {
     setResult(null);
 
     try {
-      const response = await fetch("/api/execution/distribute", {
+      const res = await fetch("/api/execution/distribute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -72,19 +78,30 @@ export function DistributionPanel() {
           })),
           totalAmount,
           usePercentage,
+          network: "devnet",
+          payer: publicKey.toBase58(),
         }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || data.message || "Prepare failed");
 
-      if (!response.ok) {
-        throw new Error(data.error || "Distribution failed");
-      }
+      const raw = Uint8Array.from(atob(data.serializedTransaction), (c) => c.charCodeAt(0));
+      const tx = Transaction.from(raw);
+      const signed = await signTransaction(tx);
+      const txHash = await connection.sendRawTransaction(signed.serialize(), {
+        skipPreflight: false,
+        preflightCommitment: "confirmed",
+      });
+      await connection.confirmTransaction(txHash, "confirmed");
 
-      setResult(data.result);
-    } catch (error) {
-      console.error("Distribution error:", error);
-      alert(error instanceof Error ? error.message : "Distribution failed");
+      setResult({
+        transactionHash: txHash,
+        totalAmount: data.totalAmount ?? 0,
+      });
+    } catch (err) {
+      console.error("Distribution error:", err);
+      alert(err instanceof Error ? err.message : "Distribution failed");
     } finally {
       setLoading(false);
     }
@@ -220,9 +237,8 @@ export function DistributionPanel() {
         </motion.div>
       )}
 
-      {/* Warning */}
-      <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-xs text-slate-400">
-        ⚠️ <strong>Demo Mode:</strong> This is a demonstration. In production, transactions must be signed by the user&apos;s wallet.
+      <div className="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-xs text-slate-400">
+        ✅ Transactions are signed by your wallet. Connect and approve in Phantom/Solflare.
       </div>
     </div>
   );
