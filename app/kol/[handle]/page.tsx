@@ -1,7 +1,5 @@
 "use client";
 
-export const runtime = "edge";
-
 import { use } from "react";
 import { motion } from "framer-motion";
 import AgentSuitePanel from "@/components/AgentSuitePanel";
