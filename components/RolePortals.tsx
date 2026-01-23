@@ -120,7 +120,7 @@ export function RolePortals() {
 
                             {/* CTA Button */}
                             <a
-                                href={role.id === 'project' ? '/cortex' : (role.id === 'dao' ? '/gov' : (role.id === 'trader' ? '/terminal' : `/${role.id}`))}
+                                href={role.id === 'kol' ? '/kol' : (role.id === 'project' ? '/cortex' : (role.id === 'dao' ? '/gov' : (role.id === 'trader' ? '/terminal' : '/terminal')))}
                                 className={`w-full py-3 rounded-lg bg-gradient-to-r ${role.color} text-white font-semibold flex items-center justify-center gap-2 group/btn hover:brightness-110 transition-all cursor-pointer`}
                             >
                                 Enter Portal
