@@ -382,9 +382,30 @@ process.on('SIGINT', () => {
 console.log('🚀 Starting ElizaOS Container...');
 console.log(`📦 Node version: ${process.version}`);
 console.log(`📦 Platform: ${process.platform}`);
+console.log(`📦 Process ID: ${process.pid}`);
+console.log(`📦 Working directory: ${process.cwd()}`);
+console.log(`📦 Environment variables:`);
+console.log(`   - PORT: ${process.env.PORT}`);
+console.log(`   - HOST: ${process.env.HOST}`);
+console.log(`   - NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`   - RAILWAY_PORT: ${process.env.RAILWAY_PORT}`);
 
-const port = parseInt(process.env.PORT || '3001', 10);
+// Railway V2 会自动设置 PORT 环境变量
+// 如果没有设置，使用默认端口 3001
+const port = parseInt(
+  process.env.PORT || 
+  process.env.RAILWAY_PORT || 
+  '3001', 
+  10
+);
 const host = process.env.HOST || '0.0.0.0';
+
+// 添加详细的端口日志
+console.log('🔌 Port configuration:');
+console.log(`   - PORT env: ${process.env.PORT}`);
+console.log(`   - Railway PORT: ${process.env.RAILWAY_PORT}`);
+console.log(`   - Final port: ${port}`);
+console.log(`   - Host: ${host}`);
 
 // 验证端口
 if (isNaN(port) || port < 1 || port > 65535) {

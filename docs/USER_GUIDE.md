@@ -1,339 +1,392 @@
-# 📖 KOLMarket.ai 使用指南
+# 📖 KOLMarket.ai 使用手册
+
+**最后更新**: 2025-01-22
+
+---
 
 ## 🎯 快速开始
 
-### 第一步: 访问平台
+### 5 分钟快速上手
 
-访问 [https://kolmarket.ai](https://kolmarket.ai) 或本地开发环境 [http://localhost:3000](http://localhost:3000)
-
-### 第二步: 连接钱包
-
-1. 点击右上角 **"Connect Wallet"** 按钮
-2. 选择您的 Solana 钱包（Phantom、Solflare 等）
-3. 授权连接
-
-### 第三步: 探索功能
-
-- **Market**: 浏览 KOL 市场，查看实时影响力数据
-- **Agents**: 与 KOL 数字生命对话
-- **Portals**: 选择您的角色（KOL、投资者、项目方）
+1. **访问平台**: [kolmarket.ai](https://kolmarket.ai)
+2. **连接钱包**: 点击右上角连接 Phantom 或 Solflare
+3. **选择角色**: KOL 或 粉丝
+4. **开始使用**: 按照下方指南操作
 
 ---
 
-## 👤 用户角色
+## 👨‍💼 KOL 使用指南
 
-### 1. KOL（意见领袖）
+### 第一步：注册与设置
 
-#### 创建数字生命
+#### 1.1 注册账号
 
-1. 进入 **"Creator Portal"**
-2. 点击 **"Create Agent Suite"**
-3. 填写信息:
-   - KOL Handle (Twitter 用户名)
-   - 个性设置（攻击性、幽默感等）
-   - 启用模块（Avatar、Mod、Trader）
+1. 访问 [KOLMarket.ai](https://kolmarket.ai)
+2. 点击右上角 "Connect Wallet"
+3. 选择钱包（Phantom/Solflare）
+4. 确认连接
 
-4. 配置模块:
-   - **Avatar**: 连接 Twitter API，设置自动发推规则
-   - **Mod**: 连接 Discord/Telegram Bot，设置自动回复
-   - **Trader**: 配置交易策略和钱包
+#### 1.2 进入 Creator Portal
 
-5. 启动 Agent Suite
+1. 点击导航栏 "Creator Portal"
+2. 或访问 `/creator` 页面
+3. 首次进入会提示完善信息
 
-#### 管理数字生命
+#### 1.3 完善个人信息
 
-- 查看实时统计数据
-- 调整个性参数
-- 管理知识库
-- 查看交易记录
+- **名称**: 你的 KOL 名称
+- **Handle**: Twitter/X 用户名（如 @blknoiz06）
+- **简介**: 简短介绍
+- **头像**: 上传头像（可选）
 
-#### 收益管理
+### 第二步：创建 AI 数字分身
 
-- 查看订阅收入
-- 查看交易手续费分成
-- 设置分红规则
+#### 2.1 配置 Agent Suite
 
----
+1. 在 Creator Portal 找到 "Agent Suite" 区域
+2. 点击 "Create Agent Suite"
+3. 填写基本信息：
+   - Suite 名称
+   - 描述
+   - 个性设置
 
-### 2. 投资者
+#### 2.2 上传知识库（可选但推荐）
 
-#### 发现 Alpha
+1. 进入 "Knowledge Cortex" 页面
+2. 点击 "Upload Files"
+3. 上传你的内容：
+   - 历史推文（.txt）
+   - 文章/博客（.md, .txt）
+   - 常见问题（.txt）
+   - 交易策略（.txt）
 
-1. 进入 **"Market"** 页面
-2. 浏览 KOL 列表，查看:
-   - Mindshare Score（影响力分数）
-   - 交易量
-   - 粉丝数
-   - 雷达图分析
+4. 等待处理完成（通常 1-2 分钟）
 
-3. 筛选和排序:
-   - 按影响力分数
-   - 按交易量
-   - 按增长率
+**知识库的作用**:
+- AI 会学习你的内容风格
+- 回答问题时引用你的知识
+- 生成符合你个性的内容
 
-#### 跟随交易
+#### 2.3 配置 API Keys（可选）
 
-1. 选择目标 KOL
-2. 查看其交易历史
-3. 订阅交易信号
-4. 设置自动跟随策略
+**Twitter API** (用于 Avatar 模块):
+1. 申请 Twitter API Key
+2. 在 Creator Portal 的 "Settings" 中配置
+3. 启用 Avatar 模块
 
-#### 与数字生命对话
+**Discord Bot Token** (用于 Mod 模块):
+1. 创建 Discord Bot
+2. 获取 Bot Token
+3. 在 Settings 中配置
+4. 启用 Mod 模块
 
-1. 进入 **"Agents"** 页面
-2. 选择 KOL
-3. 开始对话:
-   - 询问交易建议
-   - 了解市场观点
-   - 获取 Alpha 信息
+**Telegram Bot Token** (用于 Mod 模块):
+1. 联系 @BotFather 创建 Bot
+2. 获取 Token
+3. 在 Settings 中配置
+4. 启用 Mod 模块
 
----
+### 第三步：启动数字分身
 
-### 3. 项目方
+#### 3.1 启动 Agent Suite
 
-#### 寻找 KOL 合作
+1. 在 Creator Portal 找到你的 Agent Suite
+2. 点击 "Start" 按钮
+3. 确认启动
 
-1. 进入 **"Market"** 页面
-2. 筛选合适的 KOL:
-   - 目标受众匹配
-   - 影响力分数高
-   - 活跃度高
+#### 3.2 验证运行状态
 
-3. 联系 KOL 或直接使用其数字生命
+- **Avatar 模块**: 检查 Twitter 是否开始自动发推
+- **Mod 模块**: 检查 Discord/Telegram Bot 是否在线
+- **Trader 模块**: 检查交易策略是否激活
 
-#### 使用数字生命营销
+### 第四步：分享与推广
 
-1. 创建营销活动
-2. 配置数字生命:
-   - 设置推广内容
-   - 选择发布平台
-   - 设置互动规则
+#### 4.1 获取分享链接
 
-3. 启动自动化营销
+1. 在 Creator Portal 找到你的 KOL 页面链接
+2. 格式: `kolmarket.ai/kol/你的handle`
+3. 复制链接
 
-#### 数据追踪
+#### 4.2 推广方式
 
-- 查看推广效果
-- 分析影响力数据
-- 优化营销策略
+- **Twitter**: 发布推文介绍你的数字分身
+- **Discord**: 在社区分享
+- **Telegram**: 在群组分享
+- **其他平台**: 任何你活跃的平台
 
----
+#### 4.3 推广素材
 
-## 🛠️ 功能详解
+平台会自动生成：
+- 分享卡片（带 Mindshare 指数）
+- 打赏链接（Solana Pay）
+- 订阅链接
 
-### Agent Suite（数字生命套件）
+### 第五步：管理收入
 
-#### Avatar 模块
+#### 5.1 查看收入
 
-**功能**:
-- 自动发推
-- 自动互动（点赞、转发、回复）
-- 内容生成
-- 时间表管理
+在 Creator Portal 的 "Revenue" 区域：
+- **打赏收入**: 实时显示
+- **订阅收入**: 月度统计
+- **交易分成**: 实时显示
 
-**配置**:
-```json
-{
-  "autoPost": true,
-  "autoInteract": true,
-  "postFrequency": "daily",
-  "interactionRules": {
-    "replyToMentions": true,
-    "likeRelevantTweets": true
-  }
-}
-```
+#### 5.2 提现
 
-#### Mod 模块
-
-**功能**:
-- Discord 频道管理
-- Telegram 群组管理
-- 自动回复
-- 内容审核
-
-**配置**:
-```json
-{
-  "discord": {
-    "enabled": true,
-    "autoReply": true,
-    "channels": ["general", "trading"]
-  },
-  "telegram": {
-    "enabled": true,
-    "autoReply": true
-  }
-}
-```
-
-#### Trader 模块
-
-**功能**:
-- 自动交易执行
-- 策略管理
-- 风险管理
-- 分红分配
-
-**配置**:
-```json
-{
-  "enabled": true,
-  "strategies": [
-    {
-      "name": "Momentum Trading",
-      "rules": {
-        "entry": "price_change_24h > 10%",
-        "exit": "profit_target > 20%"
-      }
-    }
-  ],
-  "riskManagement": {
-    "maxPositionSize": 10,
-    "stopLoss": -10,
-    "takeProfit": 20
-  }
-}
-```
+1. 点击 "Withdraw" 按钮
+2. 选择提现金额
+3. 确认提现到钱包
+4. 等待链上确认（通常几秒）
 
 ---
 
-### 知识库管理
+## 👥 粉丝使用指南
 
-#### 添加知识
+### 第一步：浏览市场
 
-1. 进入 **"Knowledge Sync"** 页面
-2. 选择 KOL
-3. 点击 **"Add Knowledge"**
-4. 输入内容:
-   - 文本内容
-   - 元数据（来源、类型、URL）
-   - 标签
+#### 1.1 访问市场页面
 
-5. 系统自动:
-   - 生成 Embeddings
-   - 存储到 Vectorize
-   - 建立索引
+1. 访问 [kolmarket.ai](https://kolmarket.ai)
+2. 滚动到 "KOL Market" 区域
+3. 或访问 `/kol` 页面
 
-#### 查询知识
+#### 1.2 浏览 KOL
 
-- 在对话中使用 RAG 功能
-- 系统自动检索相关知识
-- 增强 AI 回答准确性
+每个 KOL 卡片显示：
+- **名称和 Handle**
+- **Mindshare 指数**（影响力评分）
+- **24h 交易量**
+- **粉丝数**
+- **雷达图**（多维度评估）
+
+#### 1.3 搜索和筛选
+
+- **搜索框**: 输入 KOL 名称或 Handle
+- **筛选**: 按 Mindshare 指数、交易量排序
+- **分类**: 按领域筛选（DeFi、Meme、NFT 等）
+
+### 第二步：查看 KOL 详情
+
+#### 2.1 进入详情页
+
+1. 点击 KOL 卡片
+2. 或访问 `kolmarket.ai/kol/用户名`
+
+#### 2.2 查看信息
+
+详情页包含：
+- **About**: KOL 简介、专长、风格
+- **Agent Suite**: AI 数字分身功能
+- **Market Prices**: 相关 Token 价格
+- **Tip Button**: 打赏按钮
+
+### 第三步：与 AI 对话
+
+#### 3.1 开始对话
+
+1. 在 KOL 详情页点击 "Chat AI"
+2. 或访问 Terminal 页面
+3. 选择对应的 KOL
+
+#### 3.2 使用 AI 聊天
+
+**基础对话**:
+- 输入问题
+- AI 会基于 KOL 的知识库回答
+- 支持多轮对话
+
+**RAG 增强**（推荐开启）:
+- 点击 "Enable RAG" 开关
+- AI 会引用 KOL 的知识库内容
+- 回答更准确、更个性化
+
+**示例问题**:
+- "你对 SOL 价格怎么看？"
+- "推荐一些值得关注的 Token"
+- "你的交易策略是什么？"
+
+#### 3.3 聊天技巧
+
+- **具体问题**: 问得越具体，回答越准确
+- **引用知识库**: 开启 RAG 获得更好体验
+- **多轮对话**: 可以追问、深入讨论
+
+### 第四步：打赏 KOL
+
+#### 4.1 使用 Solana Pay 打赏
+
+1. 在 KOL 详情页点击 "Tip 0.01 SOL"
+2. 或自定义金额
+3. 生成 Solana Pay 链接/QR 码
+
+#### 4.2 完成支付
+
+1. 用钱包扫码或点击链接
+2. 确认金额
+3. 签名交易
+4. 等待确认（几秒）
+
+#### 4.3 查看交易
+
+- 点击 "View on Explorer" 查看链上交易
+- 在钱包中查看交易历史
+
+### 第五步：订阅 KOL
+
+#### 5.1 选择订阅计划
+
+- **免费版**: 基础功能
+- **专业版**: $9.99/月，完整功能
+- **企业版**: $29.99/月，API 访问
+
+#### 5.2 完成订阅
+
+1. 点击 "Subscribe" 按钮
+2. 选择计划
+3. 连接钱包支付
+4. 确认订阅
+
+#### 5.3 订阅权益
+
+- **专业版**:
+  - 无限 AI 聊天
+  - 交易信号推送
+  - 高级数据分析
+  - 优先通知
+
+- **企业版**:
+  - 所有专业版功能
+  - API 访问
+  - 定制开发
+  - 专属支持
+
+### 第六步：跟随交易
+
+#### 6.1 订阅交易信号
+
+1. 在 KOL 详情页找到 "Trading Signals"
+2. 点击 "Subscribe Signals"
+3. 确认订阅
+
+#### 6.2 查看信号
+
+- **实时推送**: Telegram/Discord 通知
+- **Terminal 页面**: 查看信号流
+- **历史记录**: 查看过往信号
+
+#### 6.3 执行交易
+
+1. 进入 Terminal 页面
+2. 查看 Alpha 信号
+3. 使用 Jupiter Swap 执行交易
+4. 查看交易历史
 
 ---
 
-### 交易功能
+## 💱 Terminal 使用指南
 
-#### 创建交易策略
+### 功能概览
 
-1. 进入 Trader 模块设置
-2. 点击 **"Create Strategy"**
-3. 配置规则:
-   - 入场条件
-   - 出场条件
-   - 风险管理
+Terminal 是交易和 AI 聊天的综合终端，包含：
 
-4. 启用策略
+- **Jupiter Swap**: Token 交换
+- **AI Chat**: 与 KOL AI 对话
+- **Alpha Radar**: 实时交易信号
+- **Wallet Info**: 钱包信息
 
-#### 执行交易
+### 使用 Jupiter Swap
 
-- 手动执行: 在 Trader 面板点击交易按钮
-- 自动执行: 策略触发时自动执行
+1. **选择 Token**:
+   - 输入 Token: 选择要卖出的 Token
+   - 输出 Token: 选择要买入的 Token（默认 SOL）
 
-#### 分红分配
+2. **设置金额**:
+   - 输入数量
+   - 查看预估输出
 
-1. 进入 **"Distribution"** 页面
-2. 配置接收者:
-   - 添加钱包地址
-   - 设置分配比例
+3. **设置滑点**:
+   - 默认 0.5%
+   - 可调整
 
-3. 执行分配
+4. **执行交易**:
+   - 点击 "Swap"
+   - 钱包确认
+   - 等待完成
 
----
+### 使用 AI Chat
 
-## 📊 数据查看
+1. **选择 KOL**:
+   - 在聊天界面选择要对话的 KOL
+   - 或输入 KOL Handle
 
-### Mindshare 数据
+2. **开始对话**:
+   - 输入问题
+   - 点击发送
+   - 查看回复
 
-- **Mindshare Score**: 综合影响力分数（0-100）
-- **Volume**: 交易量
-- **Followers**: 粉丝数
-- **雷达图**: 5 个维度分析
-  - Volume（交易量）
-  - Loyalty（忠诚度）
-  - Alpha（信息价值）
-  - Growth（增长）
-  - Engage（参与度）
+3. **RAG 增强**:
+   - 开启 RAG 开关
+   - 获得更准确的回答
 
-### Agent Suite 统计
+### 查看 Alpha 信号
 
-- 推文数量
-- 互动次数
-- 交易次数
-- 收益统计
-
----
-
-## 🔧 高级功能
-
-### API 访问
-
-开发者可以使用 API 进行集成:
-
-```bash
-# 获取 Agent Suite 信息
-curl https://kolmarket.ai/api/agent-suite?kolHandle=blknoiz06
-
-# 发送聊天消息
-curl -X POST https://kolmarket.ai/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Hello", "kolHandle": "blknoiz06"}'
-```
-
-详细 API 文档: [API_DOCUMENTATION.md](./API_DOCUMENTATION.md)
-
-### 自定义配置
-
-- 个性参数调整
-- 交易策略定制
-- 知识库管理
-- 自动化规则设置
+- **实时流**: 查看最新的交易信号
+- **KOL 来源**: 查看信号来自哪个 KOL
+- **置信度**: 查看信号置信度
+- **时间**: 查看信号时间
 
 ---
 
 ## ❓ 常见问题
 
-### Q: 如何创建 Agent Suite？
+### KOL 相关问题
 
-A: 进入 Creator Portal，填写 KOL 信息，配置模块，然后启动。
+**Q: AI 会发什么内容？**  
+A: AI 会根据你的知识库和个性配置，自动生成符合你风格的内容。你可以随时查看和审核。
 
-### Q: 数字生命会完全替代真人吗？
+**Q: 如何修改 AI 的行为？**  
+A: 在 Creator Portal 的 Agent Suite 设置中，可以修改个性、知识库、系统提示词。
 
-A: 不会。数字生命是 KOL 的 AI 增强工具，帮助 24/7 运营，但真人 KOL 仍然需要参与重要决策。
+**Q: 收入如何分成？**  
+A: 打赏：平台 10%，KOL 90%；订阅：平台 30%，KOL 70%；交易：平台 50%，KOL 50%。
 
-### Q: 如何确保交易安全？
+**Q: 如何提现？**  
+A: 在 Creator Portal 的 Revenue 区域，点击 Withdraw，选择金额，确认即可。
 
-A: 所有交易都需要钱包签名确认，支持多重签名，并设置了风险限制。
+### 粉丝相关问题
 
-### Q: 数据隐私如何保护？
+**Q: AI 回答准确吗？**  
+A: AI 基于 KOL 的知识库回答，开启 RAG 后会更准确。但请注意，AI 回答仅供参考，不构成投资建议。
 
-A: 数据存储在去中心化网络中，KOL 拥有完全的数据所有权，可以随时导出或删除。
+**Q: 如何跟随交易？**  
+A: 订阅 KOL 的交易信号，在 Terminal 中查看信号，使用 Jupiter Swap 执行交易。
 
-### Q: 如何获得收益？
+**Q: 打赏安全吗？**  
+A: 使用 Solana Pay，所有交易都在链上，安全透明。你可以随时在 Explorer 查看交易。
 
-A: KOL 可以通过订阅分成、交易手续费分成等方式获得收益。投资者可以通过跟随交易和 Token 持有获得收益。
+**Q: 订阅可以取消吗？**  
+A: 可以，在 Creator Portal 的 Subscription 区域，点击 Cancel 即可。
+
+### 技术问题
+
+**Q: 需要什么钱包？**  
+A: 支持 Phantom、Solflare 等主流 Solana 钱包。
+
+**Q: 支持哪些网络？**  
+A: 目前支持 Solana Mainnet，未来可能支持 Devnet。
+
+**Q: 如何联系支持？**  
+A: 通过 Discord、Telegram 或 Twitter 联系我们。
 
 ---
 
-## 🆘 获取帮助
+## 📞 获取帮助
 
-- **文档**: [docs/](./)
-- **Discord**: https://discord.com/channels/1433748708255727640/1463848664001937533
-- **Telegram**: https://t.me/kolmarketai
-- **Twitter**: https://x.com/KOLMARKET
-- **邮箱**: support@kolmarket.ai
+- **Discord**: [加入社区](https://discord.gg/kolmarket)
+- **Telegram**: [Telegram 群组](https://t.me/kolmarket)
+- **Twitter**: [@KOLMarketAI](https://twitter.com/KOLMarketAI)
+- **Email**: support@kolmarket.ai
 
 ---
 
-**最后更新**: 2024-01-22
+**最后更新**: 2025-01-22
