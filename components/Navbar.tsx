@@ -28,7 +28,7 @@ export function Navbar() {
             <a href="/whitepaper" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               $KMT
             </a>
-            <a href="#portals" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
+            <a href="/nexus" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Nexus
             </a>
             <a href="/market" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
@@ -110,8 +110,8 @@ export function Navbar() {
             <a href="/whitepaper" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               $KMT Token
             </a>
-            <a href="#portals" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
-              Portals
+            <a href="/nexus" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
+              Nexus
             </a>
             <a href="/market" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Market
