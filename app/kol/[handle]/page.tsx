@@ -9,7 +9,6 @@ import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { TipButtonKOL } from "@/components/TipButton";
 import { TokenPriceDisplay } from "@/components/TokenPriceDisplay";
-import { useSOLPrice } from "@/lib/hooks/useJupiterPrice";
 
 interface PageProps {
   params: Promise<{ handle: string }>;
