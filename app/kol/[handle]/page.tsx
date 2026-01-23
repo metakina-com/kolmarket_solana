@@ -9,6 +9,9 @@ import { getKOLPersona } from "@/lib/agents/kol-personas";
 import { ArrowLeft, Bot, Twitter, MessageSquare, TrendingUp, MessageCircle, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { TipButtonKOL } from "@/components/TipButton";
+import { TokenPriceDisplay } from "@/components/TokenPriceDisplay";
+import { useSOLPrice } from "@/lib/hooks/useJupiterPrice";
 
 interface PageProps {
   params: Promise<{ handle: string }>;
@@ -79,10 +82,11 @@ export default function KOLDetailPage({ params }: PageProps) {
               <h1 className="text-3xl font-bold text-foreground mb-2">{persona.name}</h1>
               <p className="text-muted-foreground">@{persona.handle}</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <div className="px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-xl border border-cyan-500/30">
                 <span className="text-sm text-cyan-400 font-semibold">Digital Life</span>
               </div>
+              <TipButtonKOL handle={persona.handle} name={persona.name} />
             </div>
           </div>
         </div>
@@ -116,6 +120,21 @@ export default function KOLDetailPage({ params }: PageProps) {
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-2">Speaking Style</h3>
               <p className="text-muted-foreground text-sm">{persona.speakingStyle}</p>
+            </div>
+          </div>
+
+          {/* Market Price */}
+          <div className="mt-6 pt-6 border-t border-border">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-3">Market Prices</h3>
+            <div className="flex flex-wrap gap-4">
+              <div className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
+                <TokenPriceDisplay
+                  mint="So11111111111111111111111111111111111111112"
+                  symbol="SOL"
+                  showChange24h={false}
+                  size="sm"
+                />
+              </div>
             </div>
           </div>
         </motion.div>

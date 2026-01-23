@@ -45,6 +45,7 @@
 - [RAG 集成](./RAG_INTEGRATION.md) - RAG 功能说明
 - [集成指南](./INTEGRATION_GUIDE.md) - 技术集成说明
 - [ElizaOS 集成](./ELIZA_AND_AGENT_KIT_STATUS.md) - ElizaOS 状态
+- [Solana 生态可嵌入项](./SOLANA_ECOSYSTEM_INTEGRATIONS.md) - 可嵌入生态、提升体验与流量 🆕
 
 ---
 

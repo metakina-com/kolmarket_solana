@@ -1,36 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useEffect, useRef } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { getRpcEndpoint } from "@/lib/utils/solana-rpc";
 
 export function JupiterTerminal() {
     const { publicKey, connected, signAllTransactions, signTransaction } = useWallet();
     const terminalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Load Jupiter script
-        const script = document.createElement('script');
-        script.src = 'https://terminal.jup.ag/main-v3.js';
+        const script = document.createElement("script");
+        script.src = "https://terminal.jup.ag/main-v3.js";
         script.async = true;
         document.head.appendChild(script);
 
         script.onload = () => {
             if (window.Jupiter) {
                 window.Jupiter.init({
-                    displayMode: 'integrated',
-                    integratedTargetId: 'integrated-terminal',
-                    endpoint: 'https://api.mainnet-beta.solana.com',
+                    displayMode: "integrated",
+                    integratedTargetId: "integrated-terminal",
+                    endpoint: getRpcEndpoint(),
                     strictTokenList: false,
                     formProps: {
                         fixedOutputMint: true,
-                        initialOutputMint: 'So11111111111111111111111111111111111111112', // SOL
+                        initialOutputMint: "So11111111111111111111111111111111111111112",
                     },
                 });
             }
-        };
-
-        return () => {
-            // Cleanup script if needed (Jupiter Terminal usually handles itself well)
         };
     }, []);
 

@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { Send, Plus, Trash2, Loader2 } from "lucide-react";
+import { Send, Plus, Trash2, Loader2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { PublicKey, Transaction } from "@solana/web3.js";
+import { getExplorerTxUrl } from "@/lib/utils/solana-explorer";
 
 interface Recipient {
   address: string;
@@ -284,9 +285,19 @@ export function DistributionPanel() {
         >
           <h3 className="text-green-400 font-semibold mb-2">Distribution Successful!</h3>
           <p className="text-sm text-slate-300">
-            Transaction: <span className="font-mono text-xs">{result.transactionHash}</span>
+            Transaction: <span className="font-mono text-xs break-all">{result.transactionHash}</span>
           </p>
-          <p className="text-sm text-slate-300 mt-1">
+          <a
+            href={getExplorerTxUrl(result.transactionHash)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 mt-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+            aria-label="View transaction on explorer"
+          >
+            <ExternalLink size={14} />
+            View on Explorer
+          </a>
+          <p className="text-sm text-slate-300 mt-2">
             Total: {result.totalAmount} {result.mode === "token" ? "token units" : "SOL"}
           </p>
         </motion.div>

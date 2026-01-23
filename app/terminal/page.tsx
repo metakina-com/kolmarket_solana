@@ -20,6 +20,9 @@ import { Navbar } from "@/components/Navbar";
 import { ChatInterface } from "@/components/ChatInterface";
 import { JupiterTerminal } from "@/components/JupiterTerminal";
 import { MobileDrawer } from "@/components/ui/MobileDrawer";
+import { getExplorerAddressUrl } from "@/lib/utils/solana-explorer";
+import { TipButton } from "@/components/TipButton";
+import { useSOLPrice } from "@/lib/hooks/useJupiterPrice";
 import { AnimatePresence } from "framer-motion";
 
 const liveAlpha = [
@@ -32,33 +35,19 @@ export default function TerminalPage() {
     const { publicKey, connected } = useWallet();
     const { connection } = useConnection();
     const [balance, setBalance] = useState<number | null>(null);
-    const [solPrice, setSolPrice] = useState<number>(142.25);
+    const solPriceData = useSOLPrice(30000);
+    const solPrice: number = (solPriceData.price ?? 142.25) as number;
     const [mode, setMode] = useState<"chat" | "trade">("chat");
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    const fetchPrice = async () => {
-        try {
-            const response = await fetch("https://api.jup.ag/price/v2?ids=So11111111111111111111111111111111111111112");
-            const data = await response.json();
-            const price = data?.data?.["So11111111111111111111111111111111111111112"]?.price;
-            if (price) setSolPrice(parseFloat(price));
-        } catch (e) {
-            console.error("Failed to fetch SOL price:", e);
-        }
-    };
-
     useEffect(() => {
-        fetchPrice();
-        const interval = setInterval(fetchPrice, 30000); // 30s 自动刷新
-        return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
-        if (publicKey) {
-            connection.getBalance(publicKey).then((bal) => {
-                setBalance(bal / LAMPORTS_PER_SOL);
-            });
+        if (!publicKey) {
+            setBalance(null);
+            return;
         }
+        connection.getBalance(publicKey).then((bal) => {
+            setBalance(bal / LAMPORTS_PER_SOL);
+        });
     }, [publicKey, connection]);
 
     const shortAddress = publicKey ? `${publicKey.toBase58().slice(0, 4)}...${publicKey.toBase58().slice(-4)}` : "";
@@ -240,8 +229,20 @@ export default function TerminalPage() {
                                 <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">Active Wallet</div>
                                 <div className="text-sm font-mono text-cyan-400 flex items-center justify-between">
-                                    {connected ? shortAddress : "OFFLINE"}
-                                    {connected && <ExternalLink size={12} className="cursor-pointer hover:text-white" />}
+                                    {connected ? (
+                                        <a
+                                            href={publicKey ? getExplorerAddressUrl(publicKey.toBase58()) : "#"}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-1.5 hover:text-white transition-colors"
+                                            aria-label="View wallet on explorer"
+                                        >
+                                            {shortAddress}
+                                            <ExternalLink size={12} />
+                                        </a>
+                                    ) : (
+                                        "OFFLINE"
+                                    )}
                                 </div>
                             </div>
 
@@ -251,17 +252,22 @@ export default function TerminalPage() {
                                 <div className="text-3xl font-black text-white">
                                     {balance !== null ? balance.toFixed(4) : "0.00"} <span className="text-sm font-normal text-slate-500">SOL</span>
                                 </div>
-                                <div className="text-xs text-slate-500 mt-2">≈ ${(balance ? balance * solPrice : 0).toFixed(2)} <span className="text-[8px] opacity-50">USD</span></div>
+                                <div className="text-xs text-slate-500 mt-2">≈ ${balance !== null && solPrice !== null ? (balance * solPrice).toFixed(2) : "0.00"} <span className="text-[8px] opacity-50">USD</span></div>
                             </div>
                         </div>
 
                         <div className="mt-8 space-y-3">
-                            <button className="w-full py-4 bg-cyan-500 text-slate-950 font-black rounded-xl hover:bg-cyan-400 transition-all text-xs uppercase tracking-[0.2em] active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                            <button type="button" className="w-full py-4 bg-cyan-500 text-slate-950 font-black rounded-xl hover:bg-cyan-400 transition-all text-xs uppercase tracking-[0.2em] active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
                                 Sync Nexus Assets
                             </button>
-                            <button className="w-full py-4 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 transition-all text-xs uppercase tracking-[0.2em] active:scale-95">
+                            <button type="button" className="w-full py-4 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 transition-all text-xs uppercase tracking-[0.2em] active:scale-95">
                                 Export Keys
                             </button>
+                            <TipButton
+                                label="KOLMarket Terminal"
+                                message="Support the ecosystem"
+                                className="w-full justify-center"
+                            />
                         </div>
                     </motion.div>
 
@@ -329,12 +335,25 @@ export default function TerminalPage() {
                         <div className="space-y-4">
                             <div className="p-3 bg-slate-900/80 rounded-xl border border-white/5">
                                 <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">Active Wallet</div>
-                                <div className="text-sm font-mono text-cyan-400">{connected ? shortAddress : "OFFLINE"}</div>
+                                {connected && publicKey ? (
+                                    <a
+                                        href={getExplorerAddressUrl(publicKey.toBase58())}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm font-mono text-cyan-400 hover:text-white transition-colors inline-flex items-center gap-1"
+                                        aria-label="View wallet on explorer"
+                                    >
+                                        {shortAddress}
+                                        <ExternalLink size={12} />
+                                    </a>
+                                ) : (
+                                    <span className="text-sm font-mono text-cyan-400">OFFLINE</span>
+                                )}
                             </div>
                             <div className="p-3 bg-slate-900/80 rounded-xl border border-white/5">
                                 <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">SOL Balance</div>
                                 <div className="text-2xl font-black text-white">{balance !== null ? balance.toFixed(4) : "0.00"} <span className="text-sm font-normal text-slate-500">SOL</span></div>
-                                <div className="text-xs text-slate-500">≈ ${(balance ? balance * solPrice : 0).toFixed(2)} USD</div>
+                                <div className="text-xs text-slate-500">≈ ${balance !== null && solPrice !== null ? (balance * solPrice).toFixed(2) : "0.00"} USD</div>
                             </div>
                         </div>
                         <div className="mt-4 space-y-2">
@@ -344,6 +363,12 @@ export default function TerminalPage() {
                             <button type="button" className="w-full min-h-[44px] py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 transition-all text-xs uppercase tracking-wider">
                                 Export Keys
                             </button>
+                            <TipButton
+                                label="KOLMarket Terminal"
+                                message="Support the ecosystem"
+                                className="w-full justify-center"
+                                size="sm"
+                            />
                         </div>
                     </div>
                 </div>

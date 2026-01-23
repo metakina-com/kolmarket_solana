@@ -19,6 +19,10 @@
 | `SOLANA_PRIVATE_KEY` | Solana 私钥（数组格式） | JSON 数组 | `[163,222,31,...]` |
 | `SOLANA_DEVNET_PRIVATE_KEY` | Devnet 私钥（Hex 格式） | Hex 字符串 | `18f3280dfbf2c6...` |
 | `SOLANA_MAINNET_PRIVATE_KEY` | Mainnet 私钥（Hex 格式） | Hex 字符串 | `18f3280dfbf2c6...` |
+| `NEXT_PUBLIC_SOLANA_RPC` | 前端 RPC（钱包、Jupiter） | URL | `https://mainnet.helius-rpc.com/?api-key=KEY` |
+| `NEXT_PUBLIC_EXPLORER_URL` | 区块链浏览器 base URL | URL | `https://solscan.io` 或 `https://solana.fm` |
+| `NEXT_PUBLIC_TIP_RECIPIENT` | Solana Pay 打赏收款地址 | Base58 | 用于 KOL 详情 / Terminal 的「Tip SOL」链接 |
+| `NEXT_PUBLIC_BIRDEYE_API_KEY` | Birdeye API Key（可选） | 字符串 | 用于获取更详细的 Token 价格数据（24h 变化、市值等） |
 
 #### ElizaOS 配置
 | 变量名 | 说明 | 默认值 |
@@ -59,6 +63,9 @@
 ```bash
 # Solana 配置
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+NEXT_PUBLIC_SOLANA_RPC=https://mainnet.helius-rpc.com/?api-key=YOUR_KEY   # 可选，Helius 等
+NEXT_PUBLIC_EXPLORER_URL=https://solscan.io   # 可选，Explorer 链接
+NEXT_PUBLIC_TIP_RECIPIENT=   # 可选，打赏收款地址；不设则隐藏 Tip 按钮
 SOLANA_PRIVATE_KEY=[your_private_key_array_here]
 
 # ElizaOS 配置

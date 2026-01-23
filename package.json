@@ -22,6 +22,7 @@
     "@elizaos/plugin-solana-agent-kit": "^0.25.6-alpha.1",
     "@elizaos/plugin-telegram": "^1.6.2",
     "@elizaos/plugin-twitter": "^1.2.22",
+    "@solana/pay": "^0.2.6",
     "@solana/spl-token": "^0.4.14",
     "@solana/wallet-adapter-phantom": "^0.9.28",
     "@solana/wallet-adapter-react": "^0.15.35",
