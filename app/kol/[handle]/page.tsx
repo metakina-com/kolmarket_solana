@@ -3,24 +3,12 @@
 import { use } from "react";
 import { motion } from "framer-motion";
 import AgentSuitePanel from "@/components/AgentSuitePanel";
-import { getKOLPersona, getAvailableKOLs } from "@/lib/agents/kol-personas";
+import { getKOLPersona } from "@/lib/agents/kol-personas";
 import { ArrowLeft, Bot, Twitter, MessageSquare, TrendingUp, MessageCircle, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { TipButtonKOL } from "@/components/TipButton";
 import { TokenPriceDisplay } from "@/components/TokenPriceDisplay";
-
-// 生成静态参数，使所有已知 KOL 页面在构建时预生成
-// 这样它们就是静态页面，不需要 Edge Runtime
-export function generateStaticParams() {
-  const kols = getAvailableKOLs();
-  return kols.map((kol) => ({
-    handle: kol.handle,
-  }));
-}
-
-// 对于未知的 KOL，返回 404（不动态生成）
-export const dynamicParams = false;
 
 interface PageProps {
   params: Promise<{ handle: string }>;
