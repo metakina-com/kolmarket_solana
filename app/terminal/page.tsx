@@ -52,7 +52,7 @@ export default function TerminalPage() {
 
     const shortAddress = publicKey ? `${publicKey.toBase58().slice(0, 4)}...${publicKey.toBase58().slice(-4)}` : "";
     return (
-        <main className="min-h-screen bg-[#020617] text-white relative overflow-hidden">
+        <main className="min-h-screen bg-background text-foreground relative overflow-hidden">
             {/* Background scanline effect and grid */}
             <div className="absolute inset-0 bg-cyber-grid opacity-10 pointer-events-none" />
             <div className="scanline" />
@@ -74,16 +74,16 @@ export default function TerminalPage() {
                             </div>
                             <div>
                                 <h3 className="font-bold text-lg">Alpha Radar</h3>
-                                <p className="text-xs text-slate-500">Real-time Mindshare Signals</p>
+                                <p className="text-xs text-muted-foreground">Real-time Mindshare Signals</p>
                             </div>
                         </div>
 
                         <div className="space-y-4">
                             {liveAlpha.map((item, i) => (
-                                <div key={i} className="p-3 bg-white/5 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-all group">
+                                <div key={i} className="p-3 bg-card/50 rounded-xl border border-border hover:border-cyan-500/30 transition-all group">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-sm font-bold text-cyan-400">@{item.kol}</span>
-                                        <span className="text-[10px] text-slate-500 font-mono">{item.time}</span>
+                                        <span className="text-[10px] text-muted-foreground font-mono">{item.time}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
@@ -107,19 +107,19 @@ export default function TerminalPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="cyber-glass rounded-2xl p-6 border border-white/5"
+                        className="cyber-glass rounded-2xl p-6 border border-border"
                     >
-                        <h4 className="text-sm font-mono text-slate-500 uppercase tracking-widest mb-4">Market Health</h4>
+                        <h4 className="text-sm font-mono text-muted-foreground uppercase tracking-widest mb-4">Market Health</h4>
                         <div className="space-y-4">
                             <div className="flex justify-between items-center">
-                                <span className="text-xs text-slate-400 whitespace-nowrap">Global Sentiment</span>
-                                <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                <span className="text-xs text-muted-foreground whitespace-nowrap">Global Sentiment</span>
+                                <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
                                     <div className="h-full bg-cyan-500 w-[78%]" />
                                 </div>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-xs text-slate-400 whitespace-nowrap">Solana Volatility</span>
-                                <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                <span className="text-xs text-muted-foreground whitespace-nowrap">Solana Volatility</span>
+                                <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
                                     <div className="h-full bg-purple-500 w-[45%]" />
                                 </div>
                             </div>
@@ -130,11 +130,11 @@ export default function TerminalPage() {
                 {/* Center: Main — priority on mobile */}
                 <section className="col-span-12 lg:col-span-6 order-2 lg:order-2 space-y-6">
                     <div className="flex flex-wrap items-center gap-2">
-                        <div className="flex gap-2 p-1 bg-slate-900/50 rounded-xl border border-white/5 w-fit">
+                        <div className="flex gap-2 p-1 bg-card/50 rounded-xl border border-border w-fit">
                             <button
                                 type="button"
                                 onClick={() => setMode("chat")}
-                                className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${mode === "chat" ? "bg-cyan-500 text-slate-950 shadow-[0_0_10px_#06b6d4]" : "text-slate-400 hover:text-white"}`}
+                                className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${mode === "chat" ? "bg-cyan-500 text-slate-950 shadow-[0_0_10px_#06b6d4]" : "text-muted-foreground hover:text-foreground"}`}
                                 aria-pressed={mode === "chat"}
                             >
                                 INTELLIGENCE [AI]
@@ -142,7 +142,7 @@ export default function TerminalPage() {
                             <button
                                 type="button"
                                 onClick={() => setMode("trade")}
-                                className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${mode === "trade" ? "bg-purple-500 text-white shadow-[0_0_10px_#a855f7]" : "text-slate-400 hover:text-white"}`}
+                                className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${mode === "trade" ? "bg-purple-500 text-white shadow-[0_0_10px_#a855f7]" : "text-muted-foreground hover:text-foreground"}`}
                                 aria-pressed={mode === "trade"}
                             >
                                 EXECUTION [SWAP]
@@ -151,7 +151,7 @@ export default function TerminalPage() {
                         <button
                             type="button"
                             onClick={() => setDrawerOpen(true)}
-                            className="lg:hidden flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-sm font-medium"
+                            className="lg:hidden flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl border border-border bg-card/50 hover:bg-card/80 text-sm font-medium"
                             aria-label="Open Alpha & Wallet panels"
                         >
                             <LayoutDashboard size={18} />
@@ -166,7 +166,7 @@ export default function TerminalPage() {
                                 initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.98 }}
-                                className="cyber-glass rounded-2xl p-8 border border-white/10 relative overflow-hidden h-[650px] flex flex-col"
+                                className="cyber-glass rounded-2xl p-8 border border-border relative overflow-hidden h-[650px] flex flex-col"
                             >
                                 <div className="absolute top-0 right-0 p-4 opacity-20">
                                     <Cpu className="w-16 h-16 text-cyan-500" />
@@ -191,22 +191,22 @@ export default function TerminalPage() {
                     </AnimatePresence>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="p-4 rounded-2xl bg-slate-900/50 border border-white/5 flex items-center gap-4">
+                        <div className="p-4 rounded-2xl bg-card/50 border border-border flex items-center gap-4">
                             <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
                                 <Zap size={24} />
                             </div>
                             <div>
                                 <div className="text-2xl font-bold">1.2s</div>
-                                <div className="text-[10px] text-slate-500 uppercase tracking-wider">Neural Latency</div>
+                                <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Neural Latency</div>
                             </div>
                         </div>
-                        <div className="p-4 rounded-2xl bg-slate-900/50 border border-white/5 flex items-center gap-4">
+                        <div className="p-4 rounded-2xl bg-card/50 border border-border flex items-center gap-4">
                             <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
                                 <Activity size={24} />
                             </div>
                             <div>
                                 <div className="text-2xl font-bold">94.2%</div>
-                                <div className="text-[10px] text-slate-500 uppercase tracking-wider">Sync Accuracy</div>
+                                <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Sync Accuracy</div>
                             </div>
                         </div>
                     </div>
@@ -225,16 +225,16 @@ export default function TerminalPage() {
                         </h3>
 
                         <div className="space-y-6">
-                            <div className="p-4 bg-slate-900/80 rounded-xl border border-white/5 relative overflow-hidden group">
+                            <div className="p-4 bg-card/80 rounded-xl border border-border relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">Active Wallet</div>
+                                <div className="text-[10px] text-muted-foreground uppercase font-mono mb-1">Active Wallet</div>
                                 <div className="text-sm font-mono text-cyan-400 flex items-center justify-between">
                                     {connected ? (
                                         <a
                                             href={publicKey ? getExplorerAddressUrl(publicKey.toBase58()) : "#"}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-1.5 hover:text-white transition-colors"
+                                            className="flex items-center gap-1.5 hover:text-foreground transition-colors"
                                             aria-label="View wallet on explorer"
                                         >
                                             {shortAddress}
@@ -246,13 +246,13 @@ export default function TerminalPage() {
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-slate-900/80 rounded-xl border border-white/5 relative overflow-hidden group">
+                            <div className="p-4 bg-card/80 rounded-xl border border-border relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">SOL Balance</div>
-                                <div className="text-3xl font-black text-white">
-                                    {balance !== null ? balance.toFixed(4) : "0.00"} <span className="text-sm font-normal text-slate-500">SOL</span>
+                                <div className="text-[10px] text-muted-foreground uppercase font-mono mb-1">SOL Balance</div>
+                                <div className="text-3xl font-black text-foreground">
+                                    {balance !== null ? balance.toFixed(4) : "0.00"} <span className="text-sm font-normal text-muted-foreground">SOL</span>
                                 </div>
-                                <div className="text-xs text-slate-500 mt-2">≈ ${balance !== null && solPrice !== null ? (balance * solPrice).toFixed(2) : "0.00"} <span className="text-[8px] opacity-50">USD</span></div>
+                                <div className="text-xs text-muted-foreground mt-2">≈ ${balance !== null && solPrice !== null ? (balance * solPrice).toFixed(2) : "0.00"} <span className="text-[8px] opacity-50">USD</span></div>
                             </div>
                         </div>
 
@@ -260,7 +260,7 @@ export default function TerminalPage() {
                             <button type="button" className="w-full py-4 bg-cyan-500 text-slate-950 font-black rounded-xl hover:bg-cyan-400 transition-all text-xs uppercase tracking-[0.2em] active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
                                 Sync Nexus Assets
                             </button>
-                            <button type="button" className="w-full py-4 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 transition-all text-xs uppercase tracking-[0.2em] active:scale-95">
+                            <button type="button" className="w-full py-4 bg-muted text-foreground font-bold rounded-xl hover:bg-muted/80 transition-all text-xs uppercase tracking-[0.2em] active:scale-95">
                                 Export Keys
                             </button>
                             <TipButton
@@ -281,7 +281,7 @@ export default function TerminalPage() {
                             <ShieldCheck size={18} />
                             <span className="text-xs font-bold uppercase tracking-wider">Quantum Security</span>
                         </div>
-                        <p className="text-[10px] text-slate-500 leading-relaxed italic">
+                        <p className="text-[10px] text-muted-foreground leading-relaxed italic">
                             All neural signatures are multi-sig verified and broadcast via the Solana L1 Nexus.
                         </p>
                     </motion.div>
@@ -302,10 +302,10 @@ export default function TerminalPage() {
                         </h3>
                         <div className="space-y-3">
                             {liveAlpha.map((item, i) => (
-                                <div key={i} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                                <div key={i} className="p-3 bg-card/50 rounded-xl border border-border">
                                     <div className="flex justify-between items-start mb-1">
                                         <span className="text-sm font-bold text-cyan-400">@{item.kol}</span>
-                                        <span className="text-[10px] text-slate-500 font-mono">{item.time}</span>
+                                        <span className="text-[10px] text-muted-foreground font-mono">{item.time}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className={`text-xs px-2 py-0.5 rounded ${item.action === "BUY" ? "bg-green-500/20 text-green-400" : "bg-blue-500/20 text-blue-400"}`}>{item.action}</span>
@@ -315,15 +315,15 @@ export default function TerminalPage() {
                                 </div>
                             ))}
                         </div>
-                        <h4 className="text-sm font-mono text-slate-500 uppercase tracking-widest mt-4 mb-3">Market Health</h4>
+                        <h4 className="text-sm font-mono text-muted-foreground uppercase tracking-widest mt-4 mb-3">Market Health</h4>
                         <div className="space-y-3">
                             <div className="flex justify-between items-center">
-                                <span className="text-xs text-slate-400">Global Sentiment</span>
-                                <div className="w-20 h-1.5 bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-cyan-500 w-[78%]" /></div>
+                                <span className="text-xs text-muted-foreground">Global Sentiment</span>
+                                <div className="w-20 h-1.5 bg-muted rounded-full overflow-hidden"><div className="h-full bg-cyan-500 w-[78%]" /></div>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-xs text-slate-400">Solana Volatility</span>
-                                <div className="w-20 h-1.5 bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-purple-500 w-[45%]" /></div>
+                                <span className="text-xs text-muted-foreground">Solana Volatility</span>
+                                <div className="w-20 h-1.5 bg-muted rounded-full overflow-hidden"><div className="h-full bg-purple-500 w-[45%]" /></div>
                             </div>
                         </div>
                     </div>
@@ -333,14 +333,14 @@ export default function TerminalPage() {
                             Nexus Core
                         </h3>
                         <div className="space-y-4">
-                            <div className="p-3 bg-slate-900/80 rounded-xl border border-white/5">
-                                <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">Active Wallet</div>
+                            <div className="p-3 bg-card/80 rounded-xl border border-border">
+                                <div className="text-[10px] text-muted-foreground uppercase font-mono mb-1">Active Wallet</div>
                                 {connected && publicKey ? (
                                     <a
                                         href={getExplorerAddressUrl(publicKey.toBase58())}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-sm font-mono text-cyan-400 hover:text-white transition-colors inline-flex items-center gap-1"
+                                        className="text-sm font-mono text-cyan-400 hover:text-foreground transition-colors inline-flex items-center gap-1"
                                         aria-label="View wallet on explorer"
                                     >
                                         {shortAddress}
@@ -350,17 +350,17 @@ export default function TerminalPage() {
                                     <span className="text-sm font-mono text-cyan-400">OFFLINE</span>
                                 )}
                             </div>
-                            <div className="p-3 bg-slate-900/80 rounded-xl border border-white/5">
-                                <div className="text-[10px] text-slate-500 uppercase font-mono mb-1">SOL Balance</div>
-                                <div className="text-2xl font-black text-white">{balance !== null ? balance.toFixed(4) : "0.00"} <span className="text-sm font-normal text-slate-500">SOL</span></div>
-                                <div className="text-xs text-slate-500">≈ ${balance !== null && solPrice !== null ? (balance * solPrice).toFixed(2) : "0.00"} USD</div>
+                            <div className="p-3 bg-card/80 rounded-xl border border-border">
+                                <div className="text-[10px] text-muted-foreground uppercase font-mono mb-1">SOL Balance</div>
+                                <div className="text-2xl font-black text-foreground">{balance !== null ? balance.toFixed(4) : "0.00"} <span className="text-sm font-normal text-muted-foreground">SOL</span></div>
+                                <div className="text-xs text-muted-foreground">≈ ${balance !== null && solPrice !== null ? (balance * solPrice).toFixed(2) : "0.00"} USD</div>
                             </div>
                         </div>
                         <div className="mt-4 space-y-2">
                             <button type="button" className="w-full min-h-[44px] py-3 bg-cyan-500 text-slate-950 font-bold rounded-xl hover:bg-cyan-400 transition-all text-xs uppercase tracking-wider">
                                 Sync Nexus Assets
                             </button>
-                            <button type="button" className="w-full min-h-[44px] py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 transition-all text-xs uppercase tracking-wider">
+                            <button type="button" className="w-full min-h-[44px] py-3 bg-muted text-foreground font-bold rounded-xl hover:bg-muted/80 transition-all text-xs uppercase tracking-wider">
                                 Export Keys
                             </button>
                             <TipButton

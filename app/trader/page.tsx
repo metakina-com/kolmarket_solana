@@ -45,7 +45,7 @@ export default function TraderPortalPage() {
           className="text-center max-w-sm w-full"
         >
           <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center">
-            <Zap className="w-8 h-8 text-white" />
+            <Zap className="w-8 h-8 text-foreground" />
           </div>
           <h1 className="text-xl font-bold text-foreground mb-2">Taking you to Trading Terminal</h1>
           <p className="text-muted-foreground text-sm mb-6">

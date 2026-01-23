@@ -29,23 +29,33 @@ export function Footer() {
             <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#whitepaper" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
+                <a href="/whitepaper" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
                   $KMT Token
                 </a>
               </li>
               <li>
-                <a href="#portals" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
-                  Portals
+                <a href="/presale" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
+                  Presale
                 </a>
               </li>
               <li>
-                <a href="#market" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
+                <a href="/nexus" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
+                  Nexus
+                </a>
+              </li>
+              <li>
+                <a href="/market" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
                   Market
                 </a>
               </li>
               <li>
-                <a href="#agents" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
+                <a href="/agents" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
                   Agents
+                </a>
+              </li>
+              <li>
+                <a href="/knowledge" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
+                  Knowledge
                 </a>
               </li>
             </ul>

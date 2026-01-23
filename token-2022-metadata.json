@@ -1,0 +1,10 @@
+{
+  "network": "devnet",
+  "mint": "DjyuBJmt7uAS2RuQDJimNjjvjVqQkKYVukDa4m2Svyco",
+  "name": "KOLMARKET TOKEN",
+  "symbol": "KMT",
+  "uri": "https://oss.kolmarket.ai/kmt-metadata.json",
+  "storageType": "TokenMetadata Extension",
+  "transaction": "22HqMmekkpTFPES2D8eE74SRn3ncMaFbPDwDa4kzWZjymGU485sjppahGFPHk5Sa1nPWAg7FiM2kodtHhmNBiDn1",
+  "createdAt": "2026-01-23T05:26:04.187Z"
+}

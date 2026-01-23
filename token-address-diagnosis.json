@@ -1,0 +1,28 @@
+{
+  "mint": "DjyuBJmt7uAS2RuQDJimNjjvjVqQkKYVukDa4m2Svyco",
+  "network": "devnet",
+  "type": "Token-2022",
+  "decimals": 9,
+  "supply": "0",
+  "mintAuthority": "6t8ewDtr3GbocPveoCELJpd35AS6iDgBcrvRM3zsbEV1",
+  "freezeAuthority": "6t8ewDtr3GbocPveoCELJpd35AS6iDgBcrvRM3zsbEV1",
+  "hasMetadata": true,
+  "metadata": {
+    "name": "KOLMARKET TOKEN",
+    "symbol": "KMT",
+    "uri": "https://oss.kolmarket.ai/kmt-metadata.json"
+  },
+  "issues": [],
+  "warnings": [
+    "⚠️  代币供应量为 0",
+    "⚠️  这是 Token-2022 代币",
+    "⚠️  代币在 Devnet 上"
+  ],
+  "recommendations": [
+    "💡 建议: 界面可能要求代币有供应量，需要先铸造一些代币",
+    "💡 建议: 某些界面可能只支持标准 SPL Token，不支持 Token-2022",
+    "💡 建议: 检查界面是否支持 Token-2022 代币",
+    "💡 建议: 界面可能要求 Mainnet 代币，检查网络设置"
+  ],
+  "diagnosedAt": "2026-01-23T06:56:15.627Z"
+}

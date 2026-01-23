@@ -1,0 +1,17 @@
+{
+  "network": "devnet",
+  "program": "SPL Token",
+  "mint": "bkkV9DEJmAof1HvGXBPahCzxY9vazjSZSGaNnZVpANS",
+  "tokenAccount": "2aRfTC6okdkeZWY4JpEhLkaGSoBjRYWT2AF1p4FcBYaq",
+  "name": "KOLMARKET TOKEN",
+  "symbol": "KMT",
+  "decimals": 9,
+  "totalSupply": 1000000000,
+  "totalSupplyRaw": "1000000000000000000",
+  "mintAuthority": "6t8ewDtr3GbocPveoCELJpd35AS6iDgBcrvRM3zsbEV1",
+  "freezeAuthority": null,
+  "transactions": {
+    "createMint": "eMLcenqip1pLciYFaJ3CQPVX4mDBAsrfXzUJqM5ZapPka8Qn8pzyozjK7fy7YByDz7htaJWvZ6HVxuncJMN4Gbk"
+  },
+  "createdAt": "2026-01-23T06:58:32.010Z"
+}

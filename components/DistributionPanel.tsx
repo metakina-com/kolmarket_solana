@@ -129,7 +129,7 @@ export function DistributionPanel() {
   };
 
   return (
-    <div className="glass-strong rounded-xl p-6 max-w-2xl mx-auto">
+    <div className="rounded-xl p-6 max-w-2xl mx-auto bg-card/90 backdrop-blur-sm border border-border">
       <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
         Distribution Panel
       </h2>
@@ -142,7 +142,7 @@ export function DistributionPanel() {
 
       {/* Distribution Mode */}
       <div className="mb-6 space-y-3">
-        <label className="flex items-center gap-2 text-slate-300">
+        <label className="flex items-center gap-2 text-foreground">
           <input
             type="checkbox"
             checked={tokenMode}
@@ -160,12 +160,12 @@ export function DistributionPanel() {
             placeholder="Token mint address"
             value={mint}
             onChange={(e) => setMint(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500"
+            className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground placeholder-muted-foreground"
           />
         )}
         {!tokenMode && (
           <>
-            <label className="flex items-center gap-2 text-slate-300 mt-2">
+            <label className="flex items-center gap-2 text-foreground mt-2">
               <input
                 type="checkbox"
                 checked={usePercentage}
@@ -202,7 +202,7 @@ export function DistributionPanel() {
                 placeholder="Recipient address"
                 value={recipient.address}
                 onChange={(e) => updateRecipient(index, "address", e.target.value)}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500"
+                className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground placeholder-muted-foreground"
               />
               {tokenMode ? (
                 <input
@@ -212,7 +212,7 @@ export function DistributionPanel() {
                   onChange={(e) =>
                     updateRecipient(index, "amount", parseFloat(e.target.value) || 0)
                   }
-                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground"
                 />
               ) : usePercentage ? (
                 <input
@@ -222,7 +222,7 @@ export function DistributionPanel() {
                   onChange={(e) =>
                     updateRecipient(index, "percentage", parseFloat(e.target.value) || 0)
                   }
-                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground"
                 />
               ) : (
                 <input
@@ -232,7 +232,7 @@ export function DistributionPanel() {
                   onChange={(e) =>
                     updateRecipient(index, "amount", parseFloat(e.target.value) || 0)
                   }
-                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+                  className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground"
                 />
               )}
             </div>
@@ -251,7 +251,7 @@ export function DistributionPanel() {
       {/* Add Recipient Button */}
       <button
         onClick={addRecipient}
-        className="mb-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+        className="mb-6 px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
       >
         <Plus size={16} />
         Add Recipient
@@ -284,7 +284,7 @@ export function DistributionPanel() {
           className="mt-6 p-4 bg-green-500/20 border border-green-500/30 rounded-lg"
         >
           <h3 className="text-green-400 font-semibold mb-2">Distribution Successful!</h3>
-          <p className="text-sm text-slate-300">
+          <p className="text-sm text-foreground">
             Transaction: <span className="font-mono text-xs break-all">{result.transactionHash}</span>
           </p>
           <a
@@ -303,7 +303,7 @@ export function DistributionPanel() {
         </motion.div>
       )}
 
-      <div className="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-xs text-slate-400">
+      <div className="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-xs text-muted-foreground">
         ✅ Transactions are signed by your wallet. Connect and approve in Phantom/Solflare.
       </div>
     </div>

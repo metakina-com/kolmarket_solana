@@ -1,0 +1,9 @@
+{
+  "network": "devnet",
+  "mint": "2J5fqwgvtUF27Yh5i7MLuStbgzmiVjRE98ChmdNDRnLQ",
+  "tokenAccount": "2PJTpFsfcerxmeUhm4cSYyPYkBqLc8umzSdQ8KaFHkiV",
+  "decimals": 9,
+  "initialSupply": 1,
+  "transaction": "45RZiWK3ZHGWUeChdUeeivrnBHxS9PR282T5CtoXzduqjfUDmPQWsA4oV1GmcpzfELeuXBSs5BXrrq7Chc9VMw4V",
+  "createdAt": "2026-01-23T04:06:50.745Z"
+}

@@ -1,0 +1,16 @@
+{
+  "network": "devnet",
+  "program": "Token-2022",
+  "mint": "DjyuBJmt7uAS2RuQDJimNjjvjVqQkKYVukDa4m2Svyco",
+  "decimals": 9,
+  "extensions": [
+    "TransferFeeConfig",
+    "MintCloseAuthority",
+    "DefaultAccountState",
+    "InterestBearingConfig",
+    "PermanentDelegate",
+    "MetadataPointer"
+  ],
+  "transaction": "2eGQ83Vusx8TTrkkRcvd8KoXJywWCs2BEETYNqFfrD8s1JVfxycqT6dzu7dFvPsdAtFi8woR8EHKqo2XMKMJ4rRf",
+  "createdAt": "2026-01-23T05:04:37.467Z"
+}

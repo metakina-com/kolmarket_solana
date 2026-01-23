@@ -92,7 +92,7 @@ export default function CreatorPage() {
     };
 
     return (
-        <main className="min-h-screen bg-[#020617] text-white relative overflow-hidden">
+        <main className="min-h-screen bg-background text-foreground relative overflow-hidden">
             <div className="absolute inset-0 bg-cyber-grid opacity-10 pointer-events-none" />
             <div className="scanline" />
 
@@ -110,7 +110,7 @@ export default function CreatorPage() {
                         <div className="flex flex-col items-center mb-6">
                             <div className="relative group">
                                 <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 p-1 mb-4 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-                                    <div className="relative w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
+                                    <div className="relative w-full h-full rounded-full bg-card flex items-center justify-center overflow-hidden">
                                         {avatarUrl ? (
                                             <Image
                                                 src={avatarUrl}
@@ -120,7 +120,7 @@ export default function CreatorPage() {
                                                 className="object-cover"
                                             />
                                         ) : (
-                                            <UserCircle className="w-16 h-16 text-slate-700" />
+                                            <UserCircle className="w-16 h-16 text-muted-foreground/50" />
                                         )}
                                     </div>
                                 </div>
@@ -159,15 +159,15 @@ export default function CreatorPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
-                                <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <div className="flex items-center justify-between p-3 bg-card/50 rounded-lg border border-border">
+                                <div className="flex items-center gap-2 text-sm text-foreground">
                                     <Twitter size={16} className="text-cyan-400" />
                                     Twitter Link
                                 </div>
                                 <div className="w-2 h-2 rounded-full bg-green-500" />
                             </div>
-                            <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
-                                <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <div className="flex items-center justify-between p-3 bg-card/50 rounded-lg border border-border">
+                                <div className="flex items-center gap-2 text-sm text-foreground">
                                     <MessageCircle size={16} className="text-indigo-400" />
                                     Discord Mod
                                 </div>
@@ -180,10 +180,10 @@ export default function CreatorPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="cyber-glass p-6 rounded-2xl border border-white/5"
+                        className="cyber-glass p-6 rounded-2xl border border-border"
                     >
                         <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-xs font-mono text-slate-500 uppercase tracking-widest">Neural Tuning</h4>
+                            <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-widest">Neural Tuning</h4>
                             {isSaving ? (
                                 <RefreshCcw size={14} className="animate-spin text-cyan-400" />
                             ) : lastSaved ? (
@@ -194,7 +194,7 @@ export default function CreatorPage() {
                         <div className="space-y-8">
                             <div>
                                 <div className="flex justify-between text-xs mb-3">
-                                    <span className="text-slate-400 uppercase font-bold tracking-tighter">Aggression</span>
+                                    <span className="text-muted-foreground uppercase font-bold tracking-tighter">Aggression</span>
                                     <span className="text-cyan-400 font-mono">{aggression}%</span>
                                 </div>
                                 <input
@@ -206,13 +206,13 @@ export default function CreatorPage() {
                                         setAggression(val);
                                         saveSettings(val, humor);
                                     }}
-                                    className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                                    className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-cyan-500"
                                 />
                             </div>
 
                             <div>
                                 <div className="flex justify-between text-xs mb-3">
-                                    <span className="text-slate-400 uppercase font-bold tracking-tighter">Humor</span>
+                                    <span className="text-muted-foreground uppercase font-bold tracking-tighter">Humor</span>
                                     <span className="text-purple-400 font-mono">{humor}%</span>
                                 </div>
                                 <input
@@ -224,12 +224,12 @@ export default function CreatorPage() {
                                         setHumor(val);
                                         saveSettings(aggression, val);
                                     }}
-                                    className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                                    className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-purple-500"
                                 />
                             </div>
                         </div>
 
-                        <p className="mt-6 text-[10px] text-slate-600 italic leading-tight">
+                        <p className="mt-6 text-[10px] text-muted-foreground italic leading-tight">
                             Neural parameters are synced with ElizaOS Core in real-time. Changes affect agent response tone.
                         </p>
                     </motion.div>
@@ -241,7 +241,7 @@ export default function CreatorPage() {
                         <button
                             type="button"
                             onClick={() => setDrawerOpen(true)}
-                            className="flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-sm font-medium"
+                            className="flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl border border-border bg-card/50 hover:bg-card/80 text-sm font-medium"
                             aria-label="Open agent and logs"
                         >
                             <LayoutDashboard size={18} />
@@ -252,10 +252,10 @@ export default function CreatorPage() {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="cyber-glass rounded-2xl p-6 border border-white/10"
+                            className="cyber-glass rounded-2xl p-6 border border-border"
                         >
-                            <div className="text-slate-500 text-xs font-mono mb-1 uppercase tracking-wider">Total Revenue Share</div>
-                            <div className="text-4xl font-black text-white tracking-tighter">${revenue.toLocaleString()}</div>
+                            <div className="text-muted-foreground text-xs font-mono mb-1 uppercase tracking-wider">Total Revenue Share</div>
+                            <div className="text-4xl font-black text-foreground tracking-tighter">${revenue.toLocaleString()}</div>
                             <div className="mt-4 flex items-center gap-2 text-green-400 text-sm">
                                 <TrendingUp size={16} />
                                 +12.4% this week
@@ -265,10 +265,10 @@ export default function CreatorPage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="cyber-glass rounded-2xl p-6 border border-white/10"
+                            className="cyber-glass rounded-2xl p-6 border border-border"
                         >
-                            <div className="text-slate-500 text-xs font-mono mb-1 uppercase tracking-wider">Active Followers</div>
-                            <div className="text-4xl font-black text-white tracking-tighter">{(followers / 1000).toFixed(1)}K</div>
+                            <div className="text-muted-foreground text-xs font-mono mb-1 uppercase tracking-wider">Active Followers</div>
+                            <div className="text-4xl font-black text-foreground tracking-tighter">{(followers / 1000).toFixed(1)}K</div>
                             <div className="mt-4 flex items-center gap-2 text-cyan-400 text-sm">
                                 <Users size={16} />
                                 Network expansion mode
@@ -280,14 +280,14 @@ export default function CreatorPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="cyber-glass rounded-2xl p-8 border border-white/10"
+                        className="cyber-glass rounded-2xl p-8 border border-border"
                     >
                         <div className="flex justify-between items-center mb-8">
                             <h3 className="text-xl font-bold flex items-center gap-2">
                                 <BarChart2 className="w-5 h-5 text-purple-400" />
                                 Influence Metrics
                             </h3>
-                            <button type="button" className="min-h-[44px] px-3 py-2 text-xs bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50">
+                            <button type="button" className="min-h-[44px] px-3 py-2 text-xs bg-card/50 border border-border rounded-lg hover:bg-card/80 transition-all font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50">
                                 LAST 30 DAYS
                             </button>
                         </div>
@@ -299,13 +299,13 @@ export default function CreatorPage() {
                                         className="w-full bg-gradient-to-t from-cyan-500/20 via-cyan-500/50 to-cyan-500 rounded-t-sm transition-all duration-500 group-hover:from-cyan-400 group-hover:to-cyan-300"
                                         style={{ height: `${h}%` }}
                                     />
-                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity border border-white/10 z-20">
+                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-card text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity border border-border z-20">
                                         {h}k
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="flex justify-between mt-4 px-4 text-[10px] text-slate-500 font-mono">
+                        <div className="flex justify-between mt-4 px-4 text-[10px] text-muted-foreground font-mono">
                             <span>JAN</span>
                             <span>MAR</span>
                             <span>MAY</span>
@@ -323,10 +323,10 @@ export default function CreatorPage() {
                             </div>
                             <div>
                                 <h4 className="font-bold">Neural Filter Protocol</h4>
-                                <p className="text-xs text-slate-500">Enable high-sensitivity moderation for wallet interactions</p>
+                                <p className="text-xs text-muted-foreground">Enable high-sensitivity moderation for wallet interactions</p>
                             </div>
                         </div>
-                        <button className="px-6 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition-all relative z-10 border border-white/5 active:scale-95">
+                        <button className="px-6 py-2 bg-muted hover:bg-muted/80 rounded-lg text-sm transition-all relative z-10 border border-border active:scale-95">
                             Configure
                         </button>
                     </div>
@@ -392,10 +392,10 @@ export default function CreatorPage() {
                                 { time: "13:58", msg: "Executed sentiment swap: +0.5 SOL." },
                                 { time: "13:42", msg: "Synced knowledge base with new whitepaper." },
                             ].map((log, i) => (
-                                <div key={i} className="relative pl-6 border-l border-white/10 py-1">
+                                <div key={i} className="relative pl-6 border-l border-border py-1">
                                     <div className="absolute -left-[5px] top-2 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-                                    <div className="text-[10px] text-slate-500 mb-1 font-mono uppercase tracking-tighter">{log.time}</div>
-                                    <p className="text-xs text-slate-300 leading-tight">{log.msg}</p>
+                                    <div className="text-[10px] text-muted-foreground mb-1 font-mono uppercase tracking-tighter">{log.time}</div>
+                                    <p className="text-xs text-foreground leading-tight">{log.msg}</p>
                                 </div>
                             ))}
                         </div>
@@ -405,7 +405,7 @@ export default function CreatorPage() {
                                 <Share2 size={18} />
                                 BroadCast Alpha
                             </button>
-                            <button className="w-full py-4 bg-slate-800 rounded-xl font-bold text-slate-400 flex items-center justify-center gap-2 text-sm uppercase tracking-widest hover:bg-slate-700 transition-all border border-white/5">
+                            <button className="w-full py-4 bg-muted rounded-xl font-bold text-muted-foreground flex items-center justify-center gap-2 text-sm uppercase tracking-widest hover:bg-muted/80 transition-all border border-border">
                                 <Settings size={18} />
                                 Agent Settings
                             </button>
@@ -437,14 +437,14 @@ export default function CreatorPage() {
                                     <span className="text-slate-400">Aggression</span>
                                     <span className="text-cyan-400 font-mono">{aggression}%</span>
                                 </div>
-                                <input type="range" min="0" max="100" value={aggression} onChange={(e) => { const v = parseInt(e.target.value); setAggression(v); saveSettings(v, humor); }} className="w-full h-1.5 bg-slate-800 rounded-lg accent-cyan-500" />
+                                <input type="range" min="0" max="100" value={aggression} onChange={(e) => { const v = parseInt(e.target.value); setAggression(v); saveSettings(v, humor); }} className="w-full h-1.5 bg-muted rounded-lg accent-cyan-500" />
                             </div>
                             <div>
                                 <div className="flex justify-between text-xs mb-1">
                                     <span className="text-slate-400">Humor</span>
                                     <span className="text-purple-400 font-mono">{humor}%</span>
                                 </div>
-                                <input type="range" min="0" max="100" value={humor} onChange={(e) => { const v = parseInt(e.target.value); setHumor(v); saveSettings(aggression, v); }} className="w-full h-1.5 bg-slate-800 rounded-lg accent-purple-500" />
+                                <input type="range" min="0" max="100" value={humor} onChange={(e) => { const v = parseInt(e.target.value); setHumor(v); saveSettings(aggression, v); }} className="w-full h-1.5 bg-muted rounded-lg accent-purple-500" />
                             </div>
                         </div>
                     </div>
@@ -455,10 +455,10 @@ export default function CreatorPage() {
                         </h3>
                         <div className="space-y-3">
                             {[{ time: "14:20", msg: "Replied to @elonmusk re SOL scaling." }, { time: "14:15", msg: "Analyzed $KMT mindshare." }, { time: "13:58", msg: "Sentiment swap: +0.5 SOL." }].map((log, i) => (
-                                <div key={i} className="relative pl-4 border-l border-white/10 py-1">
+                                <div key={i} className="relative pl-4 border-l border-border py-1">
                                     <div className="absolute -left-[5px] top-1.5 w-1.5 h-1.5 rounded-full bg-cyan-500" />
-                                    <div className="text-[10px] text-slate-500 font-mono">{log.time}</div>
-                                    <p className="text-xs text-slate-300">{log.msg}</p>
+                                    <div className="text-[10px] text-muted-foreground font-mono">{log.time}</div>
+                                    <p className="text-xs text-foreground">{log.msg}</p>
                                 </div>
                             ))}
                         </div>
@@ -467,7 +467,7 @@ export default function CreatorPage() {
                                 <Share2 size={16} />
                                 BroadCast Alpha
                             </button>
-                            <button type="button" className="w-full min-h-[44px] py-3 bg-slate-800 rounded-xl font-bold text-slate-400 text-sm flex items-center justify-center gap-2 border border-white/5">
+                            <button type="button" className="w-full min-h-[44px] py-3 bg-muted rounded-xl font-bold text-muted-foreground text-sm flex items-center justify-center gap-2 border border-border">
                                 <Settings size={16} />
                                 Agent Settings
                             </button>

@@ -12,6 +12,16 @@
     "test:plugins": "./scripts/test-all-plugins.sh",
     "test:container": "./scripts/test-container.sh",
     "test:all": "bash scripts/comprehensive-test.sh",
+    "create:token": "node scripts/create-token-devnet.js",
+    "create:token2022": "node scripts/create-token-2022-with-all-extensions.js",
+    "set:metadata": "node scripts/set-token-metadata.js",
+    "set:kmt": "node scripts/set-kmt-metadata.js",
+    "upload:metadata": "node scripts/upload-metadata-to-chain.js",
+    "upload:r2": "node scripts/upload-metadata-to-r2.js",
+    "set:token2022:metadata": "node scripts/set-token-2022-metadata.js",
+    "verify:token": "node scripts/verify-token-info.js",
+    "generate:form": "node scripts/generate-project-form-data.js",
+    "create:spl:token": "node scripts/create-spl-token-with-supply.js",
     "deploy": "npx @cloudflare/next-on-pages && npx wrangler pages deploy .vercel/output/static",
     "deploy:preview": "npx @cloudflare/next-on-pages && npx wrangler pages deploy .vercel/output/static --branch=preview"
   },
@@ -44,6 +54,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "2.13.0",
     "@types/bs58": "^5.0.0",
     "@types/node": "^20.14.0",
     "@types/react": "^18.3.0",

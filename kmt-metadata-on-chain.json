@@ -1,0 +1,23 @@
+{
+  "network": "devnet",
+  "mint": "bkkV9DEJmAof1HvGXBPahCzxY9vazjSZSGaNnZVpANS",
+  "metadataPDA": "8NPQgZVBa6ipgf7BjcQ2wgrdZdazZQAkBNWGkKzWcVq4",
+  "name": "KOLMARKET TOKEN",
+  "symbol": "KMT",
+  "uri": "https://oss.kolmarket.ai/kmt-metadata.json",
+  "image": "https://oss.kolmarket.ai/etPJjFNh_400x400.jpg",
+  "external_url": "https://kolmarket.ai",
+  "transaction": "5f9DZyd3wPPzLk5A93afCuc8AUfaMU5n1YTV7TR4n9own6YC2TFktR4bq3uMXuzyBhUnv1dvGQjj4CkCY2o9YtJc",
+  "explorer": {
+    "solanaExplorer": {
+      "mint": "https://explorer.solana.com/address/bkkV9DEJmAof1HvGXBPahCzxY9vazjSZSGaNnZVpANS?cluster=devnet",
+      "metadata": "https://explorer.solana.com/address/8NPQgZVBa6ipgf7BjcQ2wgrdZdazZQAkBNWGkKzWcVq4?cluster=devnet",
+      "transaction": "https://explorer.solana.com/tx/5f9DZyd3wPPzLk5A93afCuc8AUfaMU5n1YTV7TR4n9own6YC2TFktR4bq3uMXuzyBhUnv1dvGQjj4CkCY2o9YtJc?cluster=devnet"
+    },
+    "solscan": {
+      "mint": "https://solscan.io/token/bkkV9DEJmAof1HvGXBPahCzxY9vazjSZSGaNnZVpANS?cluster=devnet",
+      "transaction": "https://solscan.io/tx/5f9DZyd3wPPzLk5A93afCuc8AUfaMU5n1YTV7TR4n9own6YC2TFktR4bq3uMXuzyBhUnv1dvGQjj4CkCY2o9YtJc?cluster=devnet"
+    }
+  },
+  "createdAt": "2026-01-23T06:58:42.155Z"
+}
