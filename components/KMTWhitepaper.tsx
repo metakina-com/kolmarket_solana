@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import {
     Coins,
     Users,
@@ -282,13 +283,13 @@ export function KMTWhitepaper() {
                     viewport={{ once: true }}
                     className="mt-16 text-center"
                 >
-                    <a
-                        href="#"
+                    <Link
+                        href="/presale"
                         className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-xl font-semibold text-white hover:from-cyan-600 hover:to-purple-600 transition-all shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40"
                     >
                         <Rocket className="w-5 h-5" />
                         Join the Presale
-                    </a>
+                    </Link>
                     <p className="mt-4 text-sm text-muted-foreground">
                         * This is not financial advice. Please do your own research before investing.
                     </p>

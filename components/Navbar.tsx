@@ -28,6 +28,9 @@ export function Navbar() {
             <a href="/whitepaper" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               $KMT
             </a>
+            <a href="/presale" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
+              Presale
+            </a>
             <a href="/nexus" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Nexus
             </a>
@@ -109,6 +112,9 @@ export function Navbar() {
           <div className="md:hidden py-6 space-y-4 border-t border-slate-200/20 dark:border-white/5 opacity-100 transition-opacity duration-200">
             <a href="/whitepaper" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               $KMT Token
+            </a>
+            <a href="/presale" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
+              Presale
             </a>
             <a href="/nexus" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Nexus

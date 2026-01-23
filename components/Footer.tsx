@@ -34,6 +34,11 @@ export function Footer() {
                 </a>
               </li>
               <li>
+                <a href="/presale" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
+                  Presale
+                </a>
+              </li>
+              <li>
                 <a href="/nexus" className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">
                   Nexus
                 </a>
