@@ -61,7 +61,7 @@ export default function KOLDetailPage({ params }: PageProps) {
             </Link>
             <span className="text-muted-foreground/50">·</span>
             <Link
-              href="/#market"
+              href="/market"
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-cyan-400 transition-colors min-h-[44px]"
             >
               <LayoutGrid className="w-4 h-4" />

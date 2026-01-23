@@ -6,7 +6,29 @@
 
 ## 🚀 快速测试
 
-### 使用自动化测试脚本
+### ElizaOS 一键完整测试（推荐）
+
+```bash
+# 先启动 Next.js：npm run dev
+# 然后运行（默认 http://localhost:3000，若端口不同请传入）
+bash scripts/test-elizaos-complete.sh http://localhost:3000
+
+# 跳过 verify，只测 API（更快）
+SKIP_VERIFY=1 bash scripts/test-elizaos-complete.sh http://localhost:3000
+```
+
+脚本会执行：
+1. **verify-elizaos**：包、代码、路由、容器健康、降级机制
+2. **容器健康检查**：Railway 容器 /health
+3. **Agent Suite API**：创建 Suite → Avatar 发推 → Trader 交易 → 查询 Suite
+
+### 验证脚本
+
+```bash
+bash scripts/verify-elizaos.sh
+```
+
+### 使用自动化测试脚本（容器插件）
 
 ```bash
 # 设置容器 URL（可选，默认使用 Railway URL）

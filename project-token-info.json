@@ -1,0 +1,16 @@
+{
+  "network": "devnet",
+  "mint": "DjyuBJmt7uAS2RuQDJimNjjvjVqQkKYVukDa4m2Svyco",
+  "program": "Token-2022",
+  "decimals": 9,
+  "supply": "0",
+  "mintAuthority": "6t8ewDtr3GbocPveoCELJpd35AS6iDgBcrvRM3zsbEV1",
+  "freezeAuthority": "6t8ewDtr3GbocPveoCELJpd35AS6iDgBcrvRM3zsbEV1",
+  "isFrozen": false,
+  "verified": true,
+  "verifiedAt": "2026-01-23T06:18:37.123Z",
+  "name": "KOLMARKET TOKEN",
+  "symbol": "KMT",
+  "uri": "https://oss.kolmarket.ai/kmt-metadata.json",
+  "hasMetadata": true
+}

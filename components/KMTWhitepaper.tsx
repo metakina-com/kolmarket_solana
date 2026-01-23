@@ -70,11 +70,16 @@ export function KMTWhitepaper() {
                         </span>
                     </div>
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                        KOLMarket Token
+                        KOLMarket Token Whitepaper
                     </h2>
-                    <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+                    <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-4">
                         The native utility token powering the KOLMarket ecosystem.
                         Stake, govern, and earn with the future of KOL-driven crypto commerce.
+                    </p>
+                    <p className="text-lg text-slate-400 max-w-3xl mx-auto">
+                        <strong className="text-cyan-400">$KMT: Redefining the Order of Web3 Influence</strong>
+                        <br />
+                        More than just a token—it is the fuel for Web3 growth.
                     </p>
                 </motion.div>
 
@@ -161,6 +166,48 @@ export function KMTWhitepaper() {
                                     <TrendingUp className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
                                     <span><strong className="text-white">10% Liquidity:</strong> DEX liquidity pools and market making activities.</span>
                                 </li>
+                            </ul>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Core Theme Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="mb-16"
+                >
+                    <h3 className="text-3xl font-bold text-white text-center mb-8">Core Theme: Web3 Influence Monetization</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                        <div className="p-6 bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl">
+                            <h4 className="text-xl font-bold text-cyan-400 mb-3">1. Empowering KOLs</h4>
+                            <p className="text-slate-300 mb-2">Break free from centralized platform fees and monetize your influence directly.</p>
+                            <ul className="text-sm text-slate-400 space-y-1">
+                                <li>• Direct blockchain monetization</li>
+                                <li>• AI-driven digital twins (Avatar)</li>
+                                <li>• 24/7 automated operations</li>
+                                <li>• Trading fee revenue sharing</li>
+                            </ul>
+                        </div>
+                        <div className="p-6 bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl">
+                            <h4 className="text-xl font-bold text-purple-400 mb-3">2. Accelerating Brands</h4>
+                            <p className="text-slate-300 mb-2">Use $KMT to precision-target top-tier crypto leaders globally.</p>
+                            <ul className="text-sm text-slate-400 space-y-1">
+                                <li>• Precision KOL targeting</li>
+                                <li>• Mindshare data analytics</li>
+                                <li>• Automated collaboration</li>
+                                <li>• Transparent partnership data</li>
+                            </ul>
+                        </div>
+                        <div className="p-6 bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl">
+                            <h4 className="text-xl font-bold text-green-400 mb-3">3. Earn Together</h4>
+                            <p className="text-slate-300 mb-2">Benefit from a community-driven ecosystem with buy-back mechanisms.</p>
+                            <ul className="text-sm text-slate-400 space-y-1">
+                                <li>• Buy-back mechanisms</li>
+                                <li>• Active contributor rewards</li>
+                                <li>• Governance voting rights</li>
+                                <li>• Liquidity mining rewards</li>
                             </ul>
                         </div>
                     </div>

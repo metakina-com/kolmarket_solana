@@ -25,19 +25,19 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-10">
-            <a href="#whitepaper" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
+            <a href="/whitepaper" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               $KMT
             </a>
             <a href="#portals" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Nexus
             </a>
-            <a href="#market" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
+            <a href="/market" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Market
             </a>
-            <a href="#agents" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
+            <a href="/agents" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Agents
             </a>
-            <a href="#knowledge" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
+            <a href="/knowledge" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
               Knowledge
             </a>
             <a href="#docs" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:neon-text-cyan transition-all uppercase tracking-widest">
@@ -107,19 +107,19 @@ export function Navbar() {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden py-6 space-y-4 border-t border-slate-200/20 dark:border-white/5 opacity-100 transition-opacity duration-200">
-            <a href="#whitepaper" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
+            <a href="/whitepaper" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               $KMT Token
             </a>
             <a href="#portals" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Portals
             </a>
-            <a href="#market" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
+            <a href="/market" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Market
             </a>
-            <a href="#agents" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
+            <a href="/agents" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Agents
             </a>
-            <a href="#knowledge" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
+            <a href="/knowledge" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">
               Knowledge
             </a>
             <a href="#docs" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-bold text-slate-600 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">

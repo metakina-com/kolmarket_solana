@@ -257,6 +257,7 @@ A: 使用 Solana Pay，所有交易都在链上，安全透明。
 
 - [环境变量配置](./ENV_CONFIG_GUIDE.md)
 - [Solana 生态集成](./SOLANA_ECOSYSTEM_INTEGRATIONS.md)
+- [预测市场集成](./PREDICTION_MARKETS_INTEGRATION.md) - **KOLMarket.ai × Solana 预测市场集成方案** 🆕
 - [测试指南](./TESTING_GUIDE.md)
 
 ---

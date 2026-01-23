@@ -134,7 +134,7 @@ export function KMTAutomationPanel() {
   };
 
   return (
-    <div className="glass-strong rounded-xl p-6 max-w-6xl mx-auto">
+    <div className="rounded-xl p-6 max-w-6xl mx-auto bg-card/90 backdrop-blur-sm border border-border">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
           KMT 自动化运营
@@ -149,24 +149,24 @@ export function KMTAutomationPanel() {
       </div>
 
       {/* 配置区域 */}
-      <div className="mb-6 p-4 bg-slate-800/50 rounded-lg space-y-3">
+      <div className="mb-6 p-4 bg-card/50 rounded-lg space-y-3">
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="block text-sm text-slate-300 mb-1">Token Mint 地址</label>
+            <label className="block text-sm text-foreground mb-1">Token Mint 地址</label>
             <input
               type="text"
               value={tokenMint}
               onChange={(e) => setTokenMint(e.target.value)}
               placeholder="输入 KMT Token Mint 地址"
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+              className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground"
             />
           </div>
           <div className="w-40">
-            <label className="block text-sm text-slate-300 mb-1">网络</label>
+            <label className="block text-sm text-foreground mb-1">网络</label>
             <select
               value={network}
               onChange={(e) => setNetwork(e.target.value as "devnet" | "mainnet-beta")}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white"
+              className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground"
             >
               <option value="devnet">Devnet</option>
               <option value="mainnet-beta">Mainnet</option>
@@ -181,7 +181,7 @@ export function KMTAutomationPanel() {
           <Loader2 size={32} className="animate-spin text-cyan-400" />
         </div>
       ) : tasks.length === 0 ? (
-        <div className="text-center py-12 text-slate-400">
+        <div className="text-center py-12 text-muted-foreground">
           {tokenMint ? "暂无自动化任务，点击上方按钮创建" : "请先输入 Token Mint 地址"}
         </div>
       ) : (
@@ -191,16 +191,16 @@ export function KMTAutomationPanel() {
               key={task.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg"
+              className="p-4 bg-card/50 border border-border rounded-lg"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold text-white">{task.name}</h3>
+                    <h3 className="text-lg font-semibold text-foreground">{task.name}</h3>
                     <span className={`px-2 py-1 rounded text-xs ${
                       task.enabled 
                         ? "bg-green-500/20 text-green-400" 
-                        : "bg-slate-700 text-slate-400"
+                        : "bg-muted text-muted-foreground"
                     }`}>
                       {task.enabled ? "已启用" : "已禁用"}
                     </span>
@@ -210,7 +210,7 @@ export function KMTAutomationPanel() {
                     </span>
                   </div>
                   
-                  <div className="text-sm text-slate-400 space-y-1">
+                  <div className="text-sm text-muted-foreground space-y-1">
                     {task.schedule && (
                       <div className="flex items-center gap-2">
                         <Clock size={14} />
@@ -268,15 +268,15 @@ export function KMTAutomationPanel() {
 
       {/* 创建任务模态框（简化版） */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-slate-800 rounded-xl p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-background/50 flex items-center justify-center z-50">
+          <div className="bg-card rounded-xl p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold mb-4">创建自动化任务</h3>
-            <p className="text-slate-400 mb-4">
+            <p className="text-muted-foreground mb-4">
               完整功能开发中，请使用 API 直接创建任务。
             </p>
             <button
               onClick={() => setShowCreateModal(false)}
-              className="w-full px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg"
+              className="w-full px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg"
             >
               关闭
             </button>

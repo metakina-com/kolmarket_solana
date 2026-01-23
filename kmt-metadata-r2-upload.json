@@ -1,0 +1,12 @@
+{
+  "bucket": "kolmarket-uploads",
+  "path": "token-metadata/kmt-metadata.json",
+  "url": "https://oss.kolmarket.ai/token-metadata/kmt-metadata.json",
+  "urlRelative": "/api/storage/token-metadata/kmt-metadata.json",
+  "metadata": {
+    "name": "KOLMARKET TOKEN",
+    "symbol": "KMT",
+    "image": "https://oss.kolmarket.ai/etPJjFNh_400x400.jpg"
+  },
+  "uploadedAt": "2026-01-23T03:54:15.146Z"
+}

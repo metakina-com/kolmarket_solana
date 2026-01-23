@@ -53,7 +53,7 @@ export function Hero() {
               <ArrowRight size={20} />
             </motion.a>
             <motion.a
-              href="#market"
+              href="/market"
               className="w-full sm:w-auto px-8 py-4 cyber-glass text-white font-bold rounded-xl hover:neon-border-cyan transition-all flex items-center justify-center gap-2"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

@@ -3,10 +3,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { RolePortals } from "@/components/RolePortals";
-import { KOLCardWithData } from "@/components/KOLCardWithData";
-import { ChatInterface } from "@/components/ChatInterface";
-import { KnowledgeManagement } from "@/components/KnowledgeManagement";
-import { KMTWhitepaper } from "@/components/KMTWhitepaper";
 import { Twitter, MessageCircle, Users, BookOpen, FileText, Code, TrendingUp, Database, Rocket } from "lucide-react";
 
 // Mock 数据作为降级方案
@@ -76,73 +72,7 @@ export default function Home() {
         <RolePortals />
       </div>
 
-      {/* 3. KMT Token Whitepaper Section */}
-      <div className="bg-background">
-        <KMTWhitepaper />
-      </div>
-
-      {/* 4. KOL Market Section */}
-      <section id="market" className="py-24 px-4 sm:px-6 lg:px-8 bg-secondary relative overflow-hidden">
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
-
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              Alpha Market
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Real-time influence tracking and Mindshare analysis.
-              Find the agents with the highest conviction.
-            </p>
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-xs text-muted-foreground font-mono tracking-widest uppercase">
-                Powered by Cookie.fun Mindshare Index
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {mockKOLs.map((kol, idx) => (
-              <KOLCardWithData
-                key={idx}
-                name={kol.name}
-                handle={kol.handle}
-                fallbackData={kol.fallbackData}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Chat Section */}
-      <section id="agents" className="py-24 px-4 sm:px-6 lg:px-8 bg-background relative">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">The Digital Cortex</h2>
-            <p className="text-muted-foreground font-mono">Direct neural link to KOL digital twins.</p>
-          </div>
-          <ChatInterface />
-        </div>
-      </section>
-
-      {/* 6. Knowledge Management Section */}
-      <section id="knowledge" className="py-24 px-4 sm:px-6 lg:px-8 bg-secondary">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Knowledge Sync</h2>
-            <p className="text-muted-foreground">Manage vector databases and RAG memory for your agents.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {mockKOLs.map((kol) => (
-              <KnowledgeManagement key={kol.handle} kolHandle={kol.handle} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Documentation Section */}
+      {/* 3. Documentation Section */}
       <section id="docs" className="py-24 px-4 sm:px-6 lg:px-8 bg-background relative">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
         

@@ -129,6 +129,48 @@ test_api_expect "Strategy 非法 payer" "POST" "/api/execution/strategy" \
   '{"strategy":{"id":"s1","name":"Test","description":"","rules":[{"condition":"balance > 0","action":"transfer","parameters":{"recipient":"HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH","amount":0.1}}],"enabled":true},"payer":"bad-pubkey","network":"devnet"}' 400
 echo ""
 
+# 9. Agent Suite (ElizaOS) — 创建 → Avatar → Trader
+echo "🤖 Agent Suite API 测试 (ElizaOS)"
+echo -n "测试 创建 Suite... "
+suite_resp=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/agent-suite" \
+  -H "Content-Type: application/json" \
+  -d '{"kolHandle":"blknoiz06","modules":{"avatar":{},"trader":{}}}')
+suite_http=$(echo "$suite_resp" | tail -n1)
+suite_body=$(echo "$suite_resp" | sed '$d')
+if [ "$suite_http" -ge 200 ] 2>/dev/null && [ "$suite_http" -lt 300 ] 2>/dev/null; then
+  echo -e "${GREEN}✅ 成功 (HTTP $suite_http)${NC}"
+  suite_id=""
+  if command -v jq >/dev/null 2>&1; then
+    suite_id=$(echo "$suite_body" | jq -r '.suite.suiteId // empty')
+  fi
+  [ -z "$suite_id" ] && suite_id=$(echo "$suite_body" | grep -oE '"suiteId"[^,]*' | head -1 | sed -n 's/.*"\([^"]*\)"$/\1/p')
+  [ -z "$suite_id" ] && suite_id="suite-blknoiz06-0"
+  echo -n "测试 Avatar 发推... "
+  ar=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/agent-suite/avatar" \
+    -H "Content-Type: application/json" \
+    -d "{\"suiteId\":\"$suite_id\",\"content\":\"ElizaOS API 测试\"}")
+  ah=$(echo "$ar" | tail -n1)
+  if [ "$ah" -ge 200 ] 2>/dev/null && [ "$ah" -lt 300 ] 2>/dev/null; then
+    echo -e "${GREEN}✅ 成功 (HTTP $ah)${NC}"
+  else
+    echo -e "${RED}❌ 失败 (HTTP $ah)${NC}"
+  fi
+  echo -n "测试 Trader 交易... "
+  tr=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/agent-suite/trader" \
+    -H "Content-Type: application/json" \
+    -d "{\"suiteId\":\"$suite_id\",\"action\":\"buy\",\"token\":\"SOL\",\"amount\":0.001}")
+  th=$(echo "$tr" | tail -n1)
+  if [ "$th" -ge 200 ] 2>/dev/null && [ "$th" -lt 300 ] 2>/dev/null; then
+    echo -e "${GREEN}✅ 成功 (HTTP $th)${NC}"
+  else
+    echo -e "${RED}❌ 失败 (HTTP $th)${NC}"
+  fi
+else
+  echo -e "${RED}❌ 失败 (HTTP $suite_http)${NC}"
+  echo "   响应: $(echo "$suite_body" | head -c 80)..."
+fi
+echo ""
+
 echo "✅ API 测试完成！"
 echo ""
 echo "💡 提示："

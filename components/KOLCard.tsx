@@ -83,7 +83,7 @@ export function KOLCard({ name, handle, mindshareScore, stats, volume, followers
           View Profile
         </Link>
         <Link
-          href={`/#agents`}
+          href={`/agents`}
           className="flex-1 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-sm font-medium transition-all text-center min-h-[44px] flex items-center justify-center"
         >
           Chat AI

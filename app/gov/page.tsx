@@ -83,7 +83,7 @@ export default function GovernancePage() {
     };
 
     return (
-        <main className="min-h-screen bg-[#020617] text-white relative overflow-hidden">
+        <main className="min-h-screen bg-background text-foreground relative overflow-hidden">
             <div className="absolute inset-0 bg-cyber-grid opacity-10 pointer-events-none" />
             <div className="scanline" />
 
@@ -104,30 +104,30 @@ export default function GovernancePage() {
                             </div>
                             <div>
                                 <h2 className="text-2xl font-black italic">DAO COMMONS</h2>
-                                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Collective Intelligence v1.2</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">Collective Intelligence v1.2</p>
                             </div>
                         </div>
 
                         <div className="space-y-6">
-                            <div className="p-5 bg-black/40 border border-white/5 rounded-2xl relative overflow-hidden group">
+                            <div className="p-5 bg-card/40 border border-border rounded-2xl relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="text-xs text-slate-500 mb-2 font-mono uppercase">My Voting Power</div>
+                                <div className="text-xs text-muted-foreground mb-2 font-mono uppercase">My Voting Power</div>
                                 <div className="flex items-end gap-2 relative z-10">
                                     <span className="text-4xl font-black text-orange-400">{votingPower}%</span>
-                                    <span className="text-[10px] text-slate-500 font-mono mb-2">940.2 KMT</span>
+                                    <span className="text-[10px] text-muted-foreground font-mono mb-2">940.2 KMT</span>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-slate-900/50 rounded-xl flex flex-col items-center border border-white/5 group hover:border-orange-500/30 transition-all cursor-default">
-                                    <Vote className="w-5 h-5 text-slate-500 mb-2 group-hover:text-orange-400" />
+                                <div className="p-4 bg-card/50 rounded-xl flex flex-col items-center border border-border group hover:border-orange-500/30 transition-all cursor-default">
+                                    <Vote className="w-5 h-5 text-muted-foreground mb-2 group-hover:text-orange-400" />
                                     <div className="text-lg font-bold">142</div>
-                                    <div className="text-[10px] text-slate-600">Proposals Analyzed</div>
+                                    <div className="text-[10px] text-muted-foreground">Proposals Analyzed</div>
                                 </div>
-                                <div className="p-4 bg-slate-900/50 rounded-xl flex flex-col items-center border border-white/5 group hover:border-orange-500/30 transition-all cursor-default">
-                                    <PieChart className="w-5 h-5 text-slate-500 mb-2 group-hover:text-cyan-400" />
+                                <div className="p-4 bg-card/50 rounded-xl flex flex-col items-center border border-border group hover:border-orange-500/30 transition-all cursor-default">
+                                    <PieChart className="w-5 h-5 text-muted-foreground mb-2 group-hover:text-cyan-400" />
                                     <div className="text-lg font-bold">84%</div>
-                                    <div className="text-[10px] text-slate-600">AI Participation</div>
+                                    <div className="text-[10px] text-muted-foreground">AI Participation</div>
                                 </div>
                             </div>
                         </div>
@@ -137,9 +137,9 @@ export default function GovernancePage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="cyber-glass rounded-2xl p-6 border border-white/5"
+                        className="cyber-glass rounded-2xl p-6 border border-border"
                     >
-                        <h4 className="text-xs font-mono text-slate-500 uppercase tracking-widest mb-6">Treasury Distribution</h4>
+                        <h4 className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-6">Treasury Distribution</h4>
                         <div className="space-y-6">
                             {[
                                 { label: "AI Training", val: 42, color: "bg-cyan-500" },
@@ -148,13 +148,13 @@ export default function GovernancePage() {
                             ].map((item, i) => (
                                 <div key={i} className="space-y-2">
                                     <div className="flex justify-between items-center text-xs">
-                                        <span className="text-slate-400 flex items-center gap-2">
+                                        <span className="text-muted-foreground flex items-center gap-2">
                                             <div className={`w-1.5 h-1.5 rounded-full ${item.color}`} />
                                             {item.label}
                                         </span>
                                         <span className="font-mono">{item.val}%</span>
                                     </div>
-                                    <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
+                                    <div className="h-1 bg-muted rounded-full overflow-hidden">
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: `${item.val}%` }}
@@ -172,7 +172,7 @@ export default function GovernancePage() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="cyber-glass rounded-3xl p-8 border border-white/10 overflow-hidden relative"
+                        className="cyber-glass rounded-3xl p-8 border border-border overflow-hidden relative"
                     >
                         <div className="absolute top-0 right-0 p-8 opacity-5">
                             <Layers className="w-48 h-48 text-orange-500" />
@@ -181,7 +181,7 @@ export default function GovernancePage() {
                         <div className="flex justify-between items-center mb-10 relative z-10">
                             <div>
                                 <h3 className="text-2xl font-black tracking-tight">GOVERNANCE <span className="text-orange-400">SIGNALS</span></h3>
-                                <p className="text-sm text-slate-500">AI-assisted analysis of DAO consensus.</p>
+                                <p className="text-sm text-muted-foreground">AI-assisted analysis of DAO consensus.</p>
                             </div>
                             <button className="flex items-center gap-2 text-[10px] font-mono font-bold text-orange-400 hover:text-orange-300 transition-all group">
                                 <Inbox size={14} />
@@ -196,13 +196,13 @@ export default function GovernancePage() {
                                     layout
                                     key={p.id}
                                     onClick={() => setSelectedProposal(p)}
-                                    className={`group flex flex-col md:flex-row items-start md:items-center justify-between p-6 bg-slate-900/30 border rounded-2xl transition-all cursor-pointer ${selectedProposal?.id === p.id
+                                    className={`group flex flex-col md:flex-row items-start md:items-center justify-between p-6 bg-card/30 border rounded-2xl transition-all cursor-pointer ${selectedProposal?.id === p.id
                                             ? 'border-orange-500/50 bg-orange-500/5'
-                                            : 'border-white/5 hover:border-orange-500/20'
+                                            : 'border-border hover:border-orange-500/20'
                                         }`}
                                 >
                                     <div className="flex items-center gap-6 mb-4 md:mb-0">
-                                        <div className="text-xs font-mono text-slate-500">{p.id}</div>
+                                        <div className="text-xs font-mono text-muted-foreground">{p.id}</div>
                                         <div>
                                             <div className="font-bold text-lg group-hover:text-orange-400 transition-colors flex items-center gap-2">
                                                 {p.title}
@@ -210,11 +210,11 @@ export default function GovernancePage() {
                                             </div>
                                             <div className="flex gap-4 mt-2">
                                                 {/* Sentiment Indicator */}
-                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+                                                <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
                                                     {p.sentiment === 'BULLISH' ? <TrendingUp size={12} className="text-green-500" /> : <TrendingDown size={12} className="text-red-500" />}
                                                     {p.sentiment}
                                                 </div>
-                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-500 uppercase tracking-widest font-bold border-l border-white/10 pl-4">
+                                                <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-widest font-bold border-l border-border pl-4">
                                                     <ShieldAlert size={12} className={p.risk === 'HIGH' ? 'text-red-500' : 'text-green-500'} />
                                                     {p.risk} RISK
                                                 </div>
@@ -224,11 +224,11 @@ export default function GovernancePage() {
                                     <div className="flex items-center gap-3 w-full md:w-auto">
                                         <div className={`text-[10px] h-8 px-4 rounded-full flex items-center border font-mono tracking-tighter ${p.status === 'ACTIVE' ? 'border-orange-500 text-orange-400 font-black animate-pulse' :
                                                 p.status === 'VOTED' ? 'border-green-500/50 text-green-400' :
-                                                    'border-white/10 text-slate-600'
+                                                    'border-border text-muted-foreground'
                                             }`}>
                                             {p.status}
                                         </div>
-                                        <div className="p-2 bg-slate-800 rounded-full group-hover:bg-orange-500 transition-all">
+                                        <div className="p-2 bg-muted rounded-full group-hover:bg-orange-500 transition-all">
                                             <ChevronRight size={18} />
                                         </div>
                                     </div>
@@ -243,11 +243,11 @@ export default function GovernancePage() {
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    className="mt-8 p-6 bg-slate-950/50 border border-orange-500/20 rounded-2xl relative overflow-hidden"
+                                    className="mt-8 p-6 bg-card/50 border border-orange-500/20 rounded-2xl relative overflow-hidden"
                                 >
                                     <div className="absolute top-0 right-0 p-4">
                                         <button onClick={(e) => { e.stopPropagation(); setSelectedProposal(null); }}>
-                                            <X className="text-slate-500 hover:text-white" size={20} />
+                                            <X className="text-muted-foreground hover:text-foreground" size={20} />
                                         </button>
                                     </div>
 
@@ -257,7 +257,7 @@ export default function GovernancePage() {
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-cyan-400 uppercase text-xs mb-1">AI Recommendation</h4>
-                                            <p className="text-sm text-slate-300 italic">
+                                            <p className="text-sm text-foreground italic">
                                                 &quot;Based on DAO&apos;s recent performance metrics and liquidity depth, I recommend a <b>YES</b> vote. This proposal significantly bolsters our ecosystem&apos;s growth vector.&quot;
                                             </p>
                                         </div>
@@ -269,7 +269,7 @@ export default function GovernancePage() {
                                                 <span>Support</span>
                                                 <span className="text-green-400">{selectedProposal.votesFor.toFixed(1)}M KMT</span>
                                             </div>
-                                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                                            <div className="h-2 bg-muted rounded-full overflow-hidden">
                                                 <div className="h-full bg-green-500" style={{ width: `${selectedProposal.votesFor}%` }} />
                                             </div>
                                         </div>
@@ -278,7 +278,7 @@ export default function GovernancePage() {
                                                 <span>Opposition</span>
                                                 <span className="text-red-400">{selectedProposal.votesAgainst.toFixed(1)}M KMT</span>
                                             </div>
-                                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                                            <div className="h-2 bg-muted rounded-full overflow-hidden">
                                                 <div className="h-full bg-red-500" style={{ width: `${selectedProposal.votesAgainst}%` }} />
                                             </div>
                                         </div>
@@ -300,24 +300,24 @@ export default function GovernancePage() {
                     </motion.div>
 
                     <aside className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                        <div className="p-6 rounded-2xl bg-slate-900/50 border border-white/5 flex gap-4 hover:border-cyan-500/30 transition-all">
+                        <div className="p-6 rounded-2xl bg-card/50 border border-border flex gap-4 hover:border-cyan-500/30 transition-all">
                             <div className="p-3 bg-cyan-500/10 rounded-xl h-fit">
                                 <Cpu className="text-cyan-400" size={24} />
                             </div>
                             <div>
                                 <h4 className="font-bold mb-1 italic">VOTING AGENT READY</h4>
-                                <p className="text-xs text-slate-500 leading-relaxed">
+                                <p className="text-xs text-muted-foreground leading-relaxed">
                                     AI delegate is synced with your risk profile. Auto-voting active for low-risk proposals.
                                 </p>
                             </div>
                         </div>
-                        <div className="p-6 rounded-2xl bg-slate-900/50 border border-white/5 flex gap-4 hover:border-purple-500/30 transition-all">
+                        <div className="p-6 rounded-2xl bg-card/50 border border-border flex gap-4 hover:border-purple-500/30 transition-all">
                             <div className="p-3 bg-purple-500/10 rounded-xl h-fit">
                                 <AlertTriangle className="text-purple-400" size={24} />
                             </div>
                             <div>
                                 <h4 className="font-bold mb-1 italic">SECURITY OVERRIDE</h4>
-                                <p className="text-xs text-slate-500 leading-relaxed">
+                                <p className="text-xs text-muted-foreground leading-relaxed">
                                     Proposals with &apos;HIGH&apos; risk rating require manual biometric override from the core DAO council.
                                 </p>
                             </div>

@@ -1,0 +1,44 @@
+{
+  "creationAndBranding": {
+    "roundType": "Seed",
+    "shortDescription": "$KMT: Redefining the Order of Web3 Influence At kolmarket.ai, $KMT is more than just a token—it is the fuel for Web3 growth. Empowering KOLs: Break free from centralized platform fees and monetize your influence directly.",
+    "shortDescriptionLength": 221,
+    "shortDescriptionMaxLength": 240,
+    "saleBanner": {
+      "url": "",
+      "recommendedSize": "1600x900",
+      "supportedFormats": [
+        "jpg",
+        "png",
+        "webp"
+      ],
+      "maxSize": "2MB",
+      "note": "Images will be optimized to under 2mb"
+    },
+    "projectTokenLogo": {
+      "url": "https://oss.kolmarket.ai/etPJjFNh_400x400.jpg",
+      "recommendedSize": "400x400",
+      "supportedFormats": [
+        "jpg",
+        "png",
+        "webp"
+      ]
+    },
+    "projectToken": {
+      "mint": "bkkV9DEJmAof1HvGXBPahCzxY9vazjSZSGaNnZVpANS",
+      "name": "KOLMARKET TOKEN",
+      "symbol": "KMT",
+      "network": "devnet",
+      "program": "SPL Token"
+    }
+  },
+  "metadata": {
+    "name": "KOLMARKET TOKEN",
+    "symbol": "KMT",
+    "description": "$KMT: Redefining the Order of Web3 Influence\n\nAt kolmarket.ai, $KMT is more than just a token—it is the fuel for Web3 growth.\n\nEmpowering KOLs: Break free from centralized platform fees and monetize your influence directly.\n\nAccelerating Brands: Use $KMT to precision-target top-tier crypto leaders globally.\n\nEarn Together: Benefit from a community-driven ecosystem with buy-back mechanisms and active contributor rewards.\n\nJoin us and witness the tokenization of influence with $KMT!",
+    "image": "https://oss.kolmarket.ai/etPJjFNh_400x400.jpg",
+    "external_url": "https://kolmarket.ai",
+    "uri": "https://oss.kolmarket.ai/kmt-metadata.json"
+  },
+  "generatedAt": "2026-01-23T06:59:04.017Z"
+}
