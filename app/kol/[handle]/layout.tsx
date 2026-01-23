@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
-import { getKOLPersona } from "@/lib/agents/kol-personas";
+import { getKOLPersona, getAvailableKOLs } from "@/lib/agents/kol-personas";
 
 type Props = { params: Promise<{ handle: string }> };
+
+// 生成静态参数，使所有已知 KOL 页面在构建时预生成
+// 这样它们就是静态页面，不需要 Edge Runtime
+export function generateStaticParams() {
+  const kols = getAvailableKOLs();
+  return kols.map((kol) => ({
+    handle: kol.handle,
+  }));
+}
+
+// 对于未知的 KOL，返回 404（不动态生成）
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params;
