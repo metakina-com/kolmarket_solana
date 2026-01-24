@@ -115,7 +115,7 @@ npm test https://your-domain.pages.dev
 
 ### 短期任务（1-2天）
 
-- [ ] **部署到 Cloudflare Pages**
+- [ ] **部署到 Cloudflare Pages** (需在稳定环境执行)
   - [ ] 构建项目
   - [ ] 部署到 Pages
   - [ ] 配置环境变量
