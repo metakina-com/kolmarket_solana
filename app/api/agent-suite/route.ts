@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const suiteId = searchParams.get("suiteId");
-    const kolHandle = searchParams.get("kolHandle");
+    const kolHandle = searchParams.get("kolHandle")?.toLowerCase();
 
     const db = getDB();
 
@@ -96,14 +96,16 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { kolHandle, modules } = body;
-
-    if (!kolHandle) {
+    const { kolHandle: rawHandle, modules } = body;
+    
+    if (!rawHandle) {
       return NextResponse.json(
         { error: "kolHandle is required" },
         { status: 400 }
       );
     }
+    
+    const kolHandle = rawHandle.toLowerCase();
 
     // 获取 KOL Persona
     const persona = getKOLPersona(kolHandle);
@@ -119,8 +121,10 @@ export async function POST(req: NextRequest) {
     if (db) {
       // 检查是否已存在 Suite
       try {
+        console.log(`Checking for existing suite for ${kolHandle}...`);
         const existingSuite = await db.getSuiteByKOLHandle(kolHandle);
         if (existingSuite) {
+          console.log(`Found existing suite for ${kolHandle}: ${existingSuite.suiteId}`);
           // 返回现有 Suite
           return NextResponse.json({
             success: true,
@@ -177,9 +181,12 @@ export async function POST(req: NextRequest) {
       message: "Agent Suite created successfully",
     });
   } catch (error) {
-    console.error("Agent Suite creation error:", error);
+    console.error(`Agent Suite creation error for ${kolHandle || 'unknown'}:`, error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to create agent suite" },
+      { 
+        error: error instanceof Error ? error.message : "Failed to create agent suite",
+        code: "CREATE_SUITE_ERROR"
+      },
       { status: 500 }
     );
   }

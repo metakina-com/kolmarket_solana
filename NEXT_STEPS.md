@@ -103,14 +103,14 @@ npm test https://your-domain.pages.dev
 
 ### 立即执行
 
-- [ ] **修复 D1 UNIQUE constraint 错误**
-  - [ ] 在创建 Suite 前检查是否存在
-  - [ ] 如果存在，返回现有 Suite
-  - [ ] 添加更新 Suite 的功能
+- [x] **修复 D1 UNIQUE constraint 错误**
+  - [x] 在创建 Suite 前检查是否存在
+  - [x] 如果存在，返回现有 Suite
+  - [x] 添加更新 Suite 的功能
 
-- [ ] **优化 Agent Suite API**
-  - [ ] 改进错误处理
-  - [ ] 添加更详细的日志
+- [x] **优化 Agent Suite API**
+  - [x] 改进错误处理
+  - [x] 添加更详细的日志
   - [ ] 优化响应格式
 
 ### 短期任务（1-2天）

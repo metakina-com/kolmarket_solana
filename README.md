@@ -171,8 +171,8 @@ KOLMarket.ai 是一个基于 Solana 区块链的 AI 驱动平台，为 KOL（意
 ## 📞 联系我们
 
 - **官网**: [kolmarket.ai](https://kolmarket.ai)
-- **Twitter/X**: [@KOLMarketAI](https://twitter.com/KOLMarketAI)
-- **Discord**: [加入社区](https://discord.gg/kolmarket)
+- **Twitter/X**: [@KOLMARKET](https://x.com/KOLMARKET)
+- **Discord**: [加入社区](https://discord.gg/4pXbGJQbbH)
 - **Telegram**: [Telegram 群组](https://t.me/kolmarket)
 
 ---
