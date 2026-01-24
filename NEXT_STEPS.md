@@ -111,7 +111,7 @@ npm test https://your-domain.pages.dev
 - [x] **优化 Agent Suite API**
   - [x] 改进错误处理
   - [x] 添加更详细的日志
-  - [ ] 优化响应格式
+  - [x] 优化响应格式
 
 ### 短期任务（1-2天）
 

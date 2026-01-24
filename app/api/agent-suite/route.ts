@@ -32,37 +32,37 @@ export async function GET(req: NextRequest) {
         const suite = await db.getSuite(suiteId);
         if (!suite) {
           return NextResponse.json(
-            { error: "Suite not found" },
+            { success: false, error: "Suite not found" },
             { status: 404 }
           );
         }
-        return NextResponse.json({ suite });
+        return NextResponse.json({ success: true, suite });
       }
 
       if (kolHandle) {
         const suite = await db.getSuiteByKOLHandle(kolHandle);
         if (!suite) {
           return NextResponse.json(
-            { error: "Suite not found for this KOL" },
+            { success: false, error: "Suite not found for this KOL" },
             { status: 404 }
           );
         }
-        return NextResponse.json({ suite });
+        return NextResponse.json({ success: true, suite });
       }
 
       const suites = await db.getAllSuites();
-      return NextResponse.json({ suites });
+      return NextResponse.json({ success: true, suites });
     } else {
       // 降级到内存存储
       if (suiteId) {
         const suite = agentSuiteManager.getSuite(suiteId);
         if (!suite) {
           return NextResponse.json(
-            { error: "Suite not found" },
+            { success: false, error: "Suite not found" },
             { status: 404 }
           );
         }
-        return NextResponse.json({ suite });
+        return NextResponse.json({ success: true, suite });
       }
 
       if (kolHandle) {
@@ -70,20 +70,20 @@ export async function GET(req: NextRequest) {
         const suite = allSuites.find(s => s.kolHandle === kolHandle);
         if (!suite) {
           return NextResponse.json(
-            { error: "Suite not found for this KOL" },
+            { success: false, error: "Suite not found for this KOL" },
             { status: 404 }
           );
         }
-        return NextResponse.json({ suite });
+        return NextResponse.json({ success: true, suite });
       }
 
       const suites = agentSuiteManager.getAllSuites();
-      return NextResponse.json({ suites });
+      return NextResponse.json({ success: true, suites });
     }
   } catch (error) {
     console.error("Agent Suite API error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch agent suites" },
+      { success: false, error: "Failed to fetch agent suites" },
       { status: 500 }
     );
   }
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     
     if (!rawHandle) {
       return NextResponse.json(
-        { error: "kolHandle is required" },
+        { success: false, error: "kolHandle is required" },
         { status: 400 }
       );
     }
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
     const persona = getKOLPersona(kolHandle);
     if (!persona) {
       return NextResponse.json(
-        { error: `KOL persona not found for ${kolHandle}` },
+        { success: false, error: `KOL persona not found for ${kolHandle}` },
         { status: 404 }
       );
     }
@@ -203,7 +203,7 @@ export async function PATCH(req: NextRequest) {
 
     if (!suiteId || !action) {
       return NextResponse.json(
-        { error: "suiteId and action are required" },
+        { success: false, error: "suiteId and action are required" },
         { status: 400 }
       );
     }
@@ -262,14 +262,18 @@ export async function PATCH(req: NextRequest) {
       });
     } else {
       return NextResponse.json(
-        { error: "Invalid action. Use 'start' or 'stop'" },
+        { success: false, error: "Invalid action. Use 'start' or 'stop'" },
         { status: 400 }
       );
     }
   } catch (error) {
     console.error("Agent Suite update error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to update suite" },
+      { 
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to update suite",
+        code: "UPDATE_SUITE_ERROR"
+      },
       { status: 500 }
     );
   }
