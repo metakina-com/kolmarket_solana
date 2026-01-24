@@ -4,20 +4,20 @@
   "metadataPDA": "5WNwydb3xW5SACZneUVS7W5zYMCL1K7Z6f9Aadn4xrVt",
   "name": "KOLMARKET TOKEN",
   "symbol": "KMT",
-  "uri": "https://oss.kolmarket.ai/kmt-metadata-v4.json",
+  "uri": "https://oss.kolmarket.ai/kmt-metadata.json",
   "image": "https://oss.kolmarket.ai/etPJjFNh_400x400.jpg",
   "external_url": "https://kolmarket.ai",
-  "transaction": "431xbvdE49BYKa8kx7U3zhXiFioBpZVLLSe1jBzxuSkhMZj5huDHxRb61puiDqW8MjtQgx1NMEHqF8QAmy8Leon8",
+  "transaction": "5WsqhSsquotsK21QTKqc1sNrj3iwokcnGHKBy2AtLQx4Qp7mr9gybvPEBwzgK1rko7kwC9mMBqTJdW9waqHexTqR",
   "explorer": {
     "solanaExplorer": {
       "mint": "https://explorer.solana.com/address/5WMsVAgRyJmsVyhuUSCeX5J455Tr8FohHEPCsWppgjxW?cluster=devnet",
       "metadata": "https://explorer.solana.com/address/5WNwydb3xW5SACZneUVS7W5zYMCL1K7Z6f9Aadn4xrVt?cluster=devnet",
-      "transaction": "https://explorer.solana.com/tx/431xbvdE49BYKa8kx7U3zhXiFioBpZVLLSe1jBzxuSkhMZj5huDHxRb61puiDqW8MjtQgx1NMEHqF8QAmy8Leon8?cluster=devnet"
+      "transaction": "https://explorer.solana.com/tx/5WsqhSsquotsK21QTKqc1sNrj3iwokcnGHKBy2AtLQx4Qp7mr9gybvPEBwzgK1rko7kwC9mMBqTJdW9waqHexTqR?cluster=devnet"
     },
     "solscan": {
       "mint": "https://solscan.io/token/5WMsVAgRyJmsVyhuUSCeX5J455Tr8FohHEPCsWppgjxW?cluster=devnet",
-      "transaction": "https://solscan.io/tx/431xbvdE49BYKa8kx7U3zhXiFioBpZVLLSe1jBzxuSkhMZj5huDHxRb61puiDqW8MjtQgx1NMEHqF8QAmy8Leon8?cluster=devnet"
+      "transaction": "https://solscan.io/tx/5WsqhSsquotsK21QTKqc1sNrj3iwokcnGHKBy2AtLQx4Qp7mr9gybvPEBwzgK1rko7kwC9mMBqTJdW9waqHexTqR?cluster=devnet"
     }
   },
-  "createdAt": "2026-01-24T15:28:56.805Z"
+  "createdAt": "2026-01-24T15:34:16.251Z"
 }
