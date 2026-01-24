@@ -2,7 +2,7 @@
   "name": "KOLMARKET TOKEN",
   "symbol": "KMT",
   "description": "$KMT: Redefining the Order of Web3 Influence\n\nAt kolmarket.ai, $KMT is more than just a token—it is the fuel for Web3 growth.\n\nEmpowering KOLs: Break free from centralized platform fees and monetize your influence directly.\n\nAccelerating Brands: Use $KMT to precision-target top-tier crypto leaders globally.\n\nEarn Together: Benefit from a community-driven ecosystem with buy-back mechanisms and active contributor rewards.\n\nJoin us and witness the tokenization of influence with $KMT!",
-  "image": "https://oss.kolmarket.ai/etPJjFNh_400x400.jpg",
+  "image": "https://oss.kolmarket.ai/KMTLOGO.png",
   "external_url": "https://kolmarket.ai",
   "attributes": [
     {
@@ -32,8 +32,9 @@
     ],
     "website": "https://kolmarket.ai",
     "social": {
-      "twitter": "https://twitter.com/kolmarketai",
-      "discord": "https://discord.gg/kolmarket"
+      "twitter": "https://x.com/KOLMARKET",
+      "telegram": "https://t.me/kolmarketai",
+      "discord": "https://discord.gg/CQGPNpM6Nh"
     }
   }
 }
