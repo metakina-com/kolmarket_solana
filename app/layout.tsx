@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description: "The 1st Identity Layer for AI Agents on Solana",
   other: {
     "virtual-protocol-site-verification": "51f5f7d29fbb5c62f9882af581b56109",
+    "virtual-protocol-site-verification-2": "b49220a7fff7123fedb066bccb0142e9",
   },
 };
 
