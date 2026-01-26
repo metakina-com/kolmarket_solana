@@ -1,9 +1,9 @@
 {
   "network": "devnet",
-  "mint": "2J5fqwgvtUF27Yh5i7MLuStbgzmiVjRE98ChmdNDRnLQ",
-  "tokenAccount": "2PJTpFsfcerxmeUhm4cSYyPYkBqLc8umzSdQ8KaFHkiV",
+  "mint": "5WMsVAgRyJmsVyhuUSCeX5J455Tr8FohHEPCsWppgjxW",
+  "tokenAccount": "5ACs95h739pNDDDmFTNHGVmYXdG3MZyaq6YKG5Z9xvan",
   "decimals": 9,
   "initialSupply": 1,
-  "transaction": "45RZiWK3ZHGWUeChdUeeivrnBHxS9PR282T5CtoXzduqjfUDmPQWsA4oV1GmcpzfELeuXBSs5BXrrq7Chc9VMw4V",
-  "createdAt": "2026-01-23T04:06:50.745Z"
+  "transaction": "3xuV7geVkgPDRDFefdjPv5i8L5yTdj1rX6gF7daEKwXe2kTByAjSejie4nXt2duMChJKzgicsZDFN7aF2Go3Pmdg",
+  "createdAt": "2026-01-24T15:07:25.579Z"
 }
