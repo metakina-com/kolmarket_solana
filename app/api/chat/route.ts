@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getKOLPersona, getDefaultSystemPrompt } from "@/lib/agents/kol-personas";
 import { generateTextWithCloudflareAI, getRecommendedModelConfig } from "@/lib/agents/cloudflare-ai-adapter";
+import { generateAgentResponse, isAIServiceAvailable } from "@/lib/agents/lightweight-agent";
 
 export const runtime = "edge";
 
@@ -12,37 +13,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
 
-    // 1. 优先尝试连接到 ElizaOS 服务器 (如果配置了环境变量)
-    // 这里的 ELIZA_API_URL 可以通过 .env.local 配置
-    const elizaApiUrl = process.env.ELIZA_API_URL || "http://localhost:3001";
-
-    // 如果是 Eliza 模式，我们可以尝试转发
-    if (process.env.USE_ELIZA === "true" || kolHandle) {
+    // 1. 优先使用轻量级 Agent (Vercel AI SDK)
+    if (isAIServiceAvailable()) {
       try {
-        console.log(`Attempting to reach ElizaOS at ${elizaApiUrl} for KOL: ${kolHandle}`);
-        const elizaResponse = await fetch(`${elizaApiUrl}/message`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            text: prompt,
-            userId: "user",
-            userName: "vibe_user",
-            agentId: kolHandle || "default", // 将 kolHandle 映射为 Eliza 的 agentId
-          }),
-          // 设置较短的超时时间，如果 Eliza 没开，迅速降级到 Workers AI
-          signal: AbortSignal.timeout(5000),
+        const agentResult = await generateAgentResponse(prompt, {
+          kolHandle,
+          useRAG,
         });
-
-        if (elizaResponse.ok) {
-          const elizaData = await elizaResponse.json();
-          // Eliza 返回的通常是一个数组 [{ text: "..." }]
-          const responseText = Array.isArray(elizaData) ? elizaData[0]?.text : elizaData.text;
-          if (responseText) {
-            return NextResponse.json({ response: responseText });
-          }
-        }
+        return NextResponse.json({ response: agentResult.text });
       } catch (e) {
-        console.warn("ElizaOS connection failed or timed out, falling back to Workers AI:", e);
+        console.warn("Lightweight Agent failed, falling back to Workers AI:", e);
       }
     }
 
