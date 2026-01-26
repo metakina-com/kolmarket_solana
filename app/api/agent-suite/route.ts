@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
       message: "Agent Suite created successfully",
     });
   } catch (error) {
-    console.error(`Agent Suite creation error for ${kolHandle || 'unknown'}:`, error);
+    console.error("Agent Suite creation error:", error);
     return NextResponse.json(
       { 
         error: error instanceof Error ? error.message : "Failed to create agent suite",

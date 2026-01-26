@@ -5,10 +5,10 @@ import { KnowledgeManagement } from "@/components/KnowledgeManagement";
 import { getAvailableKOLs } from "@/lib/agents/kol-personas";
 import { motion } from "framer-motion";
 import { Database, Search } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function KnowledgePage() {
+function KnowledgePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -152,5 +152,17 @@ export default function KnowledgePage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function KnowledgePage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-cyan-400 animate-pulse">Loading Knowledge...</div>
+      </main>
+    }>
+      <KnowledgePageContent />
+    </Suspense>
   );
 }

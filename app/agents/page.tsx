@@ -5,8 +5,9 @@ import { ChatInterface } from "@/components/ChatInterface";
 import { motion } from "framer-motion";
 import { Bot, Brain, MessageSquare, Database, Zap } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function AgentsPage() {
+function AgentsPageContent() {
   const searchParams = useSearchParams();
   const kolHandle = searchParams.get("kol");
 
@@ -81,5 +82,17 @@ export default function AgentsPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function AgentsPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-cyan-400 animate-pulse">Loading Agents...</div>
+      </main>
+    }>
+      <AgentsPageContent />
+    </Suspense>
   );
 }

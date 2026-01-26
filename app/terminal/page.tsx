@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
@@ -32,7 +32,7 @@ const liveAlpha = [
     { kol: "Wendy", action: "HOLD", token: "$BTC", price: "$64.2K", time: "5m ago", confidence: 72 },
 ];
 
-export default function TerminalPage() {
+function TerminalPageContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
@@ -425,5 +425,17 @@ export default function TerminalPage() {
                 </div>
             </MobileDrawer>
         </main>
+    );
+}
+
+export default function TerminalPage() {
+    return (
+        <Suspense fallback={
+            <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
+                <div className="text-cyan-400 animate-pulse">Loading Terminal...</div>
+            </main>
+        }>
+            <TerminalPageContent />
+        </Suspense>
     );
 }
