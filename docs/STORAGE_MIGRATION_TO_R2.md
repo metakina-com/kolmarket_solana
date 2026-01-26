@@ -270,8 +270,6 @@ npx wrangler r2 bucket cors put kolmarket-uploads --file=cors.json
 
 ## 📚 相关文档
 
-- [R2 存储指南](./R2_STORAGE_GUIDE.md)
-- [R2 完整配置](./R2_STORAGE_COMPLETE.md)
 - [上传元数据到链上](./UPLOAD_METADATA_TO_BLOCKCHAIN.md)
 - [KMT 元数据设置](./KMT_METADATA_SETUP.md)
 
