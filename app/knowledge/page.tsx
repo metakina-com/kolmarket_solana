@@ -5,17 +5,41 @@ import { KnowledgeManagement } from "@/components/KnowledgeManagement";
 import { getAvailableKOLs } from "@/lib/agents/kol-personas";
 import { motion } from "framer-motion";
 import { Database, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function KnowledgePage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const allKOLs = getAvailableKOLs();
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedKOL, setSelectedKOL] = useState<string | null>(null);
 
-  const filteredKOLs = allKOLs.filter(
-    (kol) =>
-      kol.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      kol.handle.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    const urlKOL = searchParams.get("kol");
+    if (urlKOL && urlKOL !== selectedKOL) {
+      setSelectedKOL(urlKOL);
+    }
+  }, [searchParams, selectedKOL]);
+
+  const filteredKOLs = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return allKOLs;
+    return allKOLs.filter(
+      (kol) => kol.name.toLowerCase().includes(q) || kol.handle.toLowerCase().includes(q)
+    );
+  }, [allKOLs, searchQuery]);
+
+  const selectedExists = selectedKOL ? allKOLs.some((k) => k.handle === selectedKOL) : false;
+  const effectiveSelectedKOL = selectedExists ? selectedKOL : null;
+
+  const selectAndPersist = (handle: string) => {
+    setSelectedKOL(handle);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("kol", handle);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -51,30 +75,58 @@ export default function KnowledgePage() {
           </div>
 
           {/* KOL 知识库管理卡片 */}
-          {filteredKOLs.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredKOLs.map((kol, idx) => (
-                <motion.div
-                  key={kol.handle}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                >
-                  <KnowledgeManagement kolHandle={kol.handle} />
-                </motion.div>
-              ))}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-4">
+              {filteredKOLs.length > 0 ? (
+                <div className="space-y-3">
+                  {filteredKOLs.map((kol, idx) => {
+                    const active = kol.handle === effectiveSelectedKOL;
+                    return (
+                      <motion.button
+                        key={kol.handle}
+                        type="button"
+                        onClick={() => selectAndPersist(kol.handle)}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.03 }}
+                        className={`w-full text-left p-4 rounded-xl border transition-all min-h-[56px] ${
+                          active
+                            ? "border-cyan-500/40 bg-cyan-500/10"
+                            : "border-border bg-card/50 hover:bg-card/80 hover:border-cyan-500/20"
+                        }`}
+                        aria-pressed={active}
+                      >
+                        <div className="font-semibold text-foreground">{kol.name}</div>
+                        <div className="text-xs text-muted-foreground font-mono">@{kol.handle}</div>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">未找到匹配的 KOL</p>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="mt-4 text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    清除搜索
+                  </button>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">未找到匹配的 KOL</p>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="mt-4 text-cyan-400 hover:text-cyan-300 transition-colors"
-              >
-                清除搜索
-              </button>
+
+            <div className="lg:col-span-8">
+              {effectiveSelectedKOL ? (
+                <KnowledgeManagement kolHandle={effectiveSelectedKOL} />
+              ) : (
+                <div className="p-6 bg-card/50 border border-border rounded-xl">
+                  <div className="text-sm text-muted-foreground">
+                    请选择左侧一个 KOL 来管理其知识库（支持 URL：<span className="font-mono">?kol=handle</span>）。
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {/* 功能说明 */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">

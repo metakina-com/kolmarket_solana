@@ -12,7 +12,11 @@ interface Message {
   isError?: boolean;
 }
 
-export function ChatInterface() {
+interface ChatInterfaceProps {
+  initialKOLHandle?: string | null;
+}
+
+export function ChatInterface({ initialKOLHandle = null }: ChatInterfaceProps) {
   const [selectedKOL, setSelectedKOL] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -21,6 +25,12 @@ export function ChatInterface() {
   const [lastFailedPrompt, setLastFailedPrompt] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (initialKOLHandle) {
+      setSelectedKOL(initialKOLHandle);
+    }
+  }, [initialKOLHandle]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -4,7 +4,7 @@ import { use } from "react";
 import { motion } from "framer-motion";
 import AgentSuitePanel from "@/components/AgentSuitePanel";
 import { getKOLPersona } from "@/lib/agents/kol-personas";
-import { ArrowLeft, Bot, Twitter, MessageSquare, TrendingUp, MessageCircle, LayoutGrid } from "lucide-react";
+import { ArrowLeft, Bot, Twitter, MessageSquare, TrendingUp, MessageCircle, LayoutGrid, CheckCircle2, AlertTriangle, Lock } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { TipButtonKOL } from "@/components/TipButton";
@@ -66,7 +66,7 @@ export default function KOLDetailPage({ params }: PageProps) {
             </Link>
             <span className="text-muted-foreground/50">·</span>
             <Link
-              href="/terminal"
+              href={`/terminal?mode=chat&kol=${encodeURIComponent(handle)}`}
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-cyan-400 transition-colors min-h-[44px]"
             >
               <MessageCircle className="w-4 h-4" />
@@ -151,6 +151,49 @@ export default function KOLDetailPage({ params }: PageProps) {
               Full Agent Suite powered by ElizaOS — bring your digital twin to life.
             </p>
           </div>
+
+          <div className="mb-6 p-6 bg-card/80 backdrop-blur border border-border rounded-2xl">
+            <h3 className="text-lg font-bold text-foreground mb-4">Quick Start</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-card/50 border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                  <span className="text-sm font-semibold">1) Configure</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Create/activate the suite, then open <span className="font-mono">Configure</span> to tune Avatar/Mod/Trader modules.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-card/50 border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                  <span className="text-sm font-semibold">2) Start</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Press <span className="font-mono">Start</span>. The status should turn to running.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-card/50 border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                  <span className="text-sm font-semibold">3) Validate</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Verify module activity, then test the chat path in Terminal to confirm persona + RAG behavior.
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 p-3 rounded-xl bg-card/50 border border-border">
+              <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase tracking-widest">
+                <Lock className="w-4 h-4 text-purple-400" />
+                Integrations
+              </div>
+              <div className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
+                Twitter/Discord/Telegram automation and autonomous trading require container deployment and platform tokens.
+              </div>
+            </div>
+          </div>
+
           <AgentSuitePanel kolHandle={handle} kolName={persona.name} />
         </motion.div>
 

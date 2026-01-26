@@ -75,19 +75,27 @@ export function KOLCard({ name, handle, mindshareScore, stats, volume, followers
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2">
+        <Link
+          href={`/terminal?mode=trade&kol=${encodeURIComponent(handle)}`}
+          className="w-full px-4 py-2.5 bg-purple-500 hover:bg-purple-400 text-white font-bold rounded-xl text-sm transition-all text-center min-h-[44px] flex items-center justify-center"
+        >
+          Trade
+        </Link>
+        <div className="flex gap-2">
+          <Link
+            href={`/agents?kol=${encodeURIComponent(handle)}`}
+            className="flex-1 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-sm transition-all text-center min-h-[44px] flex items-center justify-center"
+          >
+            Chat AI
+          </Link>
         <Link
           href={`/kol/${handle}`}
           className="flex-1 px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-500/30 rounded-xl text-sm font-medium transition-all text-center text-foreground min-h-[44px] flex items-center justify-center"
         >
           View Profile
         </Link>
-        <Link
-          href={`/agents`}
-          className="flex-1 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-sm font-medium transition-all text-center min-h-[44px] flex items-center justify-center"
-        >
-          Chat AI
-        </Link>
+        </div>
       </div>
     </motion.div>
   );

@@ -3,9 +3,10 @@
 import { Navbar } from "@/components/Navbar";
 import { KOLCardWithData } from "@/components/KOLCardWithData";
 import { getAvailableKOLs } from "@/lib/agents/kol-personas";
+import type { MindshareData } from "@/lib/data/cookie-fun";
 import { motion } from "framer-motion";
 import { Search, Filter, TrendingUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 // 生成 fallback 数据（当 API 不可用时）
 function generateFallbackData(handle: string) {
@@ -37,29 +38,84 @@ export default function MarketPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"mindshare" | "volume" | "followers">("mindshare");
 
+  const mindshareCacheRef = useRef<Record<string, MindshareData>>({});
+  const [mindshareData, setMindshareData] = useState<Record<string, MindshareData>>({});
+  const [mindshareLoading, setMindshareLoading] = useState(false);
+
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(searchQuery), 200);
+    return () => clearTimeout(t);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    // Avoid refetching if we already have a populated cache
+    if (Object.keys(mindshareCacheRef.current).length > 0) {
+      setMindshareData(mindshareCacheRef.current);
+      return;
+    }
+
+    const handles = allKOLs.map((k) => k.handle);
+    if (handles.length === 0) return;
+
+    const controller = new AbortController();
+    setMindshareLoading(true);
+
+    fetch(`/api/mindshare/batch?handles=${encodeURIComponent(handles.join(","))}`, {
+      signal: controller.signal,
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`Batch fetch failed: ${res.status}`);
+        const json = await res.json();
+        const data = (json?.data || {}) as Record<string, MindshareData>;
+        mindshareCacheRef.current = data;
+        setMindshareData(data);
+      })
+      .catch(() => {
+        // silently fall back to per-card fallbackData
+      })
+      .finally(() => {
+        setMindshareLoading(false);
+      });
+
+    return () => controller.abort();
+    // allKOLs is static (from const object), but keep dependency explicit
+  }, [allKOLs]);
+
   // 过滤和排序
-  const filteredKOLs = allKOLs
-    .filter((kol) => 
-      kol.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      kol.handle.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .map((kol) => ({
-      ...kol,
-      fallbackData: generateFallbackData(kol.handle),
-    }))
-    .sort((a, b) => {
-      if (sortBy === "mindshare") {
-        return b.fallbackData.mindshareScore - a.fallbackData.mindshareScore;
-      } else if (sortBy === "volume") {
-        const aVol = parseFloat(a.fallbackData.volume.replace(/[^0-9.]/g, ""));
-        const bVol = parseFloat(b.fallbackData.volume.replace(/[^0-9.]/g, ""));
-        return bVol - aVol;
-      } else {
-        const aFol = parseFloat(a.fallbackData.followers.replace(/[^0-9.]/g, ""));
-        const bFol = parseFloat(b.fallbackData.followers.replace(/[^0-9.]/g, ""));
-        return bFol - aFol;
-      }
-    });
+  const filteredKOLs = useMemo(() => {
+    const q = debouncedQuery.toLowerCase().trim();
+
+    return allKOLs
+      .filter((kol) => (q ? kol.name.toLowerCase().includes(q) || kol.handle.toLowerCase().includes(q) : true))
+      .map((kol) => ({
+        ...kol,
+        fallbackData: generateFallbackData(kol.handle),
+      }))
+      .sort((a, b) => {
+        const aData = mindshareData[a.handle];
+        const bData = mindshareData[b.handle];
+
+        if (sortBy === "mindshare") {
+          const aScore = aData?.mindshareScore ?? a.fallbackData.mindshareScore;
+          const bScore = bData?.mindshareScore ?? b.fallbackData.mindshareScore;
+          return bScore - aScore;
+        } else if (sortBy === "volume") {
+          const aVolStr = aData?.volume ?? a.fallbackData.volume;
+          const bVolStr = bData?.volume ?? b.fallbackData.volume;
+          const aVol = parseFloat(aVolStr.replace(/[^0-9.]/g, ""));
+          const bVol = parseFloat(bVolStr.replace(/[^0-9.]/g, ""));
+          return bVol - aVol;
+        } else {
+          const aFolStr = aData?.followers ?? a.fallbackData.followers;
+          const bFolStr = bData?.followers ?? b.fallbackData.followers;
+          const aFol = parseFloat(aFolStr.replace(/[^0-9.]/g, ""));
+          const bFol = parseFloat(bFolStr.replace(/[^0-9.]/g, ""));
+          return bFol - aFol;
+        }
+      });
+  }, [allKOLs, debouncedQuery, mindshareData, sortBy]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -117,6 +173,11 @@ export default function MarketPage() {
                 <TrendingUp className="w-4 h-4 text-cyan-400" />
                 <span>共 {filteredKOLs.length} 个 KOL</span>
               </div>
+              {mindshareLoading && (
+                <div className="text-xs text-muted-foreground font-mono tracking-widest uppercase">
+                  syncing...
+                </div>
+              )}
             </div>
           </div>
 
@@ -133,6 +194,7 @@ export default function MarketPage() {
                   <KOLCardWithData
                     name={kol.name}
                     handle={kol.handle}
+                    prefetchedData={mindshareData[kol.handle] ?? null}
                     fallbackData={kol.fallbackData}
                   />
                 </motion.div>

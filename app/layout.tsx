@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "KOLMarket.ai - Price the Human, Empower the Agent",
   description: "The 1st Identity Layer for AI Agents on Solana",
+  other: {
+    "virtual-protocol-site-verification": "51f5f7d29fbb5c62f9882af581b56109",
+  },
 };
 
 export default function RootLayout({

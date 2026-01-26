@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
@@ -32,13 +33,63 @@ const liveAlpha = [
 ];
 
 export default function TerminalPage() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
     const { publicKey, connected } = useWallet();
     const { connection } = useConnection();
     const [balance, setBalance] = useState<number | null>(null);
     const solPriceData = useSOLPrice(30000);
     const solPrice: number = (solPriceData.price ?? 142.25) as number;
     const [mode, setMode] = useState<"chat" | "trade">("chat");
+    const [kolHandle, setKolHandle] = useState<string | null>(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
+
+    const setModeAndPersist = useCallback(
+        (nextMode: "chat" | "trade") => {
+            setMode(nextMode);
+            try {
+                localStorage.setItem("kolmarket_terminal_mode", nextMode);
+            } catch {
+                // ignore
+            }
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("mode", nextMode);
+            if (kolHandle) {
+                params.set("kol", kolHandle);
+            }
+            router.replace(`${pathname}?${params.toString()}`);
+        },
+        [kolHandle, pathname, router, searchParams]
+    );
+
+    useEffect(() => {
+        const urlMode = searchParams.get("mode");
+        const urlKOL = searchParams.get("kol");
+
+        if (urlKOL) {
+            setKolHandle(urlKOL);
+        }
+
+        if (urlMode === "chat" || urlMode === "trade") {
+            setMode(urlMode);
+            try {
+                localStorage.setItem("kolmarket_terminal_mode", urlMode);
+            } catch {
+                // ignore
+            }
+            return;
+        }
+
+        try {
+            const lastMode = localStorage.getItem("kolmarket_terminal_mode");
+            if (lastMode === "chat" || lastMode === "trade") {
+                setMode(lastMode);
+            }
+        } catch {
+            // ignore
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         if (!publicKey) {
@@ -59,7 +110,7 @@ export default function TerminalPage() {
 
             <Navbar />
 
-            <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto grid grid-cols-12 gap-6 pb-24 lg:pb-12">
+            <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto grid grid-cols-12 gap-6 pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-12">
 
                 {/* Left Sidebar: desktop only; mobile → drawer */}
                 <aside className="hidden lg:block lg:col-span-3 order-1 space-y-6">
@@ -133,7 +184,7 @@ export default function TerminalPage() {
                         <div className="flex gap-2 p-1 bg-card/50 rounded-xl border border-border w-fit">
                             <button
                                 type="button"
-                                onClick={() => setMode("chat")}
+                                onClick={() => setModeAndPersist("chat")}
                                 className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${mode === "chat" ? "bg-cyan-500 text-slate-950 shadow-[0_0_10px_#06b6d4]" : "text-muted-foreground hover:text-foreground"}`}
                                 aria-pressed={mode === "chat"}
                             >
@@ -141,7 +192,7 @@ export default function TerminalPage() {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => setMode("trade")}
+                                onClick={() => setModeAndPersist("trade")}
                                 className={`min-h-[44px] px-4 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${mode === "trade" ? "bg-purple-500 text-white shadow-[0_0_10px_#a855f7]" : "text-muted-foreground hover:text-foreground"}`}
                                 aria-pressed={mode === "trade"}
                             >
@@ -166,7 +217,7 @@ export default function TerminalPage() {
                                 initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.98 }}
-                                className="cyber-glass rounded-2xl p-8 border border-border relative overflow-hidden h-[650px] flex flex-col"
+                                className="cyber-glass rounded-2xl p-8 border border-border relative overflow-hidden h-[calc(100svh-320px)] min-h-[520px] lg:h-[650px] flex flex-col"
                             >
                                 <div className="absolute top-0 right-0 p-4 opacity-20">
                                     <Cpu className="w-16 h-16 text-cyan-500" />
@@ -174,7 +225,7 @@ export default function TerminalPage() {
                                 <h2 className="text-2xl font-black mb-1 tracking-tighter">NEURAL <span className="text-cyan-400">INTERFACE</span></h2>
                                 <p className="text-[10px] text-slate-500 mb-6 uppercase tracking-widest font-mono">Real-time mindshare data uplink active</p>
                                 <div className="flex-1 overflow-hidden">
-                                    <ChatInterface />
+                                    <ChatInterface initialKOLHandle={kolHandle} />
                                 </div>
                             </motion.div>
                         ) : (
@@ -183,7 +234,7 @@ export default function TerminalPage() {
                                 initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.98 }}
-                                className="h-[650px]"
+                                className="h-[calc(100svh-320px)] min-h-[520px] lg:h-[650px]"
                             >
                                 <JupiterTerminal />
                             </motion.div>

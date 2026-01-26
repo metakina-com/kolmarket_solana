@@ -2,12 +2,14 @@
 
 import { KOLCard } from "./KOLCard";
 import { useMindshareData } from "@/lib/hooks/useMindshareData";
+import type { MindshareData } from "@/lib/data/cookie-fun";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface KOLCardWithDataProps {
   name: string;
   handle: string;
+  prefetchedData?: MindshareData | null;
   fallbackData?: {
     mindshareScore: number;
     stats: Array<{ subject: string; value: number; fullMark: number }>;
@@ -43,8 +45,22 @@ function KOLCardSkeleton() {
  * 增强版 KOLCard，支持从 API 获取真实数据
  * 如果 API 失败，会使用 fallbackData 作为降级方案
  */
-export function KOLCardWithData({ name, handle, fallbackData }: KOLCardWithDataProps) {
-  const { data, loading, error, refetch } = useMindshareData(handle);
+export function KOLCardWithData({ name, handle, prefetchedData, fallbackData }: KOLCardWithDataProps) {
+  const hasPrefetchedDataProp = prefetchedData !== undefined;
+  const { data, loading, error, refetch } = useMindshareData(handle, !hasPrefetchedDataProp);
+
+  if (prefetchedData) {
+    return (
+      <KOLCard
+        name={name}
+        handle={prefetchedData.handle}
+        mindshareScore={prefetchedData.mindshareScore}
+        stats={prefetchedData.stats}
+        volume={prefetchedData.volume}
+        followers={prefetchedData.followers}
+      />
+    );
+  }
 
   if (loading && !data) {
     return <KOLCardSkeleton />;

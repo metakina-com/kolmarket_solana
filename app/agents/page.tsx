@@ -4,8 +4,12 @@ import { Navbar } from "@/components/Navbar";
 import { ChatInterface } from "@/components/ChatInterface";
 import { motion } from "framer-motion";
 import { Bot, Brain, MessageSquare, Database, Zap } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function AgentsPage() {
+  const searchParams = useSearchParams();
+  const kolHandle = searchParams.get("kol");
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
@@ -72,7 +76,7 @@ export default function AgentsPage() {
             transition={{ delay: 0.3 }}
             className="max-w-4xl mx-auto"
           >
-            <ChatInterface />
+            <ChatInterface initialKOLHandle={kolHandle} />
           </motion.div>
         </div>
       </section>
