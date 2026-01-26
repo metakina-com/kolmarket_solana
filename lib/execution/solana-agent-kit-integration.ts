@@ -1,76 +1,33 @@
 /**
- * Solana Agent Kit 集成模块
- * 用于执行复杂的 Solana 链上操作
+ * Solana 交易执行模块 (轻量级实现)
  * 
- * 注意：
- * - 使用动态导入避免构建时依赖问题
- * - Solana Agent Kit 需要 Node.js runtime，不支持 Edge Runtime
- * - 所有导入都在函数内部进行，避免静态导入
+ * 原 solana-agent-kit 已移除，使用 @solana/web3.js + Jupiter API
+ * 保持 API 兼容性，实际交易通过 Jupiter 执行
  */
 
-import type { Connection, Keypair } from "@solana/web3.js";
+import type { Connection } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 import type { TradingStrategy, TradingExecution } from "./trading-agent";
 
-// 类型定义（避免直接导入）
-type SolanaAgentKit = any;
+// Stub 类型
+type SolanaAgentKit = {
+  transfer?: (params: any) => Promise<{ signature: string }>;
+  batchTransfer?: (params: any) => Promise<{ signature: string }>;
+};
 
-// Solana Agent Kit 实例存储
+// Agent Kit 实例存储 (stub)
 const agentKitInstances = new Map<string, SolanaAgentKit>();
 
 /**
- * 初始化 Solana Agent Kit
- * 
- * @param connection - Solana 连接
- * @param privateKey - 私钥（可选，用于自动签名）
- * @returns Agent Kit 实例
+ * 初始化 Solana Agent (Stub 实现)
+ * 返回 null，实际交易通过 Jupiter API 执行
  */
 export async function initializeSolanaAgentKit(
   connection: Connection,
   privateKey?: string
 ): Promise<SolanaAgentKit | null> {
-  try {
-    // 检查运行环境
-    if (typeof window !== "undefined") {
-      // 浏览器环境，不支持
-      return null;
-    }
-
-    // 检查是否在 Edge Runtime（不支持）
-    // Edge Runtime 没有 Node.js 全局对象
-    if (typeof process === "undefined" || !process.versions?.node) {
-      console.warn("Solana Agent Kit not supported in Edge Runtime");
-      return null;
-    }
-
-    // 动态导入 Solana Agent Kit（仅在 Node.js 环境）
-    // 使用动态导入，避免构建时解析
-    const agentKitModule = await import("solana-agent-kit");
-    const SolanaAgentKit = (agentKitModule as any).SolanaAgentKit || (agentKitModule as any).default || agentKitModule;
-
-    if (!SolanaAgentKit) {
-      console.warn("SolanaAgentKit class not found in module");
-      return null;
-    }
-
-    // 创建配置
-    const config: any = {
-      connection,
-      // 如果提供私钥，可以用于自动签名（生产环境需要更安全的处理）
-      // privateKey: privateKey ? Buffer.from(privateKey, "hex") : undefined,
-    };
-
-    // 创建 Agent Kit 实例
-    const agentKit = typeof SolanaAgentKit === "function" 
-      ? new SolanaAgentKit(config)
-      : SolanaAgentKit;
-    
-    return agentKit;
-  } catch (error) {
-    console.error("Error initializing Solana Agent Kit:", error);
-    console.warn("Solana Agent Kit not available. Falling back to basic web3.js implementation.");
-    return null;
-  }
+  console.log("[Stub] Solana Agent Kit removed. Using Jupiter API for swaps.");
+  return null;
 }
 
 /**
@@ -230,20 +187,21 @@ export async function executeDistributionWithAgentKit(
 }
 
 /**
- * 获取或创建 Agent Kit 实例
+ * 获取或创建 Agent Kit 实例 (Stub)
  */
 export async function getOrCreateAgentKit(
   connection: Connection,
   instanceId: string = "default"
 ): Promise<SolanaAgentKit | null> {
-  let agentKit = agentKitInstances.get(instanceId);
+  const agentKit = agentKitInstances.get(instanceId);
+  if (agentKit) {
+    return agentKit;
+  }
   
-  if (!agentKit) {
-    agentKit = await initializeSolanaAgentKit(connection);
-    if (agentKit) {
-      agentKitInstances.set(instanceId, agentKit);
-    }
+  const newKit = await initializeSolanaAgentKit(connection);
+  if (newKit) {
+    agentKitInstances.set(instanceId, newKit);
   }
 
-  return agentKit;
+  return newKit;
 }
