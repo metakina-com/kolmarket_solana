@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Development
+.env
+.env.local
+*.log
+logs
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Tests
+tests
+coverage
+*.test.ts
+*.spec.ts
+
+# Docs
+*.md
+!README.md
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore

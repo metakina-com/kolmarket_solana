@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElizaOS Agent Server - 测试界面</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .card h2 {
+      color: #333;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #555;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-secondary {
+      background: #6c757d;
+    }
+    .btn-danger {
+      background: #dc3545;
+    }
+    .row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .col {
+      flex: 1;
+      min-width: 300px;
+    }
+    .response-box {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .response-box pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 12px;
+    }
+    .chat-container {
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .message {
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    .message.user {
+      background: #667eea;
+      color: white;
+      margin-left: auto;
+    }
+    .message.agent {
+      background: white;
+      border: 1px solid #ddd;
+    }
+    .message .sender {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-bottom: 5px;
+    }
+    .chat-input {
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .status.active { background: #28a745; color: white; }
+    .status.inactive { background: #6c757d; color: white; }
+    .status.error { background: #dc3545; color: white; }
+    .agent-list {
+      list-style: none;
+    }
+    .agent-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .agent-item:last-child {
+      border-bottom: none;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+    .error-text {
+      color: #dc3545;
+    }
+    .success-text {
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 ElizaOS Agent Server 测试界面</h1>
+    
+    <div class="row">
+      <!-- 左侧：Agent 管理 -->
+      <div class="col">
+        <div class="card">
+          <h2>📋 Agent 列表</h2>
+          <div id="agentList" class="loading">加载中...</div>
+          <button onclick="loadAgents()" style="margin-top: 15px;">刷新列表</button>
+        </div>
+        
+        <div class="card">
+          <h2>➕ 创建 Agent</h2>
+          <div class="form-group">
+            <label>名称</label>
+            <input type="text" id="agentName" placeholder="例如：助手小明">
+          </div>
+          <div class="form-group">
+            <label>简介 (Bio)</label>
+            <textarea id="agentBio" placeholder="描述 Agent 的性格和能力...">我是一个友好的 AI 助手，乐于帮助用户解决各种问题。</textarea>
+          </div>
+          <div class="form-group">
+            <label>背景故事 (Lore) - 每行一条</label>
+            <textarea id="agentLore" placeholder="Agent 的背景故事...">我热爱学习新知识
+我喜欢与人交流</textarea>
+          </div>
+          <button onclick="createAgent()">创建 Agent</button>
+          <div id="createResult" class="response-box" style="display:none;"></div>
+        </div>
+        
+        <div class="card">
+          <h2>📥 导入 Character JSON</h2>
+          <div class="form-group">
+            <label>Character JSON</label>
+            <textarea id="characterJson" placeholder='{"name": "...", "bio": "...", ...}'></textarea>
+          </div>
+          <button onclick="importCharacter()">导入</button>
+          <div id="importResult" class="response-box" style="display:none;"></div>
+        </div>
+      </div>
+      
+      <!-- 右侧：对话测试 -->
+      <div class="col">
+        <div class="card">
+          <h2>💬 对话测试</h2>
+          <div class="form-group">
+            <label>选择 Agent</label>
+            <select id="chatAgentSelect">
+              <option value="">-- 请先加载 Agent 列表 --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>用户 ID</label>
+            <input type="text" id="userId" value="test-user-001">
+          </div>
+          <div class="chat-container">
+            <div id="chatMessages" class="chat-messages">
+              <div class="loading">选择一个 Agent 开始对话</div>
+            </div>
+            <div class="chat-input">
+              <input type="text" id="chatInput" placeholder="输入消息..." onkeypress="if(event.key==='Enter')sendMessage()">
+              <button onclick="sendMessage()">发送</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h2>🔧 系统状态</h2>
+          <div id="systemStatus" class="loading">加载中...</div>
+          <button onclick="loadSystemStatus()" style="margin-top: 15px;">刷新状态</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // API 基础 URL - 在 Docker 环境中使用 localhost:3000
+    // 如果测试 UI 也在 Docker 中运行，可能需要使用 agent-server:3000
+    const API_BASE = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3000/api' 
+      : 'http://agent-server:3000/api';
+    
+    // 当前会话
+    let currentRoomId = null;
+    let currentAgentId = null;
+    
+    // 生成 UUID
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+    
+    // 加载 Agent 列表
+    async function loadAgents() {
+      const container = document.getElementById('agentList');
+      container.innerHTML = '<div class="loading">加载中...</div>';
+      
+      try {
+        // 使用测试用户 ID
+        const response = await fetch(`${API_BASE}/agents?creatorId=test-creator-001`);
+        const data = await response.json();
+        
+        if (data.data && data.data.length > 0) {
+          let html = '<ul class="agent-list">';
+          const select = document.getElementById('chatAgentSelect');
+          select.innerHTML = '<option value="">-- 选择 Agent --</option>';
+          
+          for (const agent of data.data) {
+            html += `
+              <li class="agent-item">
+                <div>
+                  <strong>${agent.name}</strong>
+                  <span class="status ${agent.status}">${agent.status}</span>
+                </div>
+                <div>
+                  <button class="btn-secondary" onclick="selectAgent('${agent.id}', '${agent.name}')">选择</button>
+                  <button class="btn-danger" onclick="deleteAgent('${agent.id}')">删除</button>
+                </div>
+              </li>
+            `;
+            select.innerHTML += `<option value="${agent.id}">${agent.name}</option>`;
+          }
+          html += '</ul>';
+          container.innerHTML = html;
+        } else {
+          container.innerHTML = '<p>暂无 Agent，请先创建一个</p>';
+        }
+      } catch (error) {
+        container.innerHTML = `<p class="error-text">加载失败: ${error.message}</p>`;
+      }
+    }
+    
+    // 创建 Agent
+    async function createAgent() {
+      const name = document.getElementById('agentName').value.trim();
+      const bio = document.getElementById('agentBio').value.trim();
+      const loreText = document.getElementById('agentLore').value.trim();
+      const lore = loreText ? loreText.split('\n').filter(l => l.trim()) : [];
+      
+      if (!name || !bio) {
+        alert('请填写名称和简介');
+        return;
+      }
+      
+      const resultDiv = document.getElementById('createResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<div class="loading">创建中...</div>';
+      
+      try {
+        const response = await fetch(`${API_BASE}/agents`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Creator-Id': 'test-creator-001'
+          },
+          body: JSON.stringify({ name, bio, lore })
+        });
+        
+        const data = await response.json();
+        resultDiv.innerHTML = `<pre class="success-text">${JSON.stringify(data, null, 2)}</pre>`;
+        loadAgents();
+      } catch (error) {
+        resultDiv.innerHTML = `<pre class="error-text">创建失败: ${error.message}</pre>`;
+      }
+    }
+    
+    // 导入 Character
+    async function importCharacter() {
+      const jsonText = document.getElementById('characterJson').value.trim();
+      
+      if (!jsonText) {
+        alert('请输入 Character JSON');
+        return;
+      }
+      
+      let character;
+      try {
+        character = JSON.parse(jsonText);
+      } catch (e) {
+        alert('JSON 格式错误');
+        return;
+      }
+      
+      const resultDiv = document.getElementById('importResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<div class="loading">导入中...</div>';
+      
+      try {
+        const response = await fetch(`${API_BASE}/agents/import`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Creator-Id': 'test-creator-001'
+          },
+          body: JSON.stringify({ character })
+        });
+        
+        const data = await response.json();
+        resultDiv.innerHTML = `<pre class="success-text">${JSON.stringify(data, null, 2)}</pre>`;
+        loadAgents();
+      } catch (error) {
+        resultDiv.innerHTML = `<pre class="error-text">导入失败: ${error.message}</pre>`;
+      }
+    }
+    
+    // 删除 Agent
+    async function deleteAgent(agentId) {
+      if (!confirm('确定要删除这个 Agent 吗？')) return;
+      
+      try {
+        await fetch(`${API_BASE}/agents/${agentId}`, {
+          method: 'DELETE',
+          headers: { 'X-Creator-Id': 'test-creator-001' }
+        });
+        loadAgents();
+      } catch (error) {
+        alert('删除失败: ' + error.message);
+      }
+    }
+    
+    // 选择 Agent 进行对话
+    function selectAgent(agentId, agentName) {
+      currentAgentId = agentId;
+      currentRoomId = generateUUID();
+      document.getElementById('chatAgentSelect').value = agentId;
+      document.getElementById('chatMessages').innerHTML = `
+        <div style="text-align: center; color: #666; padding: 20px;">
+          已选择 <strong>${agentName}</strong><br>
+          会话 ID: ${currentRoomId}<br>
+          开始输入消息吧！
+        </div>
+      `;
+    }
+    
+    // 发送消息
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      
+      if (!text) return;
+      
+      const agentId = document.getElementById('chatAgentSelect').value || currentAgentId;
+      if (!agentId) {
+        alert('请先选择一个 Agent');
+        return;
+      }
+      
+      currentAgentId = agentId;
+      if (!currentRoomId) {
+        currentRoomId = generateUUID();
+      }
+      
+      const userId = document.getElementById('userId').value || 'test-user-001';
+      const messagesDiv = document.getElementById('chatMessages');
+      
+      // 显示用户消息
+      messagesDiv.innerHTML += `
+        <div class="message user">
+          <div class="sender">你</div>
+          <div>${text}</div>
+        </div>
+      `;
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      input.value = '';
+      
+      // 显示加载状态
+      const loadingId = 'loading-' + Date.now();
+      messagesDiv.innerHTML += `
+        <div class="message agent" id="${loadingId}">
+          <div class="sender">Agent</div>
+          <div>思考中...</div>
+        </div>
+      `;
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      
+      try {
+        const response = await fetch(`${API_BASE}/chat/${agentId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId,
+            roomId: currentRoomId,
+            text
+          })
+        });
+        
+        const data = await response.json();
+        const loadingEl = document.getElementById(loadingId);
+        
+        if (data.success && data.data) {
+          loadingEl.innerHTML = `
+            <div class="sender">Agent</div>
+            <div>${data.data.text}</div>
+          `;
+        } else {
+          loadingEl.innerHTML = `
+            <div class="sender">Agent</div>
+            <div class="error-text">错误: ${data.error?.message || '未知错误'}</div>
+          `;
+        }
+      } catch (error) {
+        const loadingEl = document.getElementById(loadingId);
+        loadingEl.innerHTML = `
+          <div class="sender">Agent</div>
+          <div class="error-text">请求失败: ${error.message}</div>
+        `;
+      }
+      
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    // 加载系统状态
+    async function loadSystemStatus() {
+      const container = document.getElementById('systemStatus');
+      container.innerHTML = '<div class="loading">加载中...</div>';
+      
+      try {
+        const [healthRes, poolRes] = await Promise.all([
+          fetch(`${API_BASE}/health`),
+          fetch(`${API_BASE}/admin/pool`)
+        ]);
+        
+        const health = await healthRes.json();
+        const pool = await poolRes.json();
+        
+        container.innerHTML = `
+          <p><strong>服务状态:</strong> <span class="status active">${health.status}</span></p>
+          <p><strong>时间:</strong> ${health.timestamp}</p>
+          <hr style="margin: 10px 0;">
+          <p><strong>活跃 Agent 数:</strong> ${pool.data?.size || 0} / ${pool.data?.maxSize || 20}</p>
+          <p><strong>活跃 Agent:</strong> ${pool.data?.agents?.join(', ') || '无'}</p>
+        `;
+      } catch (error) {
+        container.innerHTML = `<p class="error-text">加载失败: ${error.message}</p>`;
+      }
+    }
+    
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAgents();
+      loadSystemStatus();
+      
+      // 监听 Agent 选择变化
+      document.getElementById('chatAgentSelect').addEventListener('change', (e) => {
+        if (e.target.value) {
+          currentAgentId = e.target.value;
+          currentRoomId = generateUUID();
+          document.getElementById('chatMessages').innerHTML = `
+            <div style="text-align: center; color: #666; padding: 20px;">
+              会话 ID: ${currentRoomId}<br>
+              开始输入消息吧！
+            </div>
+          `;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
